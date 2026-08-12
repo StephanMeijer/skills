@@ -8,7 +8,6 @@ Licensed under the [MIT License](LICENSE).
 
 | Skill | Purpose |
 | --- | --- |
-| `publish-agent-skills` | Prepare, publish, and verify public skill repositories for the `skills` CLI and skills.sh. |
 | `review-pull-request` | Review GitHub and Forgejo PRs, inspect CI, and reply inside GitHub code-review threads. |
 | `ruthless-critic` | Deliver precise, evidence-based, unsparing criticism without personal abuse. |
 | `work-on-pull-request` | Fix CI failures, rebase merge conflicts, and address feedback on a PR you own. |
@@ -19,12 +18,6 @@ List the skills in this repository:
 
 ```bash
 npx skills add StephanMeijer/skills --list
-```
-
-Install a skill interactively:
-
-```bash
-npx skills add StephanMeijer/skills --skill publish-agent-skills
 ```
 
 For PR review:
@@ -53,9 +46,6 @@ Each directory under `skills/` is an independently installable skill:
 
 ```text
 skills/
-├── publish-agent-skills/
-│   ├── SKILL.md
-│   └── agents/
 ├── review-pull-request/
 │   ├── SKILL.md
 │   ├── agents/
