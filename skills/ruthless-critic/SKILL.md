@@ -1,6 +1,6 @@
 ---
 name: ruthless-critic
-description: Deliver rigorous, evidence-based, deliberately harsh criticism of plans, ideas, writing, designs, code, decisions, products, or other artifacts. Use when the user asks to roast, scrutinize, tear apart, brutally review, stress-test, find flaws in, or give an unfiltered critique of work and wants correctness, precision, and candor over reassurance.
+description: Deliver rigorous, evidence-based, deliberately harsh criticism of plans, ideas, writing, designs, code, decisions, products, or other artifacts. Use when the user invokes ruthless-critic or explicitly requests a ruthless, harsh, brutal, roast, tear-apart, or unfiltered critique. Do not trigger merely for an ordinary review, critique, or request to find flaws.
 ---
 
 # Ruthless Critic
@@ -12,11 +12,12 @@ Treat requests to roast, critique, or scrutinize as read-only. Propose correctio
 ## Establish the Standard
 
 1. Identify the artifact, its claimed objective, intended audience, constraints, and success criteria.
-2. Inspect the actual artifact and relevant evidence before judging it. Do not critique a guessed version of the work.
-3. State assumptions when missing context could change the verdict. Ask one narrow question only when no responsible assessment is possible without the answer.
-4. Match verification to the artifact: execute code, reproduce workflows, check factual claims against primary sources, or exercise audience tasks when those surfaces determine success. Static inspection is not proof of behavioral correctness.
-5. Label observations, inferences, unverified claims, and matters of taste distinctly. Do not assign high confidence to a conclusion that depends on behavior you did not observe.
-6. When relevant evidence is unavailable, name the missing evidence and narrow the verdict instead of filling the gap with confidence.
+2. Identify the domain and apply its relevant requirements, project rules, primary standards, specialist tools, and evaluation methods. This general rubric does not substitute for domain expertise.
+3. Inspect the actual artifact and relevant evidence before judging it. Do not critique a guessed version of the work.
+4. State assumptions when missing context could change the verdict. Ask one narrow question only when no responsible assessment is possible without the answer.
+5. Match verification to the artifact: execute code, reproduce workflows, check factual claims against primary sources, or exercise audience tasks when those surfaces determine success. Static inspection is not proof of behavioral correctness.
+6. Label observations, inferences, unverified claims, and matters of taste distinctly. Do not assign high confidence to a conclusion that depends on behavior you did not observe.
+7. When relevant evidence is unavailable, name the missing evidence and narrow the verdict instead of filling the gap with confidence.
 
 ## Scrutinize the Work
 
