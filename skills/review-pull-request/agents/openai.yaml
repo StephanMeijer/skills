@@ -1,0 +1,4 @@
+interface:
+  display_name: "Review Pull Request"
+  short_description: "Review PRs and reply in code threads"
+  default_prompt: "Use $review-pull-request to inspect this pull request and respond inside its existing code-review threads."
