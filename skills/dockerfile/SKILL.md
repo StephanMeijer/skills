@@ -47,29 +47,15 @@ Use BuildKit cache mounts for dependency caches and secret or SSH mounts for pri
 
 ## Minimize the Runtime
 
-- Run as the base image's established non-root identity or a fixed numeric UID/GID such as `10001:10001`. Run as root only when fundamentally required; document why and minimize the duration, capabilities, ownership changes, and writable paths.
-- Make the root filesystem read-only compatible whenever practical. Declare only the exact writable directories the application needs, including `/tmp` only when used.
-- Do not install source code, tests, caches, package indexes, compilers, headers, VCS tools, shells, editors, process monitors, `curl`, `wget`, or package managers into the final stage unless a runtime requirement explicitly justifies them. Prefer distroless or `scratch` when the final image must contain no shell or package manager. When Alpine is deliberately selected, treat its built-in BusyBox and `apk` as an explicit base-image tradeoff rather than claiming they are absent.
-- Add CA certificates, timezone data, locales, and native libraries only when runtime evidence requires them.
-- Use exec-form `ENTRYPOINT` and `CMD`. Run the application directly as PID 1; add a minimal init only when the process cannot forward signals or reap children correctly.
-- Add `EXPOSE` only for a stable documented port. Omit `HEALTHCHECK` by default because probes usually belong to deployment configuration; preserve a deliberate existing health check.
-- Use narrow `COPY --chown` operations instead of broad recursive `chown` or `chmod` commands.
+Apply the runtime hardening rules in the policy to the selected base. Prove that the final image contains only required artifacts and system data, starts directly with exec-form arguments, runs as a non-root identity, and works with a read-only root filesystem plus only its demonstrated writable mounts. Treat every root, tooling, writable-path, or base-image exception as a finding that needs concrete runtime evidence and a documented reason.
 
 ## Make Builds Reproducible
 
-- Require lockfiles and frozen or locked dependency installation modes where the project supports them.
-- Copy dependency manifests before frequently changing source files, then use cache mounts without retaining cache data in image layers.
-- Avoid blanket operating-system upgrades. Select an updated pinned base instead.
-- Verify every externally downloaded artifact with a pinned checksum or trusted signature. Prefer `ADD --checksum` for a fixed HTTPS artifact or perform verification in a disposable builder stage.
-- Add OCI source, revision, version, and license labels when their real values are available. Omit creation-time labels because they make otherwise identical builds differ. Never commit placeholder metadata.
-- Support both required architectures without hard-coded host architecture assumptions. Use BuildKit's platform arguments only when cross-compilation actually needs them.
-- Generate SBOM and provenance attestations in an authorized Buildx publication workflow. Do not push merely to validate a Dockerfile.
+Apply the reproducibility and supply-chain rules in the policy. Resolve lock modes, base digests, external-artifact verification, OCI metadata, and the actual multi-platform strategy from repository and publisher evidence. Keep publication-only SBOM, provenance, and push operations out of ordinary local verification.
 
 ## Maintain `.dockerignore`
 
-Create or audit `.dockerignore` with every Dockerfile. Exclude VCS metadata, local dependencies, build outputs, caches, logs, editor files, credentials, environment files, coverage, temporary artifacts, and anything else not consumed by the build.
-
-Derive exclusions from the actual build. Do not blindly exclude documentation, tests, generated code, workspace manifests, or VCS metadata when a build or versioning step reads them. Prefer a small context over a large denylist that accidentally includes sensitive files.
+Create or audit `.dockerignore` with every Dockerfile by following the repository-specific procedure in the policy. Trace the real context and every build input before writing exclusions; do not emit a stock pattern list or copy `.gitignore`. Rebuild every target after the change so an apparently smaller context cannot conceal a missing input.
 
 ## Verify Locally
 
