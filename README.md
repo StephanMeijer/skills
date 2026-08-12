@@ -2,6 +2,8 @@
 
 Portable [Agent Skills](https://agentskills.io/) for Codex and other skills-compatible agents.
 
+Licensed under the [MIT License](LICENSE).
+
 ## Available skills
 
 | Skill | Purpose |

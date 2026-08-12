@@ -1,6 +1,7 @@
 ---
 name: publish-agent-skills
 description: Prepare, publish, and verify public Agent Skills repositories that work with the skills CLI and skills.sh. Use when an agent needs to turn local skill folders into an installable GitHub repository, repair repository discovery, publish new skills, or confirm that a remote skill can be listed and installed with npx skills.
+license: MIT
 ---
 
 # Publish Agent Skills
