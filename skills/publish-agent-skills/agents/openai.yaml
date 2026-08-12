@@ -1,0 +1,4 @@
+interface:
+  display_name: "Publish Agent Skills"
+  short_description: "Publish discoverable Agent Skills repositories"
+  default_prompt: "Use $publish-agent-skills to publish this skills repository and verify that agents can install it."
