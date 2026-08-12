@@ -26,22 +26,24 @@ fj pr review <PR> list --comments
 
 Use the PR metadata's base ref and head ref; never assume `main` or `master`. Rebase only when the provider reports a merge conflict.
 
-Before rebasing, confirm the worktree and index are clean, the checked-out branch is the PR head, and its upstream is known. Fetch the exact base branch, record the current PR head SHA, and rebase:
+Before rebasing, confirm tracked and untracked worktree state and the index are clean, the checked-out branch is the PR head, and its upstream is known. Fetch the exact base branch, record the current PR head SHA and fetched base SHA, and rebase onto that observed commit:
 
 ```bash
 git fetch <base-remote> <base-branch>
-git rebase <base-remote>/<base-branch>
+git rebase <base-sha>
 ```
 
-Resolve each conflict by intent and continue with `git rebase --continue`. If a correct resolution is unclear, run `git rebase --abort` and verify the recorded head is restored. Then run relevant tests and inspect the rewritten branch range.
+Resolve each conflict by intent and continue with `git rebase --continue`. If a correct resolution is unclear, run `git rebase --abort` and verify the recorded head is restored. Then run relevant tests and inspect the rewritten branch range and `git range-diff <base-sha>..<old-head-sha> <base-sha>..HEAD`.
 
 If push was explicitly authorized, update the PR head with a lease:
 
 ```bash
-git push --force-with-lease <head-remote> HEAD:<head-branch>
+git push \
+  --force-with-lease=refs/heads/<head-branch>:<old-head-sha> \
+  <head-remote> HEAD:refs/heads/<head-branch>
 ```
 
-Never force-push the base branch. For a fork PR, identify the writable head remote rather than assuming `origin`. Refetch the PR and verify its head SHA matches local `HEAD` after the push.
+Never force-push the base branch. For a fork PR, identify the writable head remote rather than assuming `origin`. If the explicit lease rejects, refetch and stop rather than retrying with a weaker lease. Refetch the PR and verify its head SHA matches local `HEAD` after the push.
 
 ## Use the REST API for complete identifiers and CI
 
