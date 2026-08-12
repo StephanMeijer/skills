@@ -54,7 +54,7 @@ curl -fsS 'https://<host>/api/v1/repos/<owner>/<repo>/pulls/<PR>/reviews?limit=5
 curl -fsS 'https://<host>/api/v1/repos/<owner>/<repo>/pulls/<PR>/reviews/<review-id>/comments?limit=50&page=1'
 ```
 
-Paginate until a page contains fewer than the requested limit. An unresolved review comment has a null `resolver`; preserve its `id`, `pull_request_review_id`, `path`, `position`, and `html_url`.
+Paginate by following the response's `Link` header with `rel="next"` until no next link remains. Do not stop because a page contains fewer than the requested limit: a Forgejo instance can clamp `limit=50` to its lower `max_response_items` setting. Query `/api/v1/settings/api` when the client's effective page size must be diagnosed. An unresolved review comment has a null `resolver`; preserve its `id`, `pull_request_review_id`, `path`, `position`, and `html_url`.
 
 Read the PR response's head SHA, then inspect commit statuses and matching action runs when available:
 
