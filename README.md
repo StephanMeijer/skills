@@ -12,6 +12,7 @@ Licensed under the [MIT License](LICENSE).
 | `github-issue` | Create and manage GitHub issues with native metadata, relationships, projects, fields, and security workflows. |
 | `programming-python` | Write strict, modern Python with precise types, validated models, and complete local checks. |
 | `programming-rust` | Write strict, modern Rust with strong types, safe boundaries, and complete local checks. |
+| `programming-typescript` | Write strict, modern TypeScript without unsafe assertions or unparsed boundaries. |
 | `review-pull-request` | Review GitHub and Forgejo PRs, inspect CI, and reply inside GitHub code-review threads. |
 | `ruthless-critic` | Deliver precise, evidence-based, unsparing criticism without personal abuse. |
 | `work-on-pull-request` | Fix CI failures, rebase merge conflicts, and address feedback on a PR you own. |
@@ -54,6 +55,12 @@ For strict, modern Rust development:
 npx skills add StephanMeijer/skills --skill programming-rust
 ```
 
+For strict, modern TypeScript development:
+
+```bash
+npx skills add StephanMeijer/skills --skill programming-typescript
+```
+
 For an unsparing critique:
 
 ```bash
@@ -86,6 +93,9 @@ skills/
 │   ├── SKILL.md
 │   └── agents/
 ├── programming-rust/
+│   ├── SKILL.md
+│   └── agents/
+├── programming-typescript/
 │   ├── SKILL.md
 │   └── agents/
 ├── review-pull-request/
