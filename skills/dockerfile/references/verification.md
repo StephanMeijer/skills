@@ -65,23 +65,45 @@ docker buildx build --load \
 
 Run the application's real interface: make an HTTP request, invoke the CLI, process a representative input, or exercise the service protocol. A successful build is not sufficient.
 
-Start with a read-only root filesystem and only the proven writable mounts:
+For a one-shot CLI, run it in the foreground with a read-only root filesystem and only proven writable mounts:
 
 ```bash
-docker run --detach --rm \
-  --name dockerfile-runtime-qa \
+docker run --rm \
   --read-only \
   --tmpfs /tmp:rw,nosuid,nodev,noexec \
   "$runtime_image"
 ```
 
-Adapt ports, arguments, environment, and writable mounts to the application. Do not inject production credentials. If the application does not use `/tmp`, omit that mount.
-
-Verify the configured user without assuming the image has a shell:
+For a service, retain the stopped container until its logs and exit state have been inspected:
 
 ```bash
-docker image inspect "$runtime_image" \
-  --format '{{json .Config.User}}'
+container_name="dockerfile-runtime-qa-$$"
+docker run --detach \
+  --name "$container_name" \
+  --read-only \
+  --tmpfs /tmp:rw,nosuid,nodev,noexec \
+  "$runtime_image"
+
+# Exercise the real readiness and service interface here.
+
+docker stop --time 10 "$container_name"
+docker logs "$container_name"
+test "$(docker inspect --format '{{.State.ExitCode}}' "$container_name")" -eq 0
+docker rm "$container_name"
+```
+
+The readiness and interface step is mandatory; replace the marker with the repository's real probe before running the scenario. Adapt ports, arguments, environment, and writable mounts to the application. Do not inject production credentials. If the application does not use `/tmp`, omit that mount. On failure, inspect logs and state before removing the container.
+
+Verify the configured user without assuming the image has a shell. Unless a root exception is documented, make root-equivalent values fail:
+
+```bash
+image_user="$(docker image inspect "$runtime_image" --format '{{.Config.User}}')"
+case "$image_user" in
+  ""|0|0:*|root|root:*)
+    printf 'runtime image is configured as root: %s\n' "$image_user" >&2
+    exit 1
+    ;;
+esac
 ```
 
 Exercise startup, readiness, normal work, failure behavior, and graceful shutdown. Use `docker stop` and inspect logs and exit status; do not merely kill the process.
@@ -96,15 +118,34 @@ docker image inspect "$runtime_image" \
 docker history --no-trunc "$runtime_image"
 ```
 
-Use an available image inspection tool to confirm the final filesystem contains no source, secrets, caches, package indexes, compiler toolchain, VCS/debugging utilities, or unexpected writable permissions. Do not rely on layer count alone; modern Docker instructions do not necessarily create extra filesystem layers.
-
-Run a vulnerability scan when available:
+Inventory packages and the final filesystem with Syft when installed:
 
 ```bash
-trivy image "$runtime_image"
+syft "$runtime_image"
 ```
 
-Treat unresolved critical or high findings as blockers unless they are pre-existing, unreachable, or unfixable and explicitly documented with evidence. Never hide scanner output with a broad ignore.
+Without Syft, export a created container and inspect the complete path list without requiring a shell in the image:
+
+```bash
+inspection_container="$(docker create "$runtime_image")"
+docker export "$inspection_container" | tar -tf - | sort
+docker rm "$inspection_container"
+```
+
+Compare the inventory with the selected base and intended artifacts. Fail the review when it reveals copied source, secrets, caches, package indexes, an unexpected compiler toolchain, or unjustified VCS/debugging utilities. Alpine's built-in BusyBox and `apk` are base-image contents, not proof that the Dockerfile installed debugging tools; record that accepted base tradeoff. Do not rely on layer count alone because modern Docker instructions do not necessarily create filesystem layers.
+
+Run a vulnerability and secret scan when Trivy is available. Make fixable high or critical findings fail the command:
+
+```bash
+trivy image \
+  --scanners vuln,secret \
+  --severity HIGH,CRITICAL \
+  --ignore-unfixed \
+  --exit-code 1 \
+  "$runtime_image"
+```
+
+Run a second reporting scan without `--ignore-unfixed` when the first scan omitted findings. Report unfixed high or critical findings and assess them explicitly; do not silently classify “unfixed” as safe. Never hide scanner output with a broad ignore.
 
 ## Publication Evidence
 
