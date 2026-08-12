@@ -16,7 +16,10 @@ Collect summary data and inspect the patch without changing branches:
 gh pr view <PR> --json number,title,state,isDraft,url,author,baseRefName,headRefName,headRefOid,body,mergeable,reviewDecision
 gh pr diff <PR>
 gh pr checks <PR> --json bucket,completedAt,description,event,link,name,startedAt,state,workflow
+gh api 'repos/<owner>/<repo>/pulls/<PR>/files?per_page=100' --paginate
 ```
+
+Record `headRefOid` before collecting other surfaces and refetch it afterward. Accept the snapshot only when both values match. Reconcile the paginated file count and paths with the patch; GitHub's rendered diff and files API have size and count limits, so use exact base/head Git objects when available and report any remaining gap.
 
 Use the PR's `headRefOid` to find matching workflow runs:
 
@@ -110,6 +113,8 @@ gh api graphql \
 ```
 
 Require `.data.resolveReviewThread.thread.isResolved` to be `true`.
+
+If either mutation times out or returns an ambiguous error, refetch the thread before retrying. A reply already visible in the correct thread must not be posted again.
 
 ## Other remote actions
 

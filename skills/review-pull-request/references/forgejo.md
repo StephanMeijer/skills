@@ -13,6 +13,8 @@ fj pr view <PR> files
 fj pr status <PR>
 ```
 
+Read the PR's head SHA before collecting other surfaces and again afterward. Accept the snapshot only when the head is unchanged. Keep the terminal `Link` state and any declared total with each paginated collection; a short page is not proof of completion.
+
 Collect top-level discussion and inline review comments:
 
 ```bash
@@ -34,6 +36,8 @@ curl -fsS 'https://<host>/api/v1/repos/<owner>/<repo>/pulls/<PR>/reviews/<review
 ```
 
 Paginate by following the response's `Link` header with `rel="next"` until no next link remains. Do not stop because a page contains fewer than the requested limit: a Forgejo instance can clamp `limit=50` to its lower `max_response_items` setting. Query `/api/v1/settings/api` when the client's effective page size must be diagnosed. For private repositories, use an authenticated API client or a Forgejo token without printing or logging the token.
+
+Reconcile the provider's changed-file inventory with the patch. When the provider truncates either surface, use exact base/head Git objects when available without altering the user's worktree and report any binary, LFS, submodule, fork-ref, or oversized-file gap.
 
 An unresolved review comment has a null `resolver`. Preserve its `id`, `pull_request_review_id`, `path`, `position`, and `html_url` for triage.
 
