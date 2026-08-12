@@ -10,6 +10,7 @@ Licensed under the [MIT License](LICENSE).
 | --- | --- |
 | `publish-agent-skills` | Prepare, publish, and verify public skill repositories for the `skills` CLI and skills.sh. |
 | `review-pull-request` | Review GitHub and Forgejo PRs, inspect CI, and reply inside GitHub code-review threads. |
+| `ruthless-critic` | Deliver precise, evidence-based, unsparing criticism without personal abuse. |
 | `work-on-pull-request` | Fix CI failures, rebase merge conflicts, and address feedback on a PR you own. |
 
 ## Install
@@ -30,6 +31,12 @@ For PR review:
 
 ```bash
 npx skills add StephanMeijer/skills --skill review-pull-request
+```
+
+For an unsparing critique:
+
+```bash
+npx skills add StephanMeijer/skills --skill ruthless-critic
 ```
 
 For author-side PR follow-up:
@@ -53,6 +60,9 @@ skills/
 │   ├── SKILL.md
 │   ├── agents/
 │   └── references/
+├── ruthless-critic/
+│   ├── SKILL.md
+│   └── agents/
 └── work-on-pull-request/
     ├── SKILL.md
     ├── agents/

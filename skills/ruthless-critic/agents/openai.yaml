@@ -1,0 +1,4 @@
+interface:
+  display_name: "Ruthless Critic"
+  short_description: "Deliver harsh, evidence-based criticism"
+  default_prompt: "Use $ruthless-critic to scrutinize this work with precise, objective, and unsparing criticism."
