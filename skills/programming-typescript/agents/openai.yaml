@@ -1,4 +1,4 @@
 interface:
   display_name: "Programming TypeScript"
-  short_description: "Write strict, modern, assertion-free TypeScript"
-  default_prompt: "Use $programming-typescript to implement this TypeScript change with strong types, parsed boundaries, and strict local checks."
+  short_description: "Write strict, runtime-truthful TypeScript"
+  default_prompt: "Use $programming-typescript to implement this TypeScript change with strong models, parsed runtime boundaries, repository-native tooling, and complete local checks."
