@@ -10,6 +10,7 @@ Licensed under the [MIT License](LICENSE).
 | --- | --- |
 | `publish-agent-skills` | Prepare, publish, and verify public skill repositories for the `skills` CLI and skills.sh. |
 | `review-pull-request` | Review GitHub and Forgejo PRs, inspect CI, and reply inside GitHub code-review threads. |
+| `work-on-pull-request` | Fix CI failures, rebase merge conflicts, and address feedback on a PR you own. |
 
 ## Install
 
@@ -31,6 +32,12 @@ For PR review:
 npx skills add StephanMeijer/skills --skill review-pull-request
 ```
 
+For author-side PR follow-up:
+
+```bash
+npx skills add StephanMeijer/skills --skill work-on-pull-request
+```
+
 You can target a specific supported agent with `--agent`, or install globally with `--global`.
 
 ## Repository layout
@@ -40,9 +47,15 @@ Each directory under `skills/` is an independently installable skill:
 ```text
 skills/
 ├── publish-agent-skills/
-│   └── SKILL.md
-└── review-pull-request/
+│   ├── SKILL.md
+│   └── agents/
+├── review-pull-request/
+│   ├── SKILL.md
+│   ├── agents/
+│   └── references/
+└── work-on-pull-request/
     ├── SKILL.md
+    ├── agents/
     └── references/
 ```
 
