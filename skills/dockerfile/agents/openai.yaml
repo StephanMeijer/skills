@@ -1,0 +1,4 @@
+interface:
+  display_name: "Dockerfile"
+  short_description: "Build minimal, secure production images"
+  default_prompt: "Use $dockerfile to create or improve this project’s Dockerfile and .dockerignore, then build and exercise the resulting image locally."

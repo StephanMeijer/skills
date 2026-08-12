@@ -8,6 +8,7 @@ Licensed under the [MIT License](LICENSE).
 
 | Skill | Purpose |
 | --- | --- |
+| `dockerfile` | Create and audit minimal, secure, reproducible multi-platform Dockerfiles and `.dockerignore` files. |
 | `github-issue` | Create and manage GitHub issues with native metadata, relationships, projects, fields, and security workflows. |
 | `review-pull-request` | Review GitHub and Forgejo PRs, inspect CI, and reply inside GitHub code-review threads. |
 | `ruthless-critic` | Deliver precise, evidence-based, unsparing criticism without personal abuse. |
@@ -33,6 +34,12 @@ For GitHub issue management:
 npx skills add StephanMeijer/skills --skill github-issue
 ```
 
+For production Dockerfiles:
+
+```bash
+npx skills add StephanMeijer/skills --skill dockerfile
+```
+
 For an unsparing critique:
 
 ```bash
@@ -53,6 +60,10 @@ Each directory under `skills/` is an independently installable skill:
 
 ```text
 skills/
+├── dockerfile/
+│   ├── SKILL.md
+│   ├── agents/
+│   └── references/
 ├── github-issue/
 │   ├── SKILL.md
 │   ├── agents/
