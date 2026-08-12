@@ -13,7 +13,7 @@ gh api --paginate "repos/OWNER/REPO/assignees" --jq '.[].login'
 List labels and milestones:
 
 ```bash
-gh label list --repo OWNER/REPO --limit 100
+gh label list --repo OWNER/REPO --limit 1000
 gh api --paginate "repos/OWNER/REPO/milestones?state=all" \
   --jq '.[] | [.number, .title, .state] | @tsv'
 ```
@@ -30,9 +30,11 @@ gh api graphql \
 List projects owned by the repository owner and inspect a selected project's fields:
 
 ```bash
-gh project list --owner OWNER
-gh project field-list PROJECT_NUMBER --owner OWNER
+gh project list --owner OWNER --limit 1000
+gh project field-list PROJECT_NUMBER --owner OWNER --limit 1000
 ```
+
+Compare returned counts with provider totals when available. If a command cannot prove completeness, use the corresponding documented API with pagination instead of assuming a default or short page is complete.
 
 Adding an issue to a project requires the `project` authentication scope. Check before changing authentication:
 
