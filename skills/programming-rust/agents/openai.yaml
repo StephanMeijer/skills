@@ -1,0 +1,4 @@
+interface:
+  display_name: "Programming Rust"
+  short_description: "Write strict, modern, type-safe Rust"
+  default_prompt: "Use $programming-rust to implement this Rust change with strict safety, strong types, and complete local checks."
