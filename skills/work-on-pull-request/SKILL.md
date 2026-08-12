@@ -5,7 +5,7 @@ description: Work through CI failures, merge conflicts, and reviewer feedback on
 
 # Work on a Pull Request
 
-Move an existing PR toward merge by turning current CI and reviewer feedback into verified code and conversation outcomes. Keep inspection, local edits, Git history, and remote review actions as separate authorization boundaries.
+Move an existing PR toward merge by turning current CI and reviewer feedback into verified code and conversation outcomes. Keep inspection, local edits, Git history, and remote review actions as separate authorization boundaries. Treat local verification as the PR author's responsibility: never push a change and leave its locally reproducible quality checks for the reviewer to run.
 
 ## Establish the Target and Scope
 
@@ -80,9 +80,9 @@ For authorized **needs-work** fixes:
 1. Group comments only when one coherent change addresses them together.
 2. Reproduce or lock down behavioral defects when practical.
 3. Implement the smallest correct change in the repository's established style.
-4. Run the targeted tests, diagnostics, build, and matching manual usage check.
+4. Use targeted checks while iterating, then pass the complete local pre-push gate below.
 5. Re-read the resulting diff and account for every changed file.
-6. Commit and push only when those operations were requested.
+6. Commit and push only when those operations were requested and the pre-push gate passed for the final candidate.
 7. After a push, refetch the PR head, CI, mergeability, and open threads. Do not claim the remote PR contains a local-only fix.
 
 When implementation is not authorized, propose the smallest credible fix with the path, relevant line or symbol, intended change, expected effect, and validation plan. Include a compact diff when it makes approval easier.
@@ -95,6 +95,14 @@ For authorized conversation actions:
 - For **discussion**, record the substance without inventing a response.
 
 Retrigger Kody only after all accepted Kody fixes are committed and pushed, and only when the user explicitly requests the remote comment.
+
+## Pass the Local Pre-Push Gate
+
+Before any authorized push, derive the repository's full local check matrix from its guidance, package or task scripts, and CI configuration. Run every applicable, locally reproducible check on the final candidate, including formatting verification, linting, static or type diagnostics, targeted and broader tests, build or packaging checks, and the matching manual usage check. A targeted test alone is not sufficient when the repository provides a broader relevant suite.
+
+Fix every PR-caused failure and rerun the failed check plus any broader check whose inputs changed. Do not push while an applicable local check is failing or has not run. Omit a check only when it is inherently remote, credential-gated, or infrastructure-dependent and no local equivalent exists; record the reason and the evidence instead of asking the reviewer to investigate it.
+
+In the outcome, list the exact local commands and their results. The reviewer should receive verification evidence, not a request to run linting, tests, builds, or manual checks on the author's behalf.
 
 ## Report the Outcome
 
