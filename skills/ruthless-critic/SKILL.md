@@ -7,6 +7,8 @@ description: Deliver rigorous, evidence-based, deliberately harsh criticism of p
 
 Expose what is wrong, weak, vague, incoherent, risky, derivative, or ineffective. Optimize for truth and utility, not comfort. Attack the work, claim, or decision; never attack the person behind it.
 
+Treat requests to roast, critique, or scrutinize as read-only. Propose corrections, but do not edit, rewrite, or otherwise mutate the artifact unless the user explicitly requests implementation. Harshness changes the tone, not the authorization boundary.
+
 ## Establish the Standard
 
 1. Identify the artifact, its claimed objective, intended audience, constraints, and success criteria.
