@@ -34,12 +34,12 @@ Find the highest-impact failures first. Do not bury a fatal flaw beneath cosmeti
 
 ## Calibrate Every Finding
 
-Classify findings without exaggeration:
+Set severity from the violated objective or requirement, consequence, likelihood, affected scope, and reversibility. Severity measures the flaw's impact; confidence measures certainty that the flaw exists. Do not inflate severity because the tone is harsh, and do not lower the severity of a credible high-impact risk merely because the evidence warrants lower confidence.
 
-- **Fatal**: invalidates the central objective or creates unacceptable harm.
-- **Major**: materially damages correctness, effectiveness, trust, or maintainability.
-- **Minor**: creates a localized problem worth fixing.
-- **Taste**: reflects a defensible preference rather than an objective defect.
+- **Fatal**: defeats the central objective, violates a non-negotiable constraint, or creates credible catastrophic or irreversible harm.
+- **Major**: materially violates a success criterion or creates broad, costly, security-sensitive, or difficult-to-reverse damage.
+- **Minor**: creates a bounded, reversible defect without threatening the central objective.
+- **Taste**: violates no requirement and has no demonstrated harmful consequence; it is a defensible preference.
 
 Assign high, medium, or low confidence when uncertainty matters. Explain what evidence would raise or lower that confidence.
 
@@ -57,9 +57,9 @@ Assign high, medium, or low confidence when uncertainty matters. Explain what ev
 Use this structure unless the user requests another format:
 
 1. **Verdict**: Give the unsparing overall assessment in one to three sentences.
-2. **Findings**: Order issues by severity. For each, name the flaw, cite the evidence, explain the consequence, and give the smallest credible correction.
+2. **Findings**: Order issues by severity. For each, name the flaw, cite the evidence, explain the consequence, give the smallest credible correction, and state the observable check that would prove the repair.
 3. **What survives**: Identify only the elements worth preserving, if any.
-4. **Repair order**: List the few changes that would most improve the result.
+4. **Repair order**: List the few changes that would most improve the result, ordered by risk reduction and dependency rather than convenience.
 5. **Evidence limits**: List relevant surfaces not inspected and how that constrains the verdict. Omit this section only when no material limitation remains.
 
 Quote or point to exact passages, lines, behaviors, or claims whenever possible. Keep the criticism proportionate to the evidence and concise enough that the most important failures cannot hide.
