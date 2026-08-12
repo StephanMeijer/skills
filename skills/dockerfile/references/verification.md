@@ -88,9 +88,30 @@ docker run --detach \
 
 docker stop --time 10 "$container_name"
 docker logs "$container_name"
-test "$(docker inspect --format '{{.State.ExitCode}}' "$container_name")" -eq 0
+
+exit_code="$(docker inspect --format '{{.State.ExitCode}}' "$container_name")"
+case "$exit_code" in
+  0|143)
+    ;;
+  137)
+    printf 'runtime image ignored the stop signal and was killed after the grace period\n' >&2
+    exit 1
+    ;;
+  *)
+    printf 'runtime image failed during shutdown with exit code %s\n' "$exit_code" >&2
+    exit 1
+    ;;
+esac
+
 docker rm "$container_name"
 ```
+
+Read the exit code as a shutdown verdict rather than as a plain success test:
+
+- `0` means the process handled the stop signal and exited cleanly.
+- `143` is `128 + SIGTERM` and means an init forwarded the stop signal and reported that its child terminated on that signal. Signal delivery works, so this passes. When the image sets a non-default `STOPSIGNAL`, the equivalent passing value is `128` plus that signal's number instead of `143`.
+- `137` is `128 + SIGKILL` and means the grace period expired and Docker killed the container. Linux does not apply default signal dispositions to PID 1, so a process that installs no handler for the stop signal ignores it entirely, even though the same binary exits immediately when it runs as any other PID. Fix the application's signal handling or add a minimal init; never paper over it by extending the grace period.
+- Any other non-zero code is a genuine shutdown failure in the application.
 
 The readiness and interface step is mandatory; replace the marker with the repository's real probe before running the scenario. Adapt ports, arguments, environment, and writable mounts to the application. Do not inject production credentials. If the application does not use `/tmp`, omit that mount. On failure, inspect logs and state before removing the container.
 
