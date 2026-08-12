@@ -31,7 +31,7 @@ Use these priorities in order:
 
 Prefer a `scratch` runtime for a completely static artifact that needs no certificates, timezone data, defined user database, shell, or debugging support. Otherwise prefer distroless, then Alpine. Use Debian slim only when compatibility requires it, and document the concrete reason.
 
-Pin production base images with a readable version tag and immutable digest. Use trusted official or verified images. Never use `latest`.
+Pin production base images with a meaningful publisher tag and the immutable multi-platform index digest. Use trusted official or verified images. Never use `latest`.
 
 ## Separate Build from Runtime
 
@@ -41,7 +41,7 @@ Use named multi-stage builds unless an additional stage provides no isolation, s
 dependencies -> build -> test -> runtime
 ```
 
-Keep lint and test targets independently buildable. Do not make the runtime stage inherit from test stages. Copy only the final executable or runtime artifact, required shared libraries, explicitly needed certificates/data, and narrowly scoped configuration into the runtime image.
+When container-specific tests or the repository's existing build design justify lint and test stages, keep those targets independently buildable and outside the runtime ancestry. Do not duplicate a complete host-side test workflow merely to add stages. Copy only the final executable or runtime artifact, required shared libraries, explicitly needed certificates/data, and narrowly scoped configuration into the runtime image.
 
 Use BuildKit cache mounts for dependency caches and secret or SSH mounts for private inputs. Never pass secrets through `ARG`, `ENV`, image labels, copied files, or command-line literals that persist in image metadata.
 
@@ -49,7 +49,7 @@ Use BuildKit cache mounts for dependency caches and secret or SSH mounts for pri
 
 - Run as the base image's established non-root identity or a fixed numeric UID/GID such as `10001:10001`. Run as root only when fundamentally required; document why and minimize the duration, capabilities, ownership changes, and writable paths.
 - Make the root filesystem read-only compatible whenever practical. Declare only the exact writable directories the application needs, including `/tmp` only when used.
-- Exclude source code, tests, caches, package indexes, compilers, headers, VCS tools, shells, editors, process monitors, `curl`, `wget`, and package managers from the final stage unless a runtime requirement explicitly justifies them. If the selected base inherently includes tooling, record that tradeoff or choose a stricter base.
+- Do not install source code, tests, caches, package indexes, compilers, headers, VCS tools, shells, editors, process monitors, `curl`, `wget`, or package managers into the final stage unless a runtime requirement explicitly justifies them. Prefer distroless or `scratch` when the final image must contain no shell or package manager. When Alpine is deliberately selected, treat its built-in BusyBox and `apk` as an explicit base-image tradeoff rather than claiming they are absent.
 - Add CA certificates, timezone data, locales, and native libraries only when runtime evidence requires them.
 - Use exec-form `ENTRYPOINT` and `CMD`. Run the application directly as PID 1; add a minimal init only when the process cannot forward signals or reap children correctly.
 - Add `EXPOSE` only for a stable documented port. Omit `HEALTHCHECK` by default because probes usually belong to deployment configuration; preserve a deliberate existing health check.

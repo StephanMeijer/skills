@@ -19,20 +19,27 @@ Choose the runtime base by verified requirements:
 3. Use Alpine when the application needs a minimal conventional userspace and is compatible with musl and the available native dependencies.
 4. Use Debian slim only for a concrete incompatibility such as glibc, unavailable native packages, or vendor support. Add a concise comment explaining the reason when it is not evident from the copied artifact.
 
-Use trusted official or verified publisher images. Retain a readable exact version tag and pin its digest in production:
+Use trusted official or verified publisher images. Retain a meaningful publisher tag and pin the OCI image-index or manifest-list digest that contains both required platforms:
 
 ```dockerfile
 FROM alpine:3.23.3@sha256:... AS runtime
 ```
 
-Never use `latest`. Never select a base solely because it produces the smallest compressed number; confirm architecture availability, support lifecycle, runtime compatibility, and vulnerability posture.
+Verify the pinned digest and its platforms before use:
+
+```bash
+docker buildx imagetools inspect IMAGE:TAG
+docker buildx imagetools inspect IMAGE@sha256:INDEX_DIGEST
+```
+
+Do not pin a platform-specific manifest digest in a Dockerfile that must build for both architectures. Not every publisher offers patch-version tags; distroless commonly uses tags that communicate runtime and user variants instead. Never use `latest`. Never select a base solely because it produces the smallest compressed number; confirm architecture availability, support lifecycle, runtime compatibility, and vulnerability posture.
 
 ## Stages and Artifacts
 
 - Declare `# syntax=docker/dockerfile:1` and use BuildKit.
 - Give stages lowercase semantic names such as `dependencies`, `build`, `test`, and `runtime`.
 - Keep dependency resolution separate from frequently changing source when that improves cache reuse.
-- Make test and lint stages buildable targets, but keep them outside the runtime ancestry.
+- Add buildable test or lint stages only when the repository already uses that design or the tests must exercise build-stage artifacts. Keep them outside the runtime ancestry.
 - Copy final artifacts from an exact named stage. Do not copy an entire builder filesystem.
 - Never install a compiler in the runtime stage merely to build a native dependency at container startup.
 - Avoid broad early `COPY . .`; first copy only inputs needed for dependency resolution, then the minimum source needed for the build.
@@ -55,8 +62,8 @@ Never use `latest`. Never select a base solely because it produces the smallest 
 - Design for `docker run --read-only`; identify exact tmpfs or volume mounts needed for writes.
 - Keep one concern per image. Run the application directly as PID 1 and use exec-form startup instructions.
 - Add an init only after demonstrating defective signal forwarding or child reaping without it.
-- Do not include shells, editors, process monitors, curl, wget, Git, compilers, headers, or package managers in the final stage. When a base supplies unwanted tooling inherently, prefer a stricter base or document the exception.
-- Keep root-only setup in build layers. If runtime root is unavoidable, explain the constraint and minimize Linux capabilities and writable filesystem access in the deployment guidance.
+- Do not install shells, editors, process monitors, curl, wget, Git, compilers, headers, or package managers in the final stage. Prefer distroless or `scratch` when these tools must be absent. Alpine inherently includes BusyBox and `apk`; accept and report that tradeoff only when Alpine's userspace is actually required.
+- Keep root-only setup in build layers. If runtime root is unavoidable, explain the constraint and report the minimum required capabilities and writable paths without silently expanding into deployment-file edits.
 
 ## Reproducibility and Supply Chain
 
@@ -66,6 +73,7 @@ Never use `latest`. Never select a base solely because it produces the smallest 
 - Add real OCI labels when known: `org.opencontainers.image.source`, `.revision`, `.version`, and `.licenses`.
 - Omit `org.opencontainers.image.created` unless the release process explicitly requires it, because timestamps undermine reproducibility.
 - Ensure every selected base and downloaded artifact exists for both `linux/amd64` and `linux/arm64`.
+- Choose a real multi-platform strategy: native builder nodes, QEMU emulation, or cross-compilation. Use `FROM --platform=$BUILDPLATFORM` only when the toolchain can cross-compile for `$TARGETOS/$TARGETARCH`; otherwise build target-platform stages on native nodes or with registered emulation. Never execute a target-architecture binary on the build platform without the required emulation.
 - Prefer deterministic build inputs and honor mechanisms such as `SOURCE_DATE_EPOCH` when the project already supports them.
 - Request SBOM and provenance attestations in Buildx publication commands; keep registry pushes outside ordinary local verification unless authorized.
 
@@ -81,28 +89,16 @@ Never use `latest`. Never select a base solely because it produces the smallest 
 
 ## `.dockerignore`
 
-Start from repository evidence. Normally exclude:
+Derive `.dockerignore` from the actual build context; never paste a static language or framework template.
 
-```text
-.git
-.env
-.env*
-!.env.example
-**/*.pem
-**/*.key
-**/id_rsa*
-**/credentials.json
-**/node_modules
-**/.venv
-**/target
-**/dist
-**/build
-**/coverage
-**/.cache
-**/*.log
-```
+1. Enumerate tracked and untracked paths under the selected build context.
+2. Trace every `COPY`, `ADD`, bind mount, build script, versioning step, and test target to identify inputs that must remain available.
+3. Exclude everything else that is local-only, reproducibly generated, irrelevant to the build, or sensitive. Pay particular attention to repository metadata, credentials, private keys, environment files, local dependency trees, caches, logs, coverage, editor state, and host build outputs, but match the repository's real paths rather than broad guessed extensions.
+4. Preserve required workspace manifests, generated sources, tests, documentation, public certificates, and VCS metadata when a verified build step consumes them.
+5. When multiple Dockerfiles use materially different contexts, consider Dockerfile-specific ignore files instead of weakening one global file.
+6. Re-run build checks and every target after changing ignore rules. A smaller context does not justify a missing build input.
 
-Adapt names to the repository; these are examples, not a block to paste blindly. Re-include a file only when the build demonstrably consumes it. Do not assume `.git`, tests, documentation, or generated directories are unused; version derivation and build steps sometimes require them.
+Use `.gitignore` only as evidence; do not copy it wholesale. Git-ignored files may be required build inputs, while tracked files may still be irrelevant or unsafe to send to the builder.
 
 Official references:
 
