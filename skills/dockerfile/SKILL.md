@@ -12,8 +12,8 @@ Create the smallest reproducible production image that preserves the application
 
 1. Inspect the complete repository structure, existing Dockerfile variants, `.dockerignore`, lockfiles, build scripts, CI configuration, runtime documentation, and deployment manifests.
 2. Determine the actual build command, test command, produced artifacts, startup command, ports, signals, runtime dependencies, configuration inputs, and writable paths.
-3. For an existing Dockerfile, build and exercise the current image when practical and record its behavior, user, platforms, size, layers, and scanner findings before changing it.
-4. Preserve supported build arguments, labels, entrypoint semantics, exposed ports, and runtime behavior unless the user explicitly requests a breaking change.
+3. For an existing Dockerfile, build and exercise the current image when practical and record its behavior, user, platforms, size, layers, and scanner findings before changing it, and snapshot its startup configuration as the audit baseline.
+4. Preserve supported build arguments, labels, entrypoint semantics, exposed ports, stop signal, and runtime behavior unless the user explicitly requests a breaking change.
 5. Keep Docker Compose and deployment configuration out of scope unless separately requested.
 
 If repository evidence does not determine a correctness-critical command or artifact, ask one narrow question; do not guess an ecosystem convention.
@@ -74,6 +74,6 @@ Read [references/verification.md](references/verification.md), then run every ap
 8. scan the final image and build context for vulnerabilities and secrets when applicable tooling is available;
 9. repeat a clean build when practical and explain any digest or semantic configuration difference before claiming reproducibility.
 
-For an audit, compare before and after evidence. Never accept a behavioral regression for a smaller image. Treat any failed mandatory gate, behavioral regression, unverified required platform, or unverified required runtime path as `INCOMPLETE`, and state exactly why a gate could not run.
+For an audit, diff the baseline and candidate startup configuration as described in the verification reference, and compare the remaining before and after evidence. Never accept a behavioral regression for a smaller image. Treat any failed mandatory gate, behavioral regression, unverified required platform, or unverified required runtime path as `INCOMPLETE`, and state exactly why a gate could not run.
 
 Report the files changed, runtime base and justification, final image size, platforms built, checks performed, runtime and failure scenarios observed, scanner results, every unavailable gate, and any remaining exceptions. Report configuration by name and behavior without printing secret values or raw environment dumps.
