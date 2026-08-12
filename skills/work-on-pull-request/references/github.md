@@ -68,6 +68,12 @@ Fetch every top-level issue comment:
 gh api 'repos/<owner>/<repo>/issues/<PR>/comments' --paginate
 ```
 
+Submitted reviews can contain actionable body text without an inline comment. Fetch every review and preserve its `id`, `user.login`, `state`, `body`, `submitted_at`, `commit_id`, and `html_url`:
+
+```bash
+gh api 'repos/<owner>/<repo>/pulls/<PR>/reviews' --paginate
+```
+
 Fetch review threads through GraphQL and preserve each outer thread `id`:
 
 ```bash
@@ -84,6 +90,7 @@ gh api graphql --paginate -f query='
             path
             line
             comments(first: 100) {
+              pageInfo { hasNextPage endCursor }
               nodes { id author { login } body url createdAt }
             }
           }
@@ -92,6 +99,24 @@ gh api graphql --paginate -f query='
     }
   }' -F owner='<owner>' -F repo='<repo>' -F pr='<PR>'
 ```
+
+The outer cursor paginates `reviewThreads` only. For every thread whose nested `comments.pageInfo.hasNextPage` is true, refetch and paginate that thread's complete comment chain separately:
+
+```bash
+gh api graphql --paginate -f query='
+  query($thread: ID!, $endCursor: String) {
+    node(id: $thread) {
+      ... on PullRequestReviewThread {
+        comments(first: 100, after: $endCursor) {
+          pageInfo { hasNextPage endCursor }
+          nodes { id author { login } body url createdAt }
+        }
+      }
+    }
+  }' -F thread='<thread-id>'
+```
+
+Replace the partial chain with the ordered pages from the per-thread query. Do not describe a `first: 100` result as complete without checking its nested `pageInfo`.
 
 Filter for `isResolved == false`. The outer `reviewThreads.nodes[].id`, commonly beginning with `PRRT_`, is the Thread ID. Nested comment IDs are not interchangeable with it.
 
