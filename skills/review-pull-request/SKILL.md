@@ -23,7 +23,7 @@ Use the provider CLI and API commands in the selected reference to collect:
 - PR number, URL, title, description, author, base and head branches, and head commit;
 - the complete diff and changed files;
 - checks, jobs, workflow runs, and mergeability;
-- top-level PR or issue comments;
+- top-level issue comments and submitted review bodies;
 - unresolved inline review threads with their full comment chains and stable identifiers.
 
 Compare the reported PR head commit with local `HEAD`. When they differ, inspect the provider diff without pretending the local working tree represents the PR head.
@@ -52,14 +52,14 @@ Forgejo exposes review comments and resolver state but does not currently expose
 
 ## Triage Existing Feedback
 
-Classify every fetched issue comment and unresolved review thread exactly once:
+Classify every fetched issue comment, submitted review body, and unresolved review thread exactly once:
 
 - **addressed**: current PR code conclusively satisfies the request.
 - **needs-work**: the concern remains valid and needs a code change.
 - **outdated-or-na**: the referenced code moved, disappeared, or no longer applies, but resolution still needs judgment.
 - **discussion**: no concrete action is requested, or the conversation is already complete.
 
-Read the full thread and current code before classifying it. Passing CI alone does not prove that feedback is addressed.
+Read the full review or thread and current code before classifying it. Passing CI alone does not prove that feedback is addressed.
 
 ## Keep Writes Explicit
 
