@@ -1,0 +1,4 @@
+interface:
+  display_name: "Programming Python"
+  short_description: "Write strict, modern, fully typed Python"
+  default_prompt: "Use $programming-python to implement this Python change with modern tooling, precise types, and strict local checks."

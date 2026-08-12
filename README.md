@@ -10,6 +10,7 @@ Licensed under the [MIT License](LICENSE).
 | --- | --- |
 | `dockerfile` | Create and audit minimal, secure, reproducible multi-platform Dockerfiles and `.dockerignore` files. |
 | `github-issue` | Create and manage GitHub issues with native metadata, relationships, projects, fields, and security workflows. |
+| `programming-python` | Write strict, modern Python with precise types, validated models, and complete local checks. |
 | `programming-rust` | Write strict, modern Rust with strong types, safe boundaries, and complete local checks. |
 | `review-pull-request` | Review GitHub and Forgejo PRs, inspect CI, and reply inside GitHub code-review threads. |
 | `ruthless-critic` | Deliver precise, evidence-based, unsparing criticism without personal abuse. |
@@ -39,6 +40,12 @@ For production Dockerfiles:
 
 ```bash
 npx skills add StephanMeijer/skills --skill dockerfile
+```
+
+For strict, modern Python development:
+
+```bash
+npx skills add StephanMeijer/skills --skill programming-python
 ```
 
 For strict, modern Rust development:
@@ -75,6 +82,9 @@ skills/
 │   ├── SKILL.md
 │   ├── agents/
 │   └── references/
+├── programming-python/
+│   ├── SKILL.md
+│   └── agents/
 ├── programming-rust/
 │   ├── SKILL.md
 │   └── agents/
