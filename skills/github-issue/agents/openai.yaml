@@ -1,0 +1,4 @@
+interface:
+  display_name: "GitHub Issue"
+  short_description: "Create and manage native GitHub issues"
+  default_prompt: "Use $github-issue to create or update this GitHub issue with native metadata and relationships."

@@ -8,6 +8,7 @@ Licensed under the [MIT License](LICENSE).
 
 | Skill | Purpose |
 | --- | --- |
+| `github-issue` | Create and manage GitHub issues with native metadata, relationships, projects, fields, and security workflows. |
 | `review-pull-request` | Review GitHub and Forgejo PRs, inspect CI, and reply inside GitHub code-review threads. |
 | `ruthless-critic` | Deliver precise, evidence-based, unsparing criticism without personal abuse. |
 | `work-on-pull-request` | Fix CI failures, rebase merge conflicts, and address feedback on a PR you own. |
@@ -24,6 +25,12 @@ For PR review:
 
 ```bash
 npx skills add StephanMeijer/skills --skill review-pull-request
+```
+
+For GitHub issue management:
+
+```bash
+npx skills add StephanMeijer/skills --skill github-issue
 ```
 
 For an unsparing critique:
@@ -46,6 +53,10 @@ Each directory under `skills/` is an independently installable skill:
 
 ```text
 skills/
+├── github-issue/
+│   ├── SKILL.md
+│   ├── agents/
+│   └── references/
 ├── review-pull-request/
 │   ├── SKILL.md
 │   ├── agents/
