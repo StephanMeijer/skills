@@ -1,4 +1,4 @@
 interface:
   display_name: "Programming Python"
-  short_description: "Write strict, modern, fully typed Python"
-  default_prompt: "Use $programming-python to implement this Python change with modern tooling, precise types, and strict local checks."
+  short_description: "Write strict, repository-native Python"
+  default_prompt: "Use $programming-python to implement this Python change with precise types, validated boundaries, repository-native tooling, and complete local checks."
