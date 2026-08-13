@@ -17,6 +17,8 @@ Create the smallest reproducible production image that preserves the application
 
 If repository evidence is insufficient to determine a correctness-critical command or artifact, ask one narrow question. Do not guess a plausible ecosystem convention.
 
+Record the contract and every validation gate in a compact evidence ledger. For each item include its source or exact command, baseline result when applicable, candidate result, affected stage or platform, and one status: `PASS`, `FAIL`, `UNAVAILABLE`, or `NOT_APPLICABLE`. Never turn a missing tool or unsupported environment into a pass.
+
 ## Apply the Image Policy
 
 Read [references/policy.md](references/policy.md) before writing or reviewing a Dockerfile.
@@ -65,10 +67,12 @@ Read [references/verification.md](references/verification.md), then run every ap
 2. build every relevant stage;
 3. build for both `linux/amd64` and `linux/arm64` when Buildx can do so;
 4. load the native-platform runtime image, start it, and exercise its real interface;
-5. verify non-root configuration, read-only-root compatibility, writable paths, and graceful shutdown;
+5. verify non-root configuration, read-only-root compatibility, writable paths, dropped capabilities, no-new-privileges compatibility, and graceful shutdown;
 6. inspect final size, history, files, packages, labels, and architecture metadata;
-7. scan the final image with Trivy or Docker Scout when available.
+7. exercise at least one repository-derived failure path and verify its observable error behavior;
+8. scan the final image and build context for vulnerabilities and secrets when applicable tooling is available;
+9. repeat a clean build when practical and explain any digest or semantic configuration difference before claiming reproducibility.
 
-For an audit, compare before and after evidence. Never accept a behavioral regression for a smaller image. Treat an unverified required platform or runtime path as incomplete, and state exactly why a gate could not run.
+For an audit, compare before and after evidence. Never accept a behavioral regression for a smaller image. Treat any failed mandatory gate, behavioral regression, unverified required platform, or unverified required runtime path as `INCOMPLETE`, and state exactly why a gate could not run.
 
-Report the files changed, runtime base and justification, final image size, platforms built, checks performed, runtime scenario observed, scanner results, and any remaining exceptions.
+Report the files changed, runtime base and justification, final image size, platforms built, checks performed, runtime and failure scenarios observed, scanner results, every unavailable gate, and any remaining exceptions. Report configuration by name and behavior without printing secret values or raw environment dumps.

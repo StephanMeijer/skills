@@ -70,6 +70,8 @@ For a one-shot CLI, run it in the foreground with a read-only root filesystem an
 ```bash
 docker run --rm \
   --read-only \
+  --cap-drop ALL \
+  --security-opt no-new-privileges \
   --tmpfs /tmp:rw,nosuid,nodev,noexec \
   "$runtime_image"
 ```
@@ -81,6 +83,8 @@ container_name="dockerfile-runtime-qa-$$"
 docker run --detach \
   --name "$container_name" \
   --read-only \
+  --cap-drop ALL \
+  --security-opt no-new-privileges \
   --tmpfs /tmp:rw,nosuid,nodev,noexec \
   "$runtime_image"
 
@@ -92,7 +96,7 @@ test "$(docker inspect --format '{{.State.ExitCode}}' "$container_name")" -eq 0
 docker rm "$container_name"
 ```
 
-The readiness and interface step is mandatory; replace the marker with the repository's real probe before running the scenario. Adapt ports, arguments, environment, and writable mounts to the application. Do not inject production credentials. If the application does not use `/tmp`, omit that mount. On failure, inspect logs and state before removing the container.
+The readiness and interface step is mandatory; replace the marker with the repository's real probe before running the scenario. Adapt ports, arguments, environment, capabilities, and writable mounts to the application. Do not inject production credentials. If the application does not use `/tmp`, omit that mount. Add a capability only when observed behavior proves it is required, and record the exception. On failure, inspect logs and state before removing the container.
 
 Verify the configured user without assuming the image has a shell. Unless a root exception is documented, make root-equivalent values fail:
 
@@ -107,6 +111,8 @@ esac
 ```
 
 Exercise startup, readiness, normal work, failure behavior, and graceful shutdown. Use `docker stop` and inspect logs and exit status; do not merely kill the process.
+
+Choose at least one failure case from the repository's actual interface, such as invalid configuration, malformed CLI input, or an unavailable dependency. Verify the documented exit status or response and confirm that logs remain actionable without exposing secret values.
 
 ## Inspect the Artifact
 
@@ -146,6 +152,8 @@ trivy image \
 ```
 
 Run a second reporting scan without `--ignore-unfixed` when the first scan omitted findings. Report unfixed high or critical findings and assess them explicitly; do not silently classify “unfixed” as safe. Never hide scanner output with a broad ignore.
+
+When practical, rebuild from the same clean inputs without reusing build cache and compare the resulting image digest and semantic configuration. A difference is not automatically a failure, but it must be traced to an expected input or documented source of nondeterminism before the image is described as reproducible.
 
 ## Publication Evidence
 
