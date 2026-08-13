@@ -147,6 +147,37 @@ trivy image \
 
 Run a second reporting scan without `--ignore-unfixed` when the first scan omitted findings. Report unfixed high or critical findings and assess them explicitly; do not silently classify “unfixed” as safe. Never hide scanner output with a broad ignore.
 
+## Compare an Audited Image
+
+Before changing an existing Dockerfile, build it unmodified and keep that image as the baseline. Snapshot the startup configuration of both images with one stable format so the comparison is a diff rather than a recollection:
+
+```bash
+baseline_image=local/dockerfile-qa:baseline
+snapshot_dir="$(mktemp -d)"
+config_format='entrypoint={{json .Config.Entrypoint}}
+cmd={{json .Config.Cmd}}
+user={{json .Config.User}}
+env={{json .Config.Env}}
+ports={{json .Config.ExposedPorts}}
+workdir={{json .Config.WorkingDir}}
+labels={{json .Config.Labels}}
+stopsignal={{json .Config.StopSignal}}
+healthcheck={{json .Config.Healthcheck}}'
+
+docker image inspect "$baseline_image" --format "$config_format" > "$snapshot_dir/baseline.config"
+docker image inspect "$runtime_image" --format "$config_format" > "$snapshot_dir/candidate.config"
+diff "$snapshot_dir/baseline.config" "$snapshot_dir/candidate.config"
+```
+
+Build arguments are not part of the image configuration, so compare the declared set separately:
+
+```bash
+docker buildx build --call=outline \
+  --file "$dockerfile_path" "$build_context"
+```
+
+Every line of the diff is either a change the user explicitly requested or a regression to revert. `STOPSIGNAL` and `EXPOSE` deserve particular attention because nothing in a size or hardening rewrite naturally preserves them, and a dropped `STOPSIGNAL` silently changes shutdown behavior that the runtime scenario then exercises against the wrong signal.
+
 ## Publication Evidence
 
 In an authorized publication workflow, request both required platforms plus SBOM and provenance attestations:

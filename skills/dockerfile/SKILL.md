@@ -11,8 +11,8 @@ Create the smallest reproducible production image that preserves the application
 
 1. Inspect the complete repository structure, existing Dockerfile variants, `.dockerignore`, lockfiles, build scripts, CI configuration, runtime documentation, and deployment manifests.
 2. Determine the actual build command, test command, produced artifacts, startup command, ports, signals, runtime dependencies, configuration inputs, and writable paths.
-3. For an existing Dockerfile, build and exercise the current image when practical. Record its behavior, user, platforms, size, layers, and scanner findings before changing it.
-4. Preserve supported build arguments, labels, entrypoint semantics, exposed ports, and runtime behavior unless the user explicitly requests a breaking change.
+3. For an existing Dockerfile, build and exercise the current image when practical. Record its behavior, user, platforms, size, layers, and scanner findings before changing it, and snapshot its startup configuration as the audit baseline.
+4. Preserve supported build arguments, labels, entrypoint semantics, exposed ports, stop signal, and runtime behavior unless the user explicitly requests a breaking change.
 5. Keep Docker Compose and deployment configuration out of scope unless separately requested.
 
 If repository evidence is insufficient to determine a correctness-critical command or artifact, ask one narrow question. Do not guess a plausible ecosystem convention.
@@ -69,6 +69,6 @@ Read [references/verification.md](references/verification.md), then run every ap
 6. inspect final size, history, files, packages, labels, and architecture metadata;
 7. scan the final image with Trivy or Docker Scout when available.
 
-For an audit, compare before and after evidence. Never accept a behavioral regression for a smaller image. Treat an unverified required platform or runtime path as incomplete, and state exactly why a gate could not run.
+For an audit, diff the baseline and candidate startup configuration as described in the verification reference, and compare the remaining before and after evidence. Never accept a behavioral regression for a smaller image. Treat an unverified required platform or runtime path as incomplete, and state exactly why a gate could not run.
 
 Report the files changed, runtime base and justification, final image size, platforms built, checks performed, runtime scenario observed, scanner results, and any remaining exceptions.
