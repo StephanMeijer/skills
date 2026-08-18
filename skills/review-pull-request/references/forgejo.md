@@ -41,7 +41,42 @@ Reconcile the provider's changed-file inventory with the patch. When the provide
 
 An unresolved review comment has a null `resolver`. Preserve its `id`, `pull_request_review_id`, `path`, `position`, and `html_url` for triage.
 
-## Reply limitations
+## Submit fresh findings as inline comments
+
+Only submit after explicit user authorization. Forgejo accepts a review with an array of inline comments at `POST /repos/<owner>/<repo>/pulls/<PR>/reviews`.
+
+Create `review.json` with the reviewed head SHA and one comment per defect:
+
+```json
+{
+  "commit_id": "<head-sha>",
+  "body": "Review summary and any unanchorable findings.",
+  "event": "COMMENT",
+  "comments": [
+    {
+      "path": "src/example.ts",
+      "new_position": 42,
+      "body": "Explain the impact, triggering scenario, and smallest credible fix."
+    }
+  ]
+}
+```
+
+Use `new_position` for a line on the new side of the diff and `old_position` for a deleted line on the old side. Set only the applicable side. Anchor only to lines in the reviewed diff; keep cross-cutting or unanchorable findings in the review body. Use `COMMENT` unless the user explicitly requested `APPROVED` or `REQUEST_CHANGES`.
+
+When the installed `fj` exposes raw API access, submit the review with:
+
+```bash
+fj api '/repos/<owner>/<repo>/pulls/<PR>/reviews' \
+  -X POST \
+  --input review.json
+```
+
+Otherwise use an already configured authenticated API client against the same instance endpoint. If none is available, open the PR's changed-files view, add each finding on its intended line with the web UI, and submit the review there. For API submission, require the returned review `id`, `html_url`, `commit_id`, and expected `comments_count`, then list `/repos/<owner>/<repo>/pulls/<PR>/reviews/<review-id>/comments` and require an `html_url` for every intended inline finding. For web submission, reopen the submitted review and verify every intended inline comment in place.
+
+If Forgejo rejects an anchor, refetch the diff and correct the old/new line selection. Do not silently convert the finding into a top-level PR comment.
+
+## Existing-thread reply limitations
 
 Forgejo's current REST API exposes review comments and resolver state, but no reply-in-thread or resolve-conversation operation. The review-comment creation endpoint creates a review comment; it does not attach a reply to an existing conversation.
 

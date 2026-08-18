@@ -13,7 +13,7 @@ Licensed under the [MIT License](LICENSE).
 | `programming-python` | Write strict, modern Python with precise types, validated models, and complete local checks. |
 | `programming-rust` | Write strict, modern Rust with strong types, safe boundaries, and complete local checks. |
 | `programming-typescript` | Write strict, modern TypeScript without unsafe assertions or unparsed boundaries. |
-| `review-pull-request` | Review GitHub and Forgejo PRs, inspect CI, and reply inside GitHub code-review threads. |
+| `review-pull-request` | Review GitHub and Forgejo PRs and, when authorized, post findings on the relevant changed code lines. |
 | `ruthless-critic` | Deliver precise, evidence-based, unsparing criticism without personal abuse. |
 | `work-on-pull-request` | Fix CI failures, rebase merge conflicts, and address feedback on a PR you own. |
 

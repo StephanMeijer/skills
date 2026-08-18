@@ -89,6 +89,46 @@ Replace the partial chain with the ordered pages from the per-thread query. Do n
 
 Filter for `isResolved == false`. The outer `reviewThreads.nodes[].id`, commonly beginning with `PRRT_`, is the Thread ID. A nested comment ID is not interchangeable with it.
 
+## Submit fresh findings as inline comments
+
+Only submit after explicit user authorization. Prefer one review containing every fresh inline finding so the findings share one disposition and do not produce a burst of separate notifications.
+
+Create `review.json` with the reviewed head SHA and one comment per defect:
+
+```json
+{
+  "commit_id": "<head-sha>",
+  "body": "Review summary and any unanchorable findings.",
+  "event": "COMMENT",
+  "comments": [
+    {
+      "path": "src/example.ts",
+      "line": 42,
+      "side": "RIGHT",
+      "body": "Explain the impact, triggering scenario, and smallest credible fix."
+    }
+  ]
+}
+```
+
+Use `RIGHT` for an added or context line and `LEFT` for a deleted line. Use the blob line number visible in the PR diff, not the diff offset. For a multi-line finding, add `start_line` and `start_side`. Anchor only to lines in the reviewed diff; keep cross-cutting or unanchorable findings in the review body.
+
+Use `COMMENT` unless the user explicitly requested `APPROVE` or `REQUEST_CHANGES`. Submit the review through the API because `gh pr review` cannot attach the `comments` array:
+
+```bash
+gh api --method POST \
+  'repos/<owner>/<repo>/pulls/<PR>/reviews' \
+  --input review.json
+```
+
+Require the response's `id`, `html_url`, `state`, and `commit_id`. Then fetch the created comments and require a returned `html_url` for every intended inline finding:
+
+```bash
+gh api 'repos/<owner>/<repo>/pulls/<PR>/reviews/<review-id>/comments'
+```
+
+If GitHub rejects an anchor, refetch the diff and correct the line or side. Do not silently convert the finding into a top-level PR comment.
+
 ## Reply inside an existing thread
 
 Only reply after explicit user authorization. Put non-trivial Markdown in `reply.md`, then use the exact Thread ID:
@@ -124,7 +164,7 @@ Top-level issue comments have no resolved state. Use this only for explicitly au
 gh pr comment <PR> --body-file <file>
 ```
 
-Submit an explicitly authorized overall review with exactly one disposition:
+When there are no inline findings, submit an explicitly authorized overall-only review with exactly one disposition:
 
 ```bash
 gh pr review <PR> --comment --body-file <file>
