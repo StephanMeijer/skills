@@ -1,0 +1,4 @@
+interface:
+  display_name: "Convert Documents"
+  short_description: "Convert documents with reliable CLI tools"
+  default_prompt: "Use $convert-documents to convert this document with an available CLI and verify the output."

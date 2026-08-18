@@ -8,6 +8,8 @@ Licensed under the [MIT License](LICENSE).
 
 | Skill | Purpose |
 | --- | --- |
+| `convert-documents` | Convert office, PDF, markup, ebook, spreadsheet, and presentation formats with CLI tools. |
+| `convert-media` | Convert images, audio, and video with CLI tools and verified codec-aware settings. |
 | `dockerfile` | Create and audit minimal, secure, reproducible multi-platform Dockerfiles and `.dockerignore` files. |
 | `github-issue` | Create and manage GitHub issues with native metadata, relationships, projects, fields, and security workflows. |
 | `programming-python` | Write strict, modern Python with precise types, validated models, and complete local checks. |
@@ -41,6 +43,18 @@ For production Dockerfiles:
 
 ```bash
 npx skills add StephanMeijer/skills --skill dockerfile
+```
+
+For document conversion:
+
+```bash
+npx skills add StephanMeijer/skills --skill convert-documents
+```
+
+For image, audio, and video conversion:
+
+```bash
+npx skills add StephanMeijer/skills --skill convert-media
 ```
 
 For strict, modern Python development:
@@ -81,6 +95,14 @@ Each directory under `skills/` is an independently installable skill:
 
 ```text
 skills/
+├── convert-documents/
+│   ├── SKILL.md
+│   ├── agents/
+│   └── references/
+├── convert-media/
+│   ├── SKILL.md
+│   ├── agents/
+│   └── references/
 ├── dockerfile/
 │   ├── SKILL.md
 │   ├── agents/

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Convert Media"
+  short_description: "Convert images, audio, and video with CLIs"
+  default_prompt: "Use $convert-media to convert this media file with an available CLI and verify the output."
