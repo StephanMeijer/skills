@@ -9,10 +9,11 @@ Recommend the best fit for the user's needs, not the product with the loudest ma
 
 ## Establish the Buying Brief
 
-1. Identify the product category, use case, budget, location and currency, deadline, and any retailer or condition constraints.
-2. Separate non-negotiable requirements from preferences. Include compatibility, dimensions, accessibility, repairability, privacy, ongoing costs, and expected service life when relevant.
-3. Ask one narrow question only when the answer would materially change the candidates. Otherwise state reasonable assumptions and continue.
-4. Identify the exact model, generation, year, size, region, configuration, and SKU. Do not merge evidence from similar names or materially different variants.
+1. Establish the intended outcome before comparing products. When a category serves materially different goals, ask what the user will do with it rather than assuming all products in that category are interchangeable. For example, ask whether a dark rum is for sipping neat, mixing into a drink where it should stand out, mixing into a drink where it should blend in, cooking, or gifting; each goal can favor a different rum.
+2. Translate that goal into category-specific selection criteria. Identify the product category, use case, budget, location and currency, deadline, and any retailer or condition constraints.
+3. Separate non-negotiable requirements from preferences. Include compatibility, dimensions, accessibility, repairability, privacy, ongoing costs, and expected service life when relevant.
+4. Ask one narrow question whenever an unresolved answer would materially change the candidates. Otherwise state reasonable assumptions and continue.
+5. Identify the exact model, generation, year, size, region, configuration, and SKU. Do not merge evidence from similar names or materially different variants.
 
 ## Research Beyond the Webshop
 
