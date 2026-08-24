@@ -144,3 +144,23 @@ skills/
 ```
 
 Add new skills as `skills/<skill-name>/SKILL.md`, with matching `name` and `description` frontmatter.
+
+### Shared reference blocks
+
+Each skill installs as a self-contained directory, so `review-pull-request` and
+`work-on-pull-request` must each carry their own copy of the provider commands they
+share. Those copies are marked, and CI fails if they stop being byte-identical:
+
+```markdown
+<!-- shared:github-collect-threads -->
+...content that must be identical in every file declaring this block...
+<!-- /shared:github-collect-threads -->
+```
+
+When editing inside a marked block, apply the same edit to every file that declares
+it. Keep role-specific wording — preconditions, authorization, surrounding prose —
+outside the markers. List the files declaring a block with:
+
+```bash
+grep -rl '<!-- shared:BLOCK-NAME -->' skills/
+```

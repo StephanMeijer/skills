@@ -29,9 +29,10 @@ gh run list --commit <head-sha> --limit 20 --json conclusion,createdAt,databaseI
 
 Use `gh pr checkout <PR>` only when local inspection is necessary, the working tree is safe to switch, and checkout is within the user's request.
 
-## Collect comments and review threads
+## Collect discussion and review threads
 
-Top-level discussion uses the issues API:
+<!-- shared:github-collect-threads -->
+Fetch every top-level issue comment:
 
 ```bash
 gh api 'repos/<owner>/<repo>/issues/<PR>/comments' --paginate
@@ -43,7 +44,7 @@ Submitted reviews can contain actionable body text without an inline comment. Fe
 gh api 'repos/<owner>/<repo>/pulls/<PR>/reviews' --paginate
 ```
 
-Inline conversations require GraphQL review threads. Fetch unresolved threads with their full chains and preserve each `id`:
+Inline conversations require GraphQL review threads. Fetch them with their full comment chains and preserve each outer thread `id`:
 
 ```bash
 gh api graphql --paginate -f query='
@@ -88,6 +89,7 @@ gh api graphql --paginate -f query='
 Replace the partial chain with the ordered pages from the per-thread query. Do not describe a `first: 100` result as complete without checking its nested `pageInfo`.
 
 Filter for `isResolved == false`. The outer `reviewThreads.nodes[].id`, commonly beginning with `PRRT_`, is the Thread ID. A nested comment ID is not interchangeable with it.
+<!-- /shared:github-collect-threads -->
 
 ## Submit fresh findings as inline comments
 
@@ -131,8 +133,9 @@ If GitHub rejects an anchor, refetch the diff and correct the line or side. Do n
 
 ## Reply inside an existing thread
 
-Only reply after explicit user authorization. Put non-trivial Markdown in `reply.md`, then use the exact Thread ID:
+Only reply after explicit user authorization. Put non-trivial Markdown in `reply.md`, then use the exact Thread ID. This is the primary response path for code-line feedback.
 
+<!-- shared:github-thread-reply -->
 ```bash
 gh api graphql \
   -f query='mutation($id: ID!, $body: String!) { addPullRequestReviewThreadReply(input: {pullRequestReviewThreadId: $id, body: $body}) { comment { id url } } }' \
@@ -140,12 +143,12 @@ gh api graphql \
   -F body=@reply.md
 ```
 
-Verify that `.data.addPullRequestReviewThreadReply.comment.url` is present. This is the primary response path for code-line feedback.
-
-Never use `gh pr comment` for an inline review thread. It creates a separate top-level PR comment and breaks the conversation chain.
+Require a returned `.data.addPullRequestReviewThreadReply.comment.url`. Never use `gh pr comment` for an inline review thread; it creates a separate top-level PR comment and breaks the conversation chain.
+<!-- /shared:github-thread-reply -->
 
 When the thread is conclusively addressed and resolution was explicitly authorized, resolve it only after posting the reply:
 
+<!-- shared:github-thread-resolve -->
 ```bash
 gh api graphql \
   -f query='mutation($id: ID!) { resolveReviewThread(input: {threadId: $id}) { thread { isResolved } } }' \
@@ -155,6 +158,7 @@ gh api graphql \
 Require `.data.resolveReviewThread.thread.isResolved` to be `true`.
 
 If either mutation times out or returns an ambiguous error, refetch the thread before retrying. A reply already visible in the correct thread must not be posted again.
+<!-- /shared:github-thread-resolve -->
 
 ## Other remote actions
 
@@ -172,8 +176,10 @@ gh pr review <PR> --approve --body-file <file>
 gh pr review <PR> --request-changes --body-file <file>
 ```
 
+<!-- shared:github-kody-retrigger -->
 After accepted Kody fixes are committed and pushed, an explicitly authorized retrigger is:
 
 ```bash
 gh pr comment <PR> -b "$(printf '\100kody review')"
 ```
+<!-- /shared:github-kody-retrigger -->

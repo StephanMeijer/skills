@@ -47,7 +47,8 @@ Never force-push the base branch. For a fork PR, identify the writable head remo
 
 ## Use the REST API for complete identifiers and CI
 
-Derive `<host>`, `<owner>`, and `<repo>` from the selected remote. Forgejo's default API root is `https://<host>/api/v1`.
+<!-- shared:forgejo-rest-pagination -->
+Derive `<host>`, `<owner>`, and `<repo>` from the selected git remote. Forgejo's default API root is `https://<host>/api/v1`.
 
 ```bash
 curl -fsS 'https://<host>/api/v1/repos/<owner>/<repo>/pulls/<PR>'
@@ -56,7 +57,10 @@ curl -fsS 'https://<host>/api/v1/repos/<owner>/<repo>/pulls/<PR>/reviews?limit=5
 curl -fsS 'https://<host>/api/v1/repos/<owner>/<repo>/pulls/<PR>/reviews/<review-id>/comments?limit=50&page=1'
 ```
 
-Paginate by following the response's `Link` header with `rel="next"` until no next link remains. Do not stop because a page contains fewer than the requested limit: a Forgejo instance can clamp `limit=50` to its lower `max_response_items` setting. Query `/api/v1/settings/api` when the client's effective page size must be diagnosed. An unresolved review comment has a null `resolver`; preserve its `id`, `pull_request_review_id`, `path`, `position`, and `html_url`.
+Paginate by following the response's `Link` header with `rel="next"` until no next link remains. Do not stop because a page contains fewer than the requested limit: a Forgejo instance can clamp `limit=50` to its lower `max_response_items` setting. Query `/api/v1/settings/api` when the client's effective page size must be diagnosed. For private repositories, use an authenticated API client or a Forgejo token without printing or logging the token.
+
+An unresolved review comment has a null `resolver`. Preserve its `id`, `pull_request_review_id`, `path`, `position`, and `html_url` for triage.
+<!-- /shared:forgejo-rest-pagination -->
 
 Read the PR response's head SHA, then inspect commit statuses and matching action runs when available:
 
@@ -71,6 +75,7 @@ Filter action runs by the exact head SHA. Treat an unavailable actions endpoint 
 
 Forgejo's REST API exposes review comments and resolver state but does not currently provide reply-in-thread or resolve-conversation operations. Use the inline comment's `html_url` in the Forgejo web UI for an authorized true threaded reply or resolution.
 
+<!-- shared:forgejo-toplevel-comment -->
 Do not present this as an inline reply:
 
 ```bash
@@ -78,13 +83,16 @@ fj pr comment <PR> '<message>'
 ```
 
 That command creates a top-level PR comment. Use it only for explicitly authorized top-level discussion. Top-level comments have no resolved state.
+<!-- /shared:forgejo-toplevel-comment -->
 
 Check `fj pr review --help` before attempting an authorized overall review action. If the installed client exposes only review listing, use the web UI instead of guessing an API mutation.
 
-After accepted Kody fixes are pushed, an explicitly authorized top-level retrigger is:
+<!-- shared:forgejo-kody-retrigger -->
+After accepted Kody fixes are committed and pushed, an explicitly authorized top-level retrigger is:
 
 ```bash
 fj pr comment <PR> "$(printf '\100kody review')"
 ```
+<!-- /shared:forgejo-kody-retrigger -->
 
 Refetch PR state, mergeability, CI, comments, and unresolved review items after any push or remote mutation. Follow only CI attached to the current PR head SHA. Include every thread URL that still requires web-UI action in the final report.

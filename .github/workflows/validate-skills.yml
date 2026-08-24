@@ -16,6 +16,72 @@ jobs:
         with:
           node-version: 24
           package-manager-cache: false
+      - name: Verify shared reference blocks are identical
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          mapfile -t names < <(
+            grep -rhoE '<!-- shared:[a-z0-9-]+ -->' skills/ \
+              | sed -E 's|<!-- shared:(.+) -->|\1|' | sort -u
+          )
+
+          if [ "${#names[@]}" -eq 0 ]; then
+            echo "no shared blocks declared" >&2
+            exit 1
+          fi
+
+          extract() {
+            awk -v n="$2" '
+              $0 == "<!-- shared:" n " -->"  { inblock = 1; next }
+              $0 == "<!-- /shared:" n " -->" { inblock = 0 }
+              inblock
+            ' "$1"
+          }
+
+          status=0
+          for name in "${names[@]}"; do
+            mapfile -t files < <(grep -rlF "<!-- shared:$name -->" skills/ | sort)
+
+            if [ "${#files[@]}" -lt 2 ]; then
+              printf '::error::shared block %s is declared in only %d file; it needs at least 2\n' \
+                "$name" "${#files[@]}"
+              status=1
+              continue
+            fi
+
+            reference=""
+            for file in "${files[@]}"; do
+              if ! grep -qF "<!-- /shared:$name -->" "$file"; then
+                printf '::error file=%s::missing closing sentinel for shared block %s\n' "$file" "$name"
+                status=1
+                continue
+              fi
+
+              extract "$file" "$name" > "$RUNNER_TEMP/$name.current"
+
+              if [ ! -s "$RUNNER_TEMP/$name.current" ]; then
+                printf '::error file=%s::shared block %s is empty\n' "$file" "$name"
+                status=1
+                continue
+              fi
+
+              if [ -z "$reference" ]; then
+                reference="$file"
+                cp "$RUNNER_TEMP/$name.current" "$RUNNER_TEMP/$name.reference"
+              elif ! cmp -s "$RUNNER_TEMP/$name.reference" "$RUNNER_TEMP/$name.current"; then
+                printf '::error file=%s::shared block %s has drifted from %s\n' "$file" "$name" "$reference"
+                diff -u "$RUNNER_TEMP/$name.reference" "$RUNNER_TEMP/$name.current" \
+                  --label "$reference" --label "$file" || true
+                status=1
+              fi
+            done
+
+            printf 'shared:%-28s %d copies\n' "$name" "${#files[@]}"
+          done
+
+          exit "$status"
+
       - name: Verify every skill installs
         shell: bash
         run: |
