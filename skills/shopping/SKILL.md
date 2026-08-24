@@ -1,6 +1,6 @@
 ---
 name: shopping
-description: Research and compare products before purchase using current prices, exact-model specifications, seller terms, and reviews from across the wider web rather than relying on the webshop being browsed. Use when asked what to buy, whether a product is good, to compare products or listings, find the best value or deal, validate retailer claims, or assess reliability and owner experience. Browse by default because products, prices, availability, reviews, recalls, and policies change. Do not execute a purchase without explicit user authorization.
+description: Research and compare products before purchase using current prices, exact-model specifications, seller terms, and reviews from across the wider web rather than relying on the webshop being browsed. Use when asked what to buy, whether a product is good, to compare products or listings, find the best value or deal, validate retailer claims, assess reliability and owner experience, or investigate an EAN, GTIN, UPC, SKU, manufacturer part number, or exact product ID. Browse by default because products, prices, availability, reviews, recalls, and policies change. Do not execute a purchase without explicit user authorization.
 ---
 
 # Shopping
@@ -14,6 +14,16 @@ Recommend the best fit for the user's needs, not the product with the loudest ma
 3. Separate non-negotiable requirements from preferences. Include compatibility, dimensions, accessibility, repairability, privacy, ongoing costs, and expected service life when relevant.
 4. Ask one narrow question whenever an unresolved answer would materially change the candidates. Otherwise state reasonable assumptions and continue.
 5. Identify the exact model, generation, year, size, region, configuration, and SKU. Do not merge evidence from similar names or materially different variants.
+
+## Resolve Exact Identifiers First
+
+When the user supplies an EAN, GTIN, UPC, ISBN, SKU, manufacturer part number, model number, or similarly specific identifier, make that exact product the primary research subject.
+
+1. Search the identifier verbatim, including punctuation, and determine whether it is a global identifier, manufacturer identifier, or retailer-specific SKU.
+2. Verify the identifier against the manufacturer or another authoritative catalog and establish the exact product name, variant, dimensions, region, generation, and package contents. Do not accept a search engine's substituted or near-match result.
+3. Research that exact product's specifications, offers, reviews, known problems, and suitability before researching alternatives. For example, research `De Buyer 5680.28` as that specific 28 cm model, not cookware generally or every item in the Mineral B range.
+4. Keep model-family or neighboring-size evidence separate and label it as indirect. Do not attribute it to the exact product unless the source explicitly covers that identifier or confirmed variant.
+5. Broaden to similar products only after presenting the exact product assessment, when the identifier cannot be resolved, or when the user asks for comparisons or alternatives. Explain why the search broadened.
 
 ## Research Beyond the Webshop
 
