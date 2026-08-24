@@ -139,10 +139,20 @@ gh project item-edit PROJECT_NUMBER \
 
 Use the typed flags shown by `gh project item-edit --help` for fields that cannot use a name/value pair, including `--date`, `--number`, `--text`, and `--iteration-id`. Clear a field with node IDs plus `--clear` when required by the installed CLI.
 
-Verify project membership and field values:
+Verify project membership and field values. `gh project item-list` fetches only 30 items by default, so pass a `--limit` that covers the project and confirm the returned item count matches the reported `totalCount` before concluding anything:
 
 ```bash
-gh project item-list PROJECT_NUMBER --owner PROJECT_OWNER --format json
+gh project item-list PROJECT_NUMBER --owner PROJECT_OWNER --limit 1000 --format json \
+  --jq '{returned: (.items | length), totalCount: .totalCount}'
 ```
+
+Then select the issue under verification from the same complete result:
+
+```bash
+gh project item-list PROJECT_NUMBER --owner PROJECT_OWNER --limit 1000 --format json \
+  --jq '.items[] | select(.content.url == "https://github.com/OWNER/REPO/issues/NUMBER")'
+```
+
+A truncated page proves nothing: it cannot show that the issue is absent from the project, and it cannot show that a field value was left unchanged. Raise the limit or paginate the underlying API when `totalCount` exceeds what was returned.
 
 Do not treat a project Status, Priority, or Target date as the same field as an organization-level issue field with the same visible name.

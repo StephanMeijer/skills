@@ -103,6 +103,6 @@ gh issue view NUMBER --repo OWNER/REPO \
   --json number,url,title,state,stateReason,assignees,labels,issueType,milestone,projectItems,parent,subIssues,blockedBy,blocking
 ```
 
-If organization issue fields were changed, verify them separately with `gh api`. If project fields were changed, verify them with `gh project item-list`. For relationships, verify both ends. Stop the mutation sequence on any mismatch and report already verified writes as partial success; do not attempt an automatic rollback that could overwrite concurrent work.
+If organization issue fields were changed, verify them separately with `gh api`. If project fields were changed, verify them with `gh project item-list` under a `--limit` that covers the project's reported `totalCount`; its 30-item default can hide the item being verified. For relationships, verify both ends. Stop the mutation sequence on any mismatch and report already verified writes as partial success; do not attempt an automatic rollback that could overwrite concurrent work.
 
 Report the issue URL, every native field or relationship applied, preserved unrequested state, notification-producing operations, anything unsupported or intentionally omitted, and no remote action that was not actually observed.
