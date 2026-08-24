@@ -1,0 +1,4 @@
+interface:
+  display_name: "Pull Request"
+  short_description: "Review PRs and drive them toward merge"
+  default_prompt: "Use $pull-request to review this pull request, or to fix its failing CI, rebase it, and address reviewer feedback as its author."

@@ -15,10 +15,9 @@ Licensed under the [MIT License](LICENSE).
 | `programming-python` | Write strict, modern Python with precise types, validated models, and complete local checks. |
 | `programming-rust` | Write strict, modern Rust with strong types, safe boundaries, and complete local checks. |
 | `programming-typescript` | Write strict, modern TypeScript without unsafe assertions or unparsed boundaries. |
-| `review-pull-request` | Review GitHub and Forgejo PRs and, when authorized, post findings on the relevant changed code lines. |
+| `pull-request` | Review GitHub and Forgejo PRs, post findings on changed code lines, and drive a PR toward merge as its author. |
 | `ruthless-critic` | Deliver precise, evidence-based, unsparing criticism without personal abuse. |
 | `shopping` | Compare products, offers, and reviews across the wider web before buying. |
-| `work-on-pull-request` | Fix CI failures, rebase merge conflicts, and address feedback on a PR you own. |
 
 ## Install
 
@@ -28,10 +27,10 @@ List the skills in this repository:
 npx skills add StephanMeijer/skills --list
 ```
 
-For PR review:
+For pull request review and author-side work:
 
 ```bash
-npx skills add StephanMeijer/skills --skill review-pull-request
+npx skills add StephanMeijer/skills --skill pull-request
 ```
 
 For GitHub issue management:
@@ -88,12 +87,6 @@ For product and shopping research:
 npx skills add StephanMeijer/skills --skill shopping
 ```
 
-For author-side PR follow-up:
-
-```bash
-npx skills add StephanMeijer/skills --skill work-on-pull-request
-```
-
 You can target a specific supported agent with `--agent`, or install globally with `--global`.
 
 ## Repository layout
@@ -127,40 +120,16 @@ skills/
 ├── programming-typescript/
 │   ├── SKILL.md
 │   └── agents/
-├── review-pull-request/
+├── pull-request/
 │   ├── SKILL.md
 │   ├── agents/
 │   └── references/
 ├── ruthless-critic/
 │   ├── SKILL.md
 │   └── agents/
-├── shopping/
-│   ├── SKILL.md
-│   └── agents/
-└── work-on-pull-request/
+└── shopping/
     ├── SKILL.md
-    ├── agents/
-    └── references/
+    └── agents/
 ```
 
 Add new skills as `skills/<skill-name>/SKILL.md`, with matching `name` and `description` frontmatter.
-
-### Shared reference blocks
-
-Each skill installs as a self-contained directory, so `review-pull-request` and
-`work-on-pull-request` must each carry their own copy of the provider commands they
-share. Those copies are marked, and CI fails if they stop being byte-identical:
-
-```markdown
-<!-- shared:github-collect-threads -->
-...content that must be identical in every file declaring this block...
-<!-- /shared:github-collect-threads -->
-```
-
-When editing inside a marked block, apply the same edit to every file that declares
-it. Keep role-specific wording — preconditions, authorization, surrounding prose —
-outside the markers. List the files declaring a block with:
-
-```bash
-grep -rl '<!-- shared:BLOCK-NAME -->' skills/
-```

@@ -1,4 +1,0 @@
-interface:
-  display_name: "Work on Pull Request"
-  short_description: "Fix CI, conflicts, and PR feedback"
-  default_prompt: "Use $work-on-pull-request to fix failing CI, rebase the branch if it conflicts, and address reviewer feedback on this pull request."

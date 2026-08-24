@@ -1,4 +1,0 @@
-interface:
-  display_name: "Review Pull Request"
-  short_description: "Post PR findings on changed code lines"
-  default_prompt: "Use $review-pull-request to review this pull request and, when authorized, submit actionable findings as inline code comments."
