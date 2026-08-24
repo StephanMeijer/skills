@@ -101,7 +101,7 @@ For authorized conversation actions:
 
 Before any conversation mutation, refetch the current head and exact target thread. After an ambiguous timeout or transport error, read the thread before retrying so a successful reply is not duplicated.
 
-Retrigger Kody only after all accepted Kody fixes are committed and pushed, and only when the user explicitly requests the remote comment.
+Kody is the AI review agent of Kodus, an open-source code-review tool that posts inline findings on pull requests. Retrigger Kody only after all accepted Kody fixes are committed and pushed, and only when the user explicitly requests the remote comment.
 
 ## Pass the Local Pre-Push Gate
 

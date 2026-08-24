@@ -103,7 +103,7 @@ Use one canonical inventory key per top-level comment, submitted review, and unr
 
 Before any authorized remote action, refetch the PR head and target conversation. If either changed, stop and re-plan. After an ambiguous timeout or transport failure, read the target surface before retrying so a successful but unacknowledged write is not duplicated.
 
-If Kody produced feedback, retrigger it only after all accepted Kody fixes are committed and pushed, and only when the user asks for that remote comment.
+Kody is the AI review agent of Kodus, an open-source code-review tool that posts inline findings on pull requests. If Kody produced feedback, retrigger it only after all accepted Kody fixes are committed and pushed, and only when the user asks for that remote comment.
 
 ## Report
 

@@ -164,11 +164,15 @@ gh pr comment <PR> --body-file <file>
 ```
 
 <!-- shared:github-kody-retrigger -->
+Kodus documents `@kody start-review` as the manual review trigger. A plain trigger is correct here because the accepted fixes are new commits; reserve `@kody review --force` for a pass Kody would otherwise skip. Confirm the command against the Kody version actually installed on the repository before relying on it.
+
 After accepted Kody fixes are committed and pushed, an explicitly authorized retrigger is:
 
 ```bash
-gh pr comment <PR> -b "$(printf '\100kody review')"
+gh pr comment <PR> -b "$(printf '\100kody start-review')"
 ```
+
+`printf` emits the leading `@` at run time so that quoting this command in a report, commit message, or PR comment cannot mention the bot by accident.
 <!-- /shared:github-kody-retrigger -->
 
 Refetch the PR head, mergeability, checks, workflow runs, and unresolved threads after any push or conversation mutation. Follow only runs for the current `headRefOid`; a green run for an older SHA does not cover the current PR.

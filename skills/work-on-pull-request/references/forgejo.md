@@ -88,11 +88,15 @@ That command creates a top-level PR comment. Use it only for explicitly authoriz
 Check `fj pr review --help` before attempting an authorized overall review action. If the installed client exposes only review listing, use the web UI instead of guessing an API mutation.
 
 <!-- shared:forgejo-kody-retrigger -->
+Kodus documents `@kody start-review` as the manual review trigger. A plain trigger is correct here because the accepted fixes are new commits; reserve `@kody review --force` for a pass Kody would otherwise skip. Confirm the command against the Kody version actually installed on the repository before relying on it.
+
 After accepted Kody fixes are committed and pushed, an explicitly authorized top-level retrigger is:
 
 ```bash
-fj pr comment <PR> "$(printf '\100kody review')"
+fj pr comment <PR> "$(printf '\100kody start-review')"
 ```
+
+`printf` emits the leading `@` at run time so that quoting this command in a report, commit message, or PR comment cannot mention the bot by accident.
 <!-- /shared:forgejo-kody-retrigger -->
 
 Refetch PR state, mergeability, CI, comments, and unresolved review items after any push or remote mutation. Follow only CI attached to the current PR head SHA. Include every thread URL that still requires web-UI action in the final report.
