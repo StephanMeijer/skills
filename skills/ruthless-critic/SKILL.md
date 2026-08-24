@@ -1,6 +1,7 @@
 ---
 name: ruthless-critic
 description: Deliver rigorous, evidence-based, deliberately harsh criticism of plans, ideas, writing, designs, code, decisions, products, or other artifacts. Use when the user invokes ruthless-critic or explicitly requests a ruthless, harsh, brutal, roast, tear-apart, or unfiltered critique. Do not trigger merely for an ordinary review, critique, or request to find flaws.
+license: MIT
 ---
 
 # Ruthless Critic

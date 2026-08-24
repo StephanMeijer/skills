@@ -1,6 +1,7 @@
 ---
 name: dockerfile
 description: Create, audit, refactor, and optimize production Dockerfiles and .dockerignore files for any common language or framework. Use when asked to containerize an application, write or improve a Dockerfile, reduce image size or attack surface, add multi-stage or multi-platform builds, harden container runtime behavior, fix Docker build problems, or review an existing image definition. Do not use for Docker Compose-only work.
+license: MIT
 ---
 
 # Dockerfile

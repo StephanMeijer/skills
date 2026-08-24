@@ -1,6 +1,7 @@
 ---
 name: convert-documents
 description: Convert documents between office, PDF, markup, ebook, spreadsheet, and presentation formats with local command-line tools while preserving the required layout, structure, fonts, metadata, links, and accessibility. Use for DOCX, ODT, RTF, PDF, HTML, Markdown, LaTeX, EPUB, MOBI, CSV, XLSX, ODS, PPTX, ODP, and related document conversions or batch exports. Do not use for image, audio, or video conversion except when rendering document pages for validation.
+license: MIT
 ---
 
 # Convert Documents

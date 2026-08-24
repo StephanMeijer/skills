@@ -1,6 +1,7 @@
 ---
 name: programming-rust
 description: Write, change, review, and test Rust code using modern stable Rust, strong types, strict safety, explicit errors, restrained dependencies, and complete local quality gates. Use for Rust projects, Cargo workspaces, crates, libraries, applications, CLI tools, services, embedded or no_std targets, WASM, and FFI.
+license: MIT
 ---
 
 # Programming Rust

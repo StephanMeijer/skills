@@ -1,6 +1,7 @@
 ---
 name: shopping
 description: Research and compare products before purchase using current prices, exact-model specifications, seller terms, and reviews from across the wider web rather than relying on the webshop being browsed. Use when asked what to buy, whether a product is good, to compare products or listings, find the best value or deal, validate retailer claims, assess reliability and owner experience, or investigate an EAN, GTIN, UPC, SKU, manufacturer part number, or exact product ID. Browse by default because products, prices, availability, reviews, recalls, and policies change. Do not execute a purchase without explicit user authorization.
+license: MIT
 ---
 
 # Shopping

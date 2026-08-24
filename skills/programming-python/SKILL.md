@@ -1,6 +1,7 @@
 ---
 name: programming-python
 description: Write, change, review, and test modern Python using repository-native environments, precise static typing, validated boundaries, explicit errors, restrained dependencies, and complete local quality gates. Use for Python applications, libraries, packages, CLI tools, services, scripts, and asynchronous code.
+license: MIT
 ---
 
 # Programming Python

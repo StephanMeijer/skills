@@ -1,6 +1,7 @@
 ---
 name: work-on-pull-request
 description: Work through CI failures, merge conflicts, and reviewer feedback on an existing GitHub or Forgejo pull request as the PR author. Use when asked to work on a PR, repair failing CI, rebase a conflicted PR onto its target branch, address or fix PR feedback, triage unresolved review threads, reply to or resolve addressed comments, prepare follow-up changes, or move a PR toward merge.
+license: MIT
 ---
 
 # Work on a Pull Request

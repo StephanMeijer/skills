@@ -1,6 +1,7 @@
 ---
 name: convert-media
 description: Convert image, audio, and video files with local command-line tools while preserving requested quality, compatibility, metadata, streams, and dimensions. Use when asked to change a media format or container, transcode codecs, remux video, extract audio, make web-compatible media, resize during conversion, or batch-convert raster or animated media. Do not use for document, spreadsheet, presentation, PDF, or ebook conversion.
+license: MIT
 ---
 
 # Convert Media

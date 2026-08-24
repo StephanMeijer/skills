@@ -1,6 +1,7 @@
 ---
 name: programming-typescript
 description: Write, change, review, and test modern TypeScript with strict structural typing, assertion-free domain models, parsed boundaries, modern ESM, restrained dependencies, and complete local quality gates. Use for TypeScript applications, libraries, Node.js, Deno, Bun, frontend projects, Vite, Zod, Effect, and Vitest.
+license: MIT
 ---
 
 # Programming TypeScript
