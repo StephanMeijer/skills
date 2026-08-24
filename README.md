@@ -17,6 +17,7 @@ Licensed under the [MIT License](LICENSE).
 | `programming-typescript` | Write strict, modern TypeScript without unsafe assertions or unparsed boundaries. |
 | `review-pull-request` | Review GitHub and Forgejo PRs and, when authorized, post findings on the relevant changed code lines. |
 | `ruthless-critic` | Deliver precise, evidence-based, unsparing criticism without personal abuse. |
+| `shopping` | Compare products, offers, and reviews across the wider web before buying. |
 | `work-on-pull-request` | Fix CI failures, rebase merge conflicts, and address feedback on a PR you own. |
 
 ## Install
@@ -81,6 +82,12 @@ For an unsparing critique:
 npx skills add StephanMeijer/skills --skill ruthless-critic
 ```
 
+For product and shopping research:
+
+```bash
+npx skills add StephanMeijer/skills --skill shopping
+```
+
 For author-side PR follow-up:
 
 ```bash
@@ -125,6 +132,9 @@ skills/
 │   ├── agents/
 │   └── references/
 ├── ruthless-critic/
+│   ├── SKILL.md
+│   └── agents/
+├── shopping/
 │   ├── SKILL.md
 │   └── agents/
 └── work-on-pull-request/

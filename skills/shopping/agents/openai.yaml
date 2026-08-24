@@ -1,0 +1,4 @@
+interface:
+  display_name: "Shopping"
+  short_description: "Compare products using reviews across the web"
+  default_prompt: "Use $shopping to compare this product with alternatives, including independent reviews and owner feedback from across the web."
