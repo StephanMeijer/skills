@@ -1,0 +1,4 @@
+interface:
+  display_name: "Support Ticket"
+  short_description: "Advance technical tickets with falsifiable tests"
+  default_prompt: "Use $support-ticket to move this technical support case forward with falsifiable hypotheses, safe tests, evidence analysis, and a concise next reply."

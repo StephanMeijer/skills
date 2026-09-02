@@ -18,6 +18,7 @@ Licensed under the [MIT License](LICENSE).
 | `pull-request` | Review GitHub and Forgejo PRs, post findings on changed code lines, and drive a PR toward merge as its author. |
 | `ruthless-critic` | Deliver precise, evidence-based, unsparing criticism without personal abuse. |
 | `shopping` | Compare products, offers, and reviews across the wider web before buying. |
+| `support-ticket` | Advance technical support cases with falsifiable tests, evidence analysis, and actionable provider updates. |
 
 ## Install
 
@@ -87,6 +88,12 @@ For product and shopping research:
 npx skills add StephanMeijer/skills --skill shopping
 ```
 
+For advancing technical support tickets:
+
+```bash
+npx skills add StephanMeijer/skills --skill support-ticket
+```
+
 You can target a specific supported agent with `--agent`, or install globally with `--global`.
 
 ## Repository layout
@@ -127,9 +134,13 @@ skills/
 ├── ruthless-critic/
 │   ├── SKILL.md
 │   └── agents/
-└── shopping/
+├── shopping/
+│   ├── SKILL.md
+│   └── agents/
+└── support-ticket/
     ├── SKILL.md
-    └── agents/
+    ├── agents/
+    └── references/
 ```
 
 Add new skills as `skills/<skill-name>/SKILL.md`, with matching `name` and `description` frontmatter.
