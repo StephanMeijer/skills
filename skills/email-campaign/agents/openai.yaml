@@ -1,0 +1,4 @@
+interface:
+  display_name: "Email Campaign"
+  short_description: "Get stakeholders to engage with an evidence-based case"
+  default_prompt: "Use $email-campaign to build the case from public sources, map who to write, draft one message per recipient, handle replies, and keep the correspondence log and deadlines."
