@@ -11,6 +11,7 @@ Licensed under the [MIT License](LICENSE).
 | `convert-documents` | Convert office, PDF, markup, ebook, spreadsheet, and presentation formats with CLI tools. |
 | `convert-media` | Convert images, audio, and video with CLI tools and verified codec-aware settings. |
 | `dockerfile` | Create and audit minimal, secure, reproducible multi-platform Dockerfiles and `.dockerignore` files. |
+| `email-campaign` | Build an evidence-based case and get companies, officials, allies, and press to engage by e-mail. |
 | `github-issue` | Create and manage GitHub issues with native metadata, relationships, projects, fields, and security workflows. |
 | `programming-python` | Write strict, modern Python with precise types, validated models, and complete local checks. |
 | `programming-rust` | Write strict, modern Rust with strong types, safe boundaries, and complete local checks. |
@@ -44,6 +45,12 @@ For production Dockerfiles:
 
 ```bash
 npx skills add StephanMeijer/skills --skill dockerfile
+```
+
+For an evidence-based outreach campaign:
+
+```bash
+npx skills add StephanMeijer/skills --skill email-campaign
 ```
 
 For document conversion:
