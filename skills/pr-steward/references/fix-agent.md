@@ -15,7 +15,7 @@ Not authorized: approve or request changes, merge, close, touch other branches, 
 ## Work
 
 1. Fetch fresh state: head, `mergeable`, `mergeStateStatus`, review bodies, issue comments, and all review threads with full comment chains through GraphQL. Keep each thread's `PRRT_` ID, `isResolved`, and `isOutdated`.
-2. Classify each unresolved thread and review-body finding: **addressed**, **needs-work**, **outdated-or-na**, or **discussion**. Read the code to decide; passing CI does not prove a fix.
+2. Check scope first. Fix only in-scope items in this PR. For an out-of-scope thread or finding, change no code; report it as a follow-up candidate with its comment URL. The steward files the issue, then replies in the thread with the issue link and resolves it. Then classify each unresolved thread and review-body finding: **addressed**, **needs-work**, **outdated-or-na**, or **discussion**. Read the code to decide; passing CI does not prove a fix.
 3. Fix each needs-work item with the smallest correct change in the repository's style. Add or tighten a test when behavior changes, and confirm the test fails without the fix.
 4. **Rebase mode** (the PR conflicts): record the pre-rebase SHA, rebase non-interactively onto the fetched base, and resolve each conflict by reading both sides, never taking one side wholesale. For lockfiles, take the base's lockfile and re-resolve offline instead of a broad update. Inspect `git range-diff` afterward.
 5. Run the profile's full local gate on the final candidate. A docs-only change needs only the checks that read docs; say so in the report. When the only failure is a known flaky test from the profile, rerun it once and note both results.

@@ -47,16 +47,26 @@ state_dir="$(git rev-parse --path-format=absolute --git-common-dir)/pr-steward"
 
 Read both at the start of every tick. Update `STATE.md` whenever a sub-agent is launched, stopped, or reports. Record user rules given mid-loop in `STATE.md` under decisions so they outlive the conversation.
 
+## Separate In-Scope From Out-of-Scope
+
+Classify every finding (from a review, an AI review lane, or a fix sub-agent) before anyone acts on it:
+
+- **In scope**: the PR's own diff causes it, or it concerns what the PR claims to do (its title, body, or the acceptance criteria of the issue it closes), including the PR's own tests and documentation. Fix it **in the PR** through an inline thread and a fix sub-agent. In-scope findings block readiness.
+- **Out of scope**: the defect already exists on the base branch, or it lies in code or behavior the PR neither touches nor claims, or it is a larger feature or redesign. Do **not** fix it in the PR, and do not let it block readiness. File it as a GitHub issue per [references/follow-up-issues.md](references/follow-up-issues.md).
+- **When unsure**: a new defect the diff introduces is always in scope. A pre-existing defect the diff merely makes more reachable is in scope only when the fix is small and local; otherwise it is out of scope.
+
+Link an out-of-scope issue to its PR in both directions: the issue cites the PR and the comment that raised it, and the PR links the issue (a reply in the originating thread, which is then resolved, or a top-level comment). Set a native dependency when the issue needs the PR to land; otherwise the two-way mentions are the link, because GitHub has no native "related" relationship.
+
 ## Run One Tick
 
 1. **Refresh.** For each open PR collect the head SHA, the head SHA of the steward's latest review that has a non-empty body (thread replies also create review objects, so filter on body), the count of unresolved review threads, CI buckets per check, `mergeable` and `mergeStateStatus`, and `closingIssuesReferences`. Paginate every list. Use `bash` for shell loops; `zsh` does not word-split unquoted variables.
 2. **End stale sub-agents.** List the running sub-agents. Stop any whose work is done and that is only watching CI (the tick watches CI), and any that is stuck: repeating "waiting", unable to continue, or without a new commit, reply, or review since the last tick. Before stopping one, check for half-done work (unpushed commits in its worktree, pushed fixes whose threads have no reply) and hand that PR to a new or resumed sub-agent. Log each stop.
 3. **Never double up.** A PR with a live sub-agent gets no second one. Reuse the previous sub-agent for the same PR when the platform can resume it; it keeps the PR's context.
 4. **Rebase conflicts.** For each PR where `mergeable` is `CONFLICTING` or the state is `DIRTY`, launch a fix sub-agent in rebase mode. When GitHub reports `UNKNOWN`, decide with `git fetch` and `git merge-tree --write-tree origin/<base> origin/<head>`.
-5. **Fix feedback.** A PR with unresolved threads, unanswered review-body findings, or a real CI failure gets a fix sub-agent. Pending or queued CI is not a failure.
+5. **Fix feedback.** A PR with unresolved in-scope threads, unanswered in-scope review-body findings, or a real CI failure gets a fix sub-agent. Out-of-scope threads go to step 8, and are replied to and resolved once their issue exists. Pending or queued CI is not a failure.
 6. **Review.** A PR needs a review when it has no steward review with a body, or when its head moved past the last reviewed head and its unresolved threads are zero (the fixer finished). Launch a review sub-agent.
 7. **Link issues.** Every PR must carry a closing reference (`Closes #N`) so it shows under GitHub's Development panel; GitHub has no API for a manual link. Add it to the body when the issue is clear. When no issue exists, ask the user before creating one.
-8. **File follow-ups.** When a review or fix surfaces logical out-of-scope work, delegate filing it per [references/follow-up-issues.md](references/follow-up-issues.md).
+8. **File follow-ups.** Delegate filing every out-of-scope finding not yet recorded in `STATE.md`, per [references/follow-up-issues.md](references/follow-up-issues.md).
 9. **Report.** See below.
 
 Launch independent sub-agents in parallel. Give each one the path to its brief, the PR number, the expected head SHA, the worktree, and the exact threads or findings it owns. Tell fix sub-agents to reply and resolve as soon as the fix is pushed and the local gate passed, then report without waiting for CI; runner queues can last hours.
@@ -75,7 +85,7 @@ For a PR opened by another agent session that still pushes to it, the fix sub-ag
 A PR is **ready to merge** only when all of these hold at its current head:
 
 - a steward review with no open findings exists for that exact head;
-- zero unresolved review threads and no unanswered review-body findings;
+- zero unresolved review threads and no unanswered in-scope review-body findings (out-of-scope findings need only a filed issue);
 - every check has completed and passed or was intentionally skipped, with none pending, queued, failed, or cancelled;
 - every AI review lane named in the profile has finished for that head, and its findings are addressed;
 - `mergeable` is `MERGEABLE`.

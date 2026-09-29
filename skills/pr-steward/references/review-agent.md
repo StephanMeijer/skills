@@ -14,8 +14,9 @@ You review one pull request and post one COMMENT review. The orchestrator gives 
 1. Read the profile for the repository's gate, merge-order hazards, and known flaky tests.
 2. Fetch every review, review body, and review thread through GraphQL `reviewThreads`, including resolved threads and their full comment chains. Do not repeat a concern already raised.
 3. On a re-review, focus on the range since the last reviewed head. Verify each earlier thread against the code: a thread marked resolved but not fixed is a finding.
-4. Report only verified, actionable findings: correctness, security, data exposure, regressions, spec and documentation accuracy, missing boundary tests, and violations of an explicit project rule. No style nits. Zero findings is a valid result.
-5. Check the profile's merge-order hazards against the diff (for example, a pending PR that enables a lint the new code would violate).
+4. Tag every finding **[in scope]** or **[out of scope]** using the steward's scope rule. In scope: caused by this diff, or it concerns what the PR or its closing issue claims, including its own tests and docs. Out of scope: pre-existing on the base branch, or in code or behavior the PR neither touches nor claims. Post in-scope findings as inline threads. Put out-of-scope findings in the review body under an "Out of scope (follow-up issue)" heading, never inline, and never let them change the verdict.
+5. Report only verified, actionable findings: correctness, security, data exposure, regressions, spec and documentation accuracy, missing boundary tests, and violations of an explicit project rule. No style nits. Zero findings is a valid result.
+6. Check the profile's merge-order hazards against the diff (for example, a pending PR that enables a lint the new code would violate).
 
 ## Post
 
@@ -28,4 +29,4 @@ You review one pull request and post one COMMENT review. The orchestrator gives 
 
 ## Report
 
-Return concisely: review URL, reviewed head SHA, CI state (failed and pending checks by name), AI review lane state, mergeability, a findings table (severity | path:line | summary | comment URL), earlier threads verified fixed or not, and a one-line verdict: `ready to merge once CI is green`, `needs fixes`, or `blocked by <X>`.
+Return concisely: review URL, reviewed head SHA, CI state (failed and pending checks by name), AI review lane state, mergeability, a findings table (severity | scope | path:line | summary | comment URL), earlier threads verified fixed or not, and a one-line verdict: `ready to merge once CI is green`, `needs fixes`, or `blocked by <X>`.
