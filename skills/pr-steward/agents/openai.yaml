@@ -1,0 +1,4 @@
+interface:
+  display_name: "PR Steward"
+  short_description: "Loop over open PRs and report which are ready to merge"
+  default_prompt: "Use $pr-steward to run one tick over every open pull request: review, fix feedback, rebase conflicts, and report which PRs are ready to merge."

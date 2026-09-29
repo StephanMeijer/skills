@@ -15,6 +15,7 @@ Licensed under the [MIT License](LICENSE).
 | `programming-python` | Write strict, modern Python with precise types, validated models, and complete local checks. |
 | `programming-rust` | Write strict, modern Rust with strong types, safe boundaries, and complete local checks. |
 | `programming-typescript` | Write strict, modern TypeScript without unsafe assertions or unparsed boundaries. |
+| `pr-steward` | Loop over every open GitHub PR with sub-agents that review, fix, and rebase, and report which PRs are ready to merge. |
 | `pull-request` | Review GitHub and Forgejo PRs, post findings on changed code lines, and drive a PR toward merge as its author. |
 | `ruthless-critic` | Deliver precise, evidence-based, unsparing criticism without personal abuse. |
 | `shopping` | Compare products, offers, and reviews across the wider web before buying. |
@@ -32,6 +33,12 @@ For pull request review and author-side work:
 
 ```bash
 npx skills add StephanMeijer/skills --skill pull-request
+```
+
+For stewarding every open pull request on a loop:
+
+```bash
+npx skills add StephanMeijer/skills --skill pr-steward
 ```
 
 For GitHub issue management:
@@ -127,6 +134,10 @@ skills/
 ├── programming-typescript/
 │   ├── SKILL.md
 │   └── agents/
+├── pr-steward/
+│   ├── SKILL.md
+│   ├── agents/
+│   └── references/
 ├── pull-request/
 │   ├── SKILL.md
 │   ├── agents/
