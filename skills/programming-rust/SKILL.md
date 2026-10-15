@@ -20,6 +20,7 @@ Build a constraint ledger for each affected package: toolchain and MSRV, valid f
 ## Implement Strictly
 
 - Model domain concepts with enums, newtypes, and validated constructors. Prefer exhaustive matching and make invalid states unrepresentable.
+- Give every meaningful literal a name. Numbers, strings, durations, sizes, limits, keys, paths, and similar values belong in a `const`, `static`, or enum defined once in the module that owns the concept, and every use refers to that name; a bare literal never appears inline. Self-evident values such as `0`, `1`, or `""` in their plain arithmetic or identity role are not magic.
 - Express ownership and borrowing directly. Clone only when ownership or measured performance justifies it.
 - Return typed, contextual errors. Use existing repository error facilities first. Add a derive or application-context crate only when it provides a concrete benefit over the standard library and does not duplicate an established dependency; keep library errors branchable and application-boundary errors actionable.
 - Forbid `unwrap`, casual `expect`, `panic!`, unchecked indexing, ignored `Result`s, and silent fallback in production-reachable paths. An `expect` is acceptable only for a proven invariant and must explain that invariant.
