@@ -1,0 +1,4 @@
+interface:
+  display_name: "Programming Go"
+  short_description: "Write strict, modern, idiomatic Go"
+  default_prompt: "Use $programming-go to implement this Go change with explicit errors, owned concurrency, strong types, and complete local checks."

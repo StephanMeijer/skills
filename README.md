@@ -14,6 +14,7 @@ Licensed under the [MIT License](LICENSE).
 | `create-pull-request` | Open small, verified PRs, split by concern, each with an ELI5 and screenshots for visual changes. |
 | `dockerfile` | Create and audit minimal, secure, reproducible multi-platform Dockerfiles and `.dockerignore` files. |
 | `github-issue` | Create and manage GitHub issues with native metadata, relationships, projects, fields, and security workflows. |
+| `programming-go` | Write strict, modern Go with explicit errors, owned concurrency, and complete local checks. |
 | `programming-python` | Write strict, modern Python with precise types, validated models, and complete local checks. |
 | `programming-rust` | Write strict, modern Rust with strong types, safe boundaries, and complete local checks. |
 | `programming-typescript` | Write strict, modern TypeScript without unsafe assertions or unparsed boundaries. |
@@ -78,6 +79,12 @@ For image, audio, and video conversion:
 
 ```bash
 npx skills add StephanMeijer/skills --skill convert-media
+```
+
+For strict, modern Go development:
+
+```bash
+npx skills add StephanMeijer/skills --skill programming-go
 ```
 
 For strict, modern Python development:
@@ -154,6 +161,9 @@ skills/
 │   ├── SKILL.md
 │   ├── agents/
 │   └── references/
+├── programming-go/
+│   ├── SKILL.md
+│   └── agents/
 ├── programming-python/
 │   ├── SKILL.md
 │   └── agents/
