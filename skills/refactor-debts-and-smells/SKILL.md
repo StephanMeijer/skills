@@ -1,6 +1,6 @@
 ---
 name: refactor-debts-and-smells
-description: Act as a senior engineer to find technical debt and code smells (duplication, magic numbers and strings, values scattered across files instead of named constants, reinvented library features, needless layers, dead or defensive code, long functions and parameter lists, primitive obsession, misleading names) in phased sweeps run by parallel sub-agents, and either refactor them in place under passing tests or file GitHub issues for larger rewrites. Better, not compact; never trades clarity for fewer lines. Use for tech-debt sweeps, code-smell hunts, simplification passes, "this needs refactoring", "no magic numbers", or turning refactor ideas into issues. Do not use for bug hunting or feature work.
+description: Act as a senior engineer to find technical debt and code smells (duplication, magic numbers and strings, values scattered across files instead of named constants, reinvented library features, needless layers, dead or defensive code, long functions and parameter lists, primitive obsession, misleading names) in phased sweeps run by parallel sub-agents, and either refactor them in place under passing tests, delivered as many tiny pull requests, or file GitHub issues for larger rewrites. Better, not compact; never trades clarity for fewer lines. Use for tech-debt sweeps, code-smell hunts, simplification passes, "this needs refactoring", "no magic numbers", or turning refactor ideas into issues. Do not use for bug hunting or feature work.
 license: MIT
 ---
 
@@ -16,7 +16,7 @@ Determine whether the user wants a report, in-place fixes, filed issues, or both
 
 - Reporting is read-only.
 - Editing code and filing issues require the user to have asked for them. "Clean this up" or "fix it" authorizes edits; "file issues" or "make tickets" authorizes issues. When unclear, report first and ask.
-- Never commit, push, open a pull request, or close an issue unless asked.
+- Never commit, push, open a pull request, or close an issue unless asked. When the user authorizes delivering the fixes, the preferred outcome is many tiny pull requests, as described in [Deliver as Tiny Pull Requests](#deliver-as-tiny-pull-requests).
 - File issues with the conventions of the `github-issue` skill when it is installed; otherwise use `gh issue create` directly.
 
 ## Run the Sweep in Phases
@@ -26,7 +26,7 @@ Run every sweep as explicit phases, and fan the independent work in each phase o
 1. **Recon (orchestrator).** Scope the sweep, learn the conventions, find the check commands, and run the baseline, as described below. Split the scope into slices that do not overlap: by smell family (duplication and scattered values; reinvented library features and needless layers; dead and defensive code; long functions, parameter lists, and primitive obsession; misleading names), by module or directory, or both for a large repository. Hand every agent the same brief: the scope, the conventions, the check commands, the judgment rules in this skill, and the candidate record format.
 2. **Hunt (parallel, read-only).** One agent per slice finds candidates and returns them as records only, never edits. Duplication and repeated literals cross slice boundaries, so give one agent the whole scope for those rather than splitting them by directory.
 3. **Judge (orchestrator, optionally parallel).** Merge the records, drop duplicates found by several agents, and apply [Judge Every Candidate](#judge-every-candidate). For a large set, give each surviving candidate to an independent verifier agent instructed to argue against it; keep only candidates that survive.
-4. **Fix (parallel, isolated).** Assign each fix-now candidate to an agent that owns a set of files no other agent touches, working in its own git worktree or branch when the harness supports isolation. Each agent follows the [Fix Loop](#fix-loop) and returns its diff with the checks it ran. The orchestrator integrates the diffs one at a time and reruns the full checks after each; a diff that conflicts or fails is reverted and reported, not patched over. Candidates that touch the same files go to the same agent, in sequence.
+4. **Fix (parallel, isolated).** Assign each fix-now candidate to an agent that owns a set of files no other agent touches, working in its own git worktree on its own branch cut from the up-to-date default branch when the harness supports isolation. Each agent follows the [Fix Loop](#fix-loop) and returns its branch with the checks it ran. When pull requests are authorized, each branch becomes its own tiny pull request; otherwise the orchestrator integrates the diffs one at a time and reruns the full checks after each. A diff that conflicts or fails is reverted and reported, not patched over. Candidates that touch the same files go to the same agent, in sequence, still as separate commits and, where they are independent, separate pull requests.
 5. **File (parallel).** File each issue-sized candidate with its own agent when there are many; the orchestrator first checks for existing issues so two agents never file the same one.
 6. **Report (orchestrator).** Combine the results into one report, attributing nothing to a phase that did not actually run.
 
@@ -82,6 +82,16 @@ When the user asked only for fixes, list issue-sized candidates in the report in
 4. Never edit a test's assertions to make a rewrite pass. A test that must change means the behavior changed; revert and file it as an issue instead.
 5. Remove code that the rewrite made dead, such as now-unused helpers, imports, and configuration.
 
+## Deliver as Tiny Pull Requests
+
+When the user authorizes pull requests, deliver the fixes as many tiny pull requests rather than one large one. A reviewer approves a five-line, one-idea refactor in a minute; a sweep bundled into one pull request stalls, and one doubtful change blocks every good one.
+
+- One pull request per rewrite: one duplicate removed, one constant extracted, one layer inlined, one misleading name fixed. Split further whenever a pull request would need two sentences to explain what it does.
+- Cut each branch from the up-to-date default branch so the pull requests are independent and can merge in any order. Stack a pull request on another only when it genuinely depends on it, and say so in the description.
+- Each pull request passes the full checks on its own and changes no behavior; its description names the smell, what was removed or named, and the checks run.
+- Open them with the conventions of the `create-pull-request` skill when it is installed; otherwise use `gh pr create` directly.
+- Never merge, approve, or close a pull request.
+
 ## Filing Issues
 
 Search open issues for an existing report first. File one issue per independent rewrite using [references/issue-template.md](references/issue-template.md); group issues under a parent only when they share one design decision. Write each issue so an engineer with no context from this session can pick it up cold.
@@ -91,6 +101,7 @@ Search open issues for an existing report first. File one issue per independent 
 Keep the report proportional and concrete:
 
 - **Fixed**: each rewrite with file references, what it removed, and the checks run afterwards with their results;
+- **Opened**: each pull request with its link and one-line summary, and any stacking between them;
 - **Filed**: each issue with its link and one-line summary;
 - **Proposed**: issue-sized candidates not filed, when issues were not authorized;
 - **Rejected**: notable candidates dropped, with a one-line reason each;
