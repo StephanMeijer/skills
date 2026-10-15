@@ -1,6 +1,6 @@
 ---
 name: refactor-debts-and-smells
-description: Act as a senior engineer to find technical debt and code smells (duplication, magic numbers and strings, values scattered across files instead of named constants, reinvented library features, needless layers, dead or defensive code, long functions and parameter lists, primitive obsession, misleading names) and either refactor them in place under passing tests or file GitHub issues for larger rewrites. Better, not compact; never trades clarity for fewer lines. Use for tech-debt sweeps, code-smell hunts, simplification passes, "this needs refactoring", "no magic numbers", or turning refactor ideas into issues. Do not use for bug hunting or feature work.
+description: Act as a senior engineer to find technical debt and code smells (duplication, magic numbers and strings, values scattered across files instead of named constants, reinvented library features, needless layers, dead or defensive code, long functions and parameter lists, primitive obsession, misleading names) in phased sweeps run by parallel sub-agents, and either refactor them in place under passing tests or file GitHub issues for larger rewrites. Better, not compact; never trades clarity for fewer lines. Use for tech-debt sweeps, code-smell hunts, simplification passes, "this needs refactoring", "no magic numbers", or turning refactor ideas into issues. Do not use for bug hunting or feature work.
 license: MIT
 ---
 
@@ -18,6 +18,19 @@ Determine whether the user wants a report, in-place fixes, filed issues, or both
 - Editing code and filing issues require the user to have asked for them. "Clean this up" or "fix it" authorizes edits; "file issues" or "make tickets" authorizes issues. When unclear, report first and ask.
 - Never commit, push, open a pull request, or close an issue unless asked.
 - File issues with the conventions of the `github-issue` skill when it is installed; otherwise use `gh issue create` directly.
+
+## Run the Sweep in Phases
+
+Run every sweep as explicit phases, and fan the independent work in each phase out to parallel sub-agents. A single agent reading a whole repository loses detail; several focused agents with fresh context each find more, and keep their file dumps out of the orchestrator's context. When the harness offers a workflow or phase orchestration feature and the user has opted into it, express these phases as a workflow; otherwise launch the parallel sub-agents of each phase together in one message. Only when the scope is a single small module, or the harness has no sub-agents, run the phases sequentially yourself.
+
+1. **Recon (orchestrator).** Scope the sweep, learn the conventions, find the check commands, and run the baseline, as described below. Split the scope into slices that do not overlap: by smell family (duplication and scattered values; reinvented library features and needless layers; dead and defensive code; long functions, parameter lists, and primitive obsession; misleading names), by module or directory, or both for a large repository. Hand every agent the same brief: the scope, the conventions, the check commands, the judgment rules in this skill, and the candidate record format.
+2. **Hunt (parallel, read-only).** One agent per slice finds candidates and returns them as records only, never edits. Duplication and repeated literals cross slice boundaries, so give one agent the whole scope for those rather than splitting them by directory.
+3. **Judge (orchestrator, optionally parallel).** Merge the records, drop duplicates found by several agents, and apply [Judge Every Candidate](#judge-every-candidate). For a large set, give each surviving candidate to an independent verifier agent instructed to argue against it; keep only candidates that survive.
+4. **Fix (parallel, isolated).** Assign each fix-now candidate to an agent that owns a set of files no other agent touches, working in its own git worktree or branch when the harness supports isolation. Each agent follows the [Fix Loop](#fix-loop) and returns its diff with the checks it ran. The orchestrator integrates the diffs one at a time and reruns the full checks after each; a diff that conflicts or fails is reverted and reported, not patched over. Candidates that touch the same files go to the same agent, in sequence.
+5. **File (parallel).** File each issue-sized candidate with its own agent when there are many; the orchestrator first checks for existing issues so two agents never file the same one.
+6. **Report (orchestrator).** Combine the results into one report, attributing nothing to a phase that did not actually run.
+
+Sub-agents inherit this skill's authority boundary: a hunt agent never edits, and a fix or file agent acts only when the user authorized fixes or issues.
 
 ## Scope the Sweep
 
