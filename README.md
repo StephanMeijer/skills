@@ -8,6 +8,7 @@ Licensed under the [MIT License](LICENSE).
 
 | Skill | Purpose |
 | --- | --- |
+| `champion-challenger` | Search for the best classifier: one radical idea per round, scored against the champion, losers salvaged. |
 | `convert-documents` | Convert office, PDF, markup, ebook, spreadsheet, and presentation formats with CLI tools. |
 | `convert-media` | Convert images, audio, and video with CLI tools and verified codec-aware settings. |
 | `dockerfile` | Create and audit minimal, secure, reproducible multi-platform Dockerfiles and `.dockerignore` files. |
@@ -51,6 +52,12 @@ For production Dockerfiles:
 
 ```bash
 npx skills add StephanMeijer/skills --skill dockerfile
+```
+
+For searching for the best classification model:
+
+```bash
+npx skills add StephanMeijer/skills --skill champion-challenger
 ```
 
 For document conversion:
@@ -109,6 +116,10 @@ Each directory under `skills/` is an independently installable skill:
 
 ```text
 skills/
+├── champion-challenger/
+│   ├── SKILL.md
+│   ├── agents/
+│   └── references/
 ├── convert-documents/
 │   ├── SKILL.md
 │   ├── agents/

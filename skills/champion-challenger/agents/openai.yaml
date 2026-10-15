@@ -1,0 +1,4 @@
+interface:
+  display_name: "Champion Challenger"
+  short_description: "Search for the best classifier, one radical idea per round"
+  default_prompt: "Use $champion-challenger to run one round: try a radical new idea against the current champion classifier, promote it on a real win, or salvage what it got right."
