@@ -46,6 +46,8 @@ Discover complete allowed names and options before writing them. Follow paginati
 
 Write a concise, actionable title. Structure the body around the repository's issue template when one applies. Otherwise include only useful sections such as context, expected outcome, acceptance criteria, reproduction steps, and supporting evidence.
 
+Always open the body with a short **ELI5** section: one to three sentences in everyday words, no jargon, no file or function names, saying what the problem or request is and why it matters. When the repository has an issue template, add the ELI5 at the top of it rather than replacing the template.
+
 Keep secrets, credentials, exploit details, and non-public vulnerability information out of public issues. Route sensitive reports through the security workflow in [references/relationships-and-security.md](references/relationships-and-security.md).
 
 Put non-trivial Markdown in a file and pass `--body-file`; do not risk shell expansion in an inline body. Review the exact title, body, repository, and metadata before creating the issue.
