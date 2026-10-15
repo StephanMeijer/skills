@@ -1,0 +1,4 @@
+interface:
+  display_name: "Refactor Debts and Smells"
+  short_description: "Refactor technical debt and code smells, or file issues for larger rewrites"
+  default_prompt: "Use $refactor-debts-and-smells to find technical debt and code smells, such as duplication, magic numbers and strings, and values scattered around that should be named constants, refactor the small safe cases under passing tests, and file GitHub issues for the larger ones."

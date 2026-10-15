@@ -1,14 +1,14 @@
 ---
-name: refactor-technical-debt
-description: Act as a senior engineer to find code that can do the same thing with less, better code (duplication, reinvented library features, needless layers, dead or defensive code) and either rewrite it in place under passing tests or file GitHub issues for larger rewrites. Better, not compact; never trades clarity for fewer lines. Use for tech-debt sweeps, simplification passes, "this could be simpler", or turning refactor ideas into issues. Do not use for bug hunting or feature work.
+name: refactor-debts-and-smells
+description: Act as a senior engineer to find technical debt and code smells (duplication, magic numbers and strings, values scattered across files instead of named constants, reinvented library features, needless layers, dead or defensive code, long functions and parameter lists, primitive obsession, misleading names) and either refactor them in place under passing tests or file GitHub issues for larger rewrites. Better, not compact; never trades clarity for fewer lines. Use for tech-debt sweeps, code-smell hunts, simplification passes, "this needs refactoring", "no magic numbers", or turning refactor ideas into issues. Do not use for bug hunting or feature work.
 license: MIT
 ---
 
-# Refactor Technical Debt
+# Refactor Debts and Smells
 
-Find code that does its job with more machinery than the job needs, and replace it with less, better code that does exactly the same thing. Work as a senior engineer whose rewrites a strong reviewer would approve on sight: fewer concepts, fewer branches, fewer copies, less hand-rolled machinery, clearer flow.
+Find technical debt and code smells: code that does its job with more machinery than the job needs, knowledge copied into several places, and values or names that hide what the code means. Replace it with better code that does exactly the same thing. Work as a senior engineer whose refactors a strong reviewer would approve on sight: fewer concepts, fewer branches, fewer copies, one owner for every value, less hand-rolled machinery, clearer flow.
 
-The goal is **better code, not compact code**. Code shrinks here because something was removed: a duplicate, a dead branch, a wrapper that adds nothing, a reimplementation of the standard library. It never shrinks because statements were squeezed together. A rewrite that saves lines by nesting ternaries, chaining one-liners, shortening names, or reaching for clever tricks is a regression, whatever the line count says. The test for every change: would a strong reviewer call the result clearer and easier to change?
+The goal is **better code, not compact code**. Code often shrinks because something was removed: a duplicate, a dead branch, a wrapper that adds nothing, a reimplementation of the standard library. Sometimes it grows slightly, because a magic value gained a name or a smell gained a type. It never shrinks because statements were squeezed together. A rewrite that saves lines by nesting ternaries, chaining one-liners, shortening names, or reaching for clever tricks is a regression, whatever the line count says. The test for every change: would a strong reviewer call the result clearer and easier to change?
 
 ## Set the Authority Boundary
 
@@ -29,8 +29,9 @@ Before judging anything, learn the repository's idioms: read `CLAUDE.md`, `AGENT
 
 Let tools find the mechanical debt, then read the code for the rest.
 
-- Run what the ecosystem offers in check mode: duplication detectors (`jscpd`), dead-code finders (`knip`, `ts-prune`, `vulture`, `cargo udeps`, `deadcode`), and the linter's complexity and redundancy rules.
-- Read the hot spots for the patterns in [references/smells-and-rewrites.md](references/smells-and-rewrites.md): logic duplicated with small variations, hand-rolled versions of standard or already-installed library features, pass-through layers, defensive code for states the types already exclude, stored state that could be derived, flag parameters, and conditional ladders a table or type would replace.
+- Run what the ecosystem offers in check mode: duplication detectors (`jscpd`), dead-code finders (`knip`, `ts-prune`, `vulture`, `cargo udeps`, `deadcode`), magic-number rules (`no-magic-numbers`, `PLR2004`, `clippy::unreadable_literal`), and the linter's complexity and redundancy rules.
+- Search for repeated literals: the same number, string, URL, path, key, status, or timeout appearing in more than one place is knowledge without an owner. For example, `grep -rnoE '"[^"]{3,}"' <src> | cut -d: -f3- | sort | uniq -c | sort -rn | head`, adapted to the language.
+- Read the hot spots for the patterns in [references/smells-and-rewrites.md](references/smells-and-rewrites.md): logic duplicated with small variations, magic and scattered values, hand-rolled versions of standard or already-installed library features, pass-through layers, defensive code for states the types already exclude, stored state that could be derived, flag parameters, conditional ladders a table or type would replace, long functions and parameter lists, primitive obsession, and misleading names.
 
 Record each candidate with evidence: file and line range, the current shape, the proposed shape as a short sketch, and what concretely gets removed.
 
@@ -38,7 +39,7 @@ Record each candidate with evidence: file and line range, the current shape, the
 
 Keep a candidate only when both hold:
 
-1. it **removes** something real: a concept, a branch, a copy, a dependency, a layer, or hand-written code that a standard facility already provides; and
+1. it **removes** something real: a concept, a branch, a copy (including a copied literal), a dependency, a layer, or hand-written code that a standard facility already provides; or it **names** something real that is currently implicit, such as a magic value or a primitive that stands for a domain concept; and
 2. the result is **at least as readable** to someone new to the code, and easier to change.
 
 Reject a candidate when it:
@@ -46,6 +47,7 @@ Reject a candidate when it:
 - only compacts code (see the anti-patterns in [references/smells-and-rewrites.md](references/smells-and-rewrites.md));
 - swaps one acceptable style for another, or is a matter of taste;
 - removes a name, type, or abstraction that carries domain meaning;
+- turns a self-explanatory literal into a constant that adds no meaning (see the trap under magic values in [references/smells-and-rewrites.md](references/smells-and-rewrites.md));
 - changes observable behavior, including errors, ordering, logging, performance characteristics, or public API, unless the user asked for that;
 - contradicts a recorded decision in an ADR or the repository's conventions.
 
@@ -53,7 +55,7 @@ Rank survivors by value: how much complexity goes away, multiplied by how often 
 
 ## Triage: Fix Now or File an Issue
 
-**Fix now** when the rewrite is local (one module, no public interface change), the affected behavior is covered by tests that pass today, and the risk is low.
+**Fix now** when the rewrite is local (one module, or extracting scattered literals into constants without changing their values; no public interface change), the affected behavior is covered by tests that pass today, and the risk is low.
 
 **File an issue** when the rewrite crosses modules, changes a public or exported interface, touches code no test covers, needs a design decision, or is too large to review as one focused change. When coverage is missing, the issue names the characterization test to write before the rewrite.
 

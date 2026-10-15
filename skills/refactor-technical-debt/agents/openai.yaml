@@ -1,4 +1,0 @@
-interface:
-  display_name: "Refactor Technical Debt"
-  short_description: "Rewrite code to do the same with less, better code, or file issues for it"
-  default_prompt: "Use $refactor-technical-debt to find code that could do the same thing with less, better code, rewrite the small safe cases under passing tests, and file GitHub issues for the larger ones."

@@ -18,7 +18,7 @@ Licensed under the [MIT License](LICENSE).
 | `programming-typescript` | Write strict, modern TypeScript without unsafe assertions or unparsed boundaries. |
 | `pr-steward` | Loop over every open GitHub PR with sub-agents that review, fix, and rebase, and report which PRs are ready to merge. |
 | `pull-request` | Review GitHub and Forgejo PRs, post findings on changed code lines, and drive a PR toward merge as its author. |
-| `refactor-technical-debt` | Rewrite code to do the same with less, better code, or file issues for larger rewrites. Better, not compact. |
+| `refactor-debts-and-smells` | Refactor technical debt and code smells, magic values, and scattered literals, or file issues for larger rewrites. Better, not compact. |
 | `ruthless-critic` | Deliver precise, evidence-based, unsparing criticism without personal abuse. |
 | `shopping` | Compare products, offers, and reviews across the wider web before buying. |
 | `support-ticket` | Advance technical support cases with falsifiable tests, evidence analysis, and actionable provider updates. |
@@ -91,10 +91,10 @@ For strict, modern TypeScript development:
 npx skills add StephanMeijer/skills --skill programming-typescript
 ```
 
-For rewriting code to do the same with less, better code:
+For refactoring technical debt and code smells:
 
 ```bash
-npx skills add StephanMeijer/skills --skill refactor-technical-debt
+npx skills add StephanMeijer/skills --skill refactor-debts-and-smells
 ```
 
 For an unsparing critique:
@@ -160,7 +160,7 @@ skills/
 │   ├── SKILL.md
 │   ├── agents/
 │   └── references/
-├── refactor-technical-debt/
+├── refactor-debts-and-smells/
 │   ├── SKILL.md
 │   ├── agents/
 │   └── references/
