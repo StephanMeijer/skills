@@ -1,0 +1,4 @@
+interface:
+  display_name: "Create Pull Request"
+  short_description: "Open small, verified PRs with an ELI5 and screenshots"
+  default_prompt: "Use $create-pull-request to turn my changes into small, focused pull requests, each with an ELI5 summary and before and after screenshots when anything visual changed."

@@ -11,6 +11,7 @@ Licensed under the [MIT License](LICENSE).
 | `champion-challenger` | Search for the best classifier: one radical idea per round, scored against the champion, losers salvaged. |
 | `convert-documents` | Convert office, PDF, markup, ebook, spreadsheet, and presentation formats with CLI tools. |
 | `convert-media` | Convert images, audio, and video with CLI tools and verified codec-aware settings. |
+| `create-pull-request` | Open small, verified PRs, split by concern, each with an ELI5 and screenshots for visual changes. |
 | `dockerfile` | Create and audit minimal, secure, reproducible multi-platform Dockerfiles and `.dockerignore` files. |
 | `github-issue` | Create and manage GitHub issues with native metadata, relationships, projects, fields, and security workflows. |
 | `programming-python` | Write strict, modern Python with precise types, validated models, and complete local checks. |
@@ -29,6 +30,12 @@ List the skills in this repository:
 
 ```bash
 npx skills add StephanMeijer/skills --list
+```
+
+For opening small pull requests with an ELI5 and screenshots:
+
+```bash
+npx skills add StephanMeijer/skills --skill create-pull-request
 ```
 
 For pull request review and author-side work:
@@ -132,6 +139,10 @@ skills/
 │   ├── agents/
 │   └── references/
 ├── convert-media/
+│   ├── SKILL.md
+│   ├── agents/
+│   └── references/
+├── create-pull-request/
 │   ├── SKILL.md
 │   ├── agents/
 │   └── references/

@@ -1,6 +1,6 @@
 ---
 name: pull-request
-description: Review pull requests on GitHub and Forgejo, including Codeberg, and work them toward merge as the author. Use when asked to review or inspect a PR, draft or submit review findings, comment on changed code, analyze PR CI, repair failing CI, rebase a conflicted PR onto its target branch, address reviewer feedback, triage unresolved review threads, reply in an inline review thread, resolve review threads, or prepare follow-up changes. Do not use to open a new pull request or to manage issues.
+description: Review pull requests on GitHub and Forgejo, including Codeberg, and work them toward merge as the author. Use when asked to review or inspect a PR, draft or submit review findings, comment on changed code, analyze PR CI, repair failing CI, rebase a conflicted PR onto its target branch, address reviewer feedback, triage unresolved review threads, reply in an inline review thread, resolve review threads, or prepare follow-up changes. Do not use to open a new pull request (use create-pull-request) or to manage issues.
 license: MIT
 ---
 
