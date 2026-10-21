@@ -23,6 +23,7 @@ Licensed under the [MIT License](LICENSE).
 | `refactor-debts-and-smells` | Refactor technical debt and code smells, magic values, and scattered literals, or file issues for larger rewrites. Better, not compact. |
 | `ruthless-critic` | Deliver precise, evidence-based, unsparing criticism without personal abuse. |
 | `shopping` | Compare products, offers, and reviews across the wider web before buying. |
+| `squash-pull-request` | Rebase a PR onto its base and squash it into one GPG-signed, signed-off commit with a subject line only. |
 | `support-ticket` | Advance technical support cases with falsifiable tests, evidence analysis, and actionable provider updates. |
 
 ## Install
@@ -123,6 +124,12 @@ For product and shopping research:
 npx skills add StephanMeijer/skills --skill shopping
 ```
 
+For squashing a pull request into one signed commit:
+
+```bash
+npx skills add StephanMeijer/skills --skill squash-pull-request
+```
+
 For advancing technical support tickets:
 
 ```bash
@@ -189,6 +196,9 @@ skills/
 │   ├── SKILL.md
 │   └── agents/
 ├── shopping/
+│   ├── SKILL.md
+│   └── agents/
+├── squash-pull-request/
 │   ├── SKILL.md
 │   └── agents/
 └── support-ticket/

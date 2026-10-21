@@ -1,0 +1,4 @@
+interface:
+  display_name: "Squash Pull Request"
+  short_description: "Rebase and squash a PR into one signed, signed-off commit"
+  default_prompt: "Use $squash-pull-request to rebase this pull request onto its base branch and squash it into one GPG-signed commit with a Signed-off-by trailer and a subject line only, then force-push it with a lease."
