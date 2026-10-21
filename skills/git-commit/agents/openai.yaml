@@ -1,0 +1,4 @@
+interface:
+  display_name: "Git Commit"
+  short_description: "One signed, signed-off Conventional Commit with a subject line only"
+  default_prompt: "Use $git-commit to commit the current changes as one GPG-signed Conventional Commit with a Signed-off-by trailer and a short subject line, no body."

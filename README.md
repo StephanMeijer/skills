@@ -13,6 +13,7 @@ Licensed under the [MIT License](LICENSE).
 | `convert-media` | Convert images, audio, and video with CLI tools and verified codec-aware settings. |
 | `create-pull-request` | Open small, verified PRs, split by concern, each with an ELI5 and screenshots for visual changes. |
 | `dockerfile` | Create and audit minimal, secure, reproducible multi-platform Dockerfiles and `.dockerignore` files. |
+| `git-commit` | Commit as one GPG-signed, signed-off Conventional Commit with a short subject line and no body. |
 | `github-issue` | Create and manage GitHub issues with native metadata, relationships, projects, fields, and security workflows. |
 | `programming-go` | Write strict, modern Go with explicit errors, owned concurrency, and complete local checks. |
 | `programming-python` | Write strict, modern Python with precise types, validated models, and complete local checks. |
@@ -56,6 +57,12 @@ For GitHub issue management:
 
 ```bash
 npx skills add StephanMeijer/skills --skill github-issue
+```
+
+For signed, signed-off Conventional Commits:
+
+```bash
+npx skills add StephanMeijer/skills --skill git-commit
 ```
 
 For production Dockerfiles:
@@ -164,6 +171,9 @@ skills/
 │   ├── SKILL.md
 │   ├── agents/
 │   └── references/
+├── git-commit/
+│   ├── SKILL.md
+│   └── agents/
 ├── github-issue/
 │   ├── SKILL.md
 │   ├── agents/
