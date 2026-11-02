@@ -53,7 +53,7 @@ Read [references/screenshots.md](references/screenshots.md) to capture before an
 Use [references/description-template.md](references/description-template.md). When the repository has its own PR template, fill that template in and add the ELI5 and Screenshots sections to it rather than replacing it.
 
 - The **ELI5** comes first: two to four short sentences in everyday words, no jargon, no file or function names, saying what changes and why it matters to the person using or running the product. A reviewer who reads nothing else should know what the PR is for.
-- The title follows the repository's convention (for example Conventional Commits); otherwise it is a short imperative sentence.
+- The title describes the change for someone scanning a PR list: what changes for the user or operator, in plain words. It is not a commit subject: never reuse the commit message or Conventional Commit syntax (`feat(scope): …`) as the title, unless the repository requires that format for PR titles (for example a title linter or squash-merge convention). Follow the house style of recent merged PR titles, such as a `Fix:` prefix.
 - Link issues with closing keywords (`Closes #123`) only when the PR fully resolves them; otherwise reference them.
 - For stacked PRs, list the whole stack with links in every PR and mark which one this is.
 - Write the description to a file and pass it with `--body-file`, so quoting and newlines survive.
