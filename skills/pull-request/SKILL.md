@@ -1,6 +1,6 @@
 ---
 name: pull-request
-description: Review pull requests on GitHub and Forgejo, including Codeberg, and work them toward merge as the author. Use when asked to review or inspect a PR, draft or submit review findings, comment on changed code, analyze PR CI, repair failing CI, rebase a conflicted PR onto its target branch, address reviewer feedback, triage unresolved review threads, reply in an inline review thread, resolve review threads, or prepare follow-up changes. Do not use to open a new pull request (use create-pull-request) or to manage issues.
+description: Review pull requests on GitHub and Forgejo, including Codeberg, and work them toward merge as the author. Use when asked to review or inspect a PR, draft or submit review findings, comment on changed code, analyze PR CI, repair failing CI, rebase a conflicted PR onto its target branch, retarget or rebase a stacked PR after the PR below it merged, address reviewer feedback, triage unresolved review threads, reply in an inline review thread, resolve review threads, or prepare follow-up changes. Do not use to open a new pull request (use create-pull-request) or to manage issues.
 license: MIT
 ---
 
@@ -13,7 +13,7 @@ Work on a pull request from current provider data and local code. Reviewing and 
 - **Fresh review**: inspect the change and draft new findings. This is the default for review or inspection requests and is read-only. Read [references/reviewing.md](references/reviewing.md).
 - **Submit review**: publish drafted findings. Only when the user explicitly asks to post, submit, comment, approve, or request changes. Read [references/reviewing.md](references/reviewing.md).
 - **Feedback triage**: classify existing comments and threads. Only when the user asks to triage, respond, or resolve them.
-- **Author-side work**: repair CI, rebase a conflicted branch, and turn reviewer feedback into code. Read [references/authoring.md](references/authoring.md).
+- **Author-side work**: repair CI, rebase a conflicted branch, retarget a stacked PR, and turn reviewer feedback into code. Read [references/authoring.md](references/authoring.md).
 
 One request can cover several jobs. Authorize each separately.
 

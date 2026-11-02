@@ -145,6 +145,15 @@ npx skills add StephanMeijer/skills --skill support-ticket
 
 You can target a specific supported agent with `--agent`, or install globally with `--global`.
 
+## Recommended GitHub CLI extensions
+
+The pull request skills use two official GitHub CLI extensions when they are installed, and ask you to install them when they are needed:
+
+```bash
+gh extension install github/gh-stack         # native stacked pull requests: link, rebase, and retarget a stack
+gh extension install github/gh-actions-lock  # pin every GitHub Action to a commit SHA in .github/workflows/actions.lock
+```
+
 ## Repository layout
 
 Each directory under `skills/` is an independently installable skill:

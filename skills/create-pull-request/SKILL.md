@@ -40,6 +40,8 @@ State the plan in one short list (PR title, what it contains, what it is based o
 
 For each PR branch, run the repository's build, lint, typecheck, and tests locally, using its documented commands. Do not open a PR whose locally reproducible checks fail; fix the failure or report it. Open as a draft only when the user asks, the repository's conventions say so, or a known failure remains that the user accepted.
 
+When the repository has `.github/workflows/actions.lock`, or the change adds or edits anything under `.github/workflows/` or an in-repo action, run GitHub's `gh actions-lock` extension (`github/gh-actions-lock`; if missing, ask the user to run `gh extension install github/gh-actions-lock`): `gh actions-lock` pins every action to a commit SHA and updates the lockfile, and the lockfile change belongs in the same PR. Verify with `gh actions-lock --verify`, which writes nothing and fails on an incomplete lockfile. A repository without a lockfile is not onboarded unasked; suggest it in the report.
+
 ## Capture Screenshots for Visual Changes
 
 A change is visual when anything a user sees could look different: UI components, styles, layout, copy, icons, images, generated documents, charts, emails, or CLI output formatting. When in doubt, treat it as visual.
@@ -66,6 +68,8 @@ gh pr create --base <base> --head <branch> --title "<title>" --body-file <file>
 ```
 
 For Forgejo, use `fj pr create` (check `fj pr create --help` for the flags of the installed version) or `POST /api/v1/repos/<owner>/<repo>/pulls`.
+
+On GitHub, open a stack with `gh stack` instead of chaining `--base` by hand, so GitHub links the PRs as a native stack and can retarget them as lower ones merge. Check `gh extension list` for GitHub's `github/gh-stack` extension; if it is missing, ask the user to install it (`gh extension install github/gh-stack`) rather than installing it yourself, since it runs code from outside the repository with the user's token. Either track the branches with `gh stack init <branch1> <branch2> ...` and push and open them with `gh stack submit`, or open the PRs as above and link them bottom to top with `gh stack link <pr1> <pr2> ...`. Without the extension, chain `--base` by hand and say so in the report.
 
 Open stacked PRs in order, then edit each body once all links exist. Apply labels and reviewers only from repository conventions or the user's instructions. After opening, re-read each PR from the provider to confirm the base, head commit, description, and that the images render.
 

@@ -39,6 +39,8 @@ In a stack, every description lists the whole chain:
 
 After a lower PR merges, the next PR's base must move to the default branch. Mention this in the report; doing the retarget and rebase later is work for the `pull-request` skill.
 
+On GitHub, link the stack with `gh stack` (see Open the PRs). A PR in a native stack cannot have its base changed with `gh pr edit --base`; GitHub refuses with "part of a stack". The `pull-request` skill covers retargeting it.
+
 ## Building the Branches
 
 Split local commits without touching anything already pushed:

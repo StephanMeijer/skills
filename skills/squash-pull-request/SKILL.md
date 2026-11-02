@@ -71,6 +71,10 @@ After the push, re-read the PR from the provider and confirm the head SHA is the
 
 Then put the local branch back in order: delete the stale local branch and recreate it from the remote, or, if it was checked out in another worktree, report the exact `git reset --hard origin/<head>` the user can run there after confirming that worktree holds nothing unpushed.
 
+## Stacked PRs
+
+When the PR is part of a GitHub stack (`gh stack view`, extension `github/gh-stack`), squashing rewrites the branch the PRs above it are built on. Those PRs then show the old commits as their own until they are rebased. Say so before squashing. After the push, rebase them with `gh stack rebase` only if the user authorized rewriting those branches too; otherwise list them in the report as needing a rebase. If the extension is missing, ask the user to install it (`gh extension install github/gh-stack`) rather than installing it yourself.
+
 ## Report
 
 - PR link, old head SHA, new head SHA, commit count, signature status, and the exact subject line.

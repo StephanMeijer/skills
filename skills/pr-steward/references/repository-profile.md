@@ -25,12 +25,14 @@ Create `$state_dir/PROFILE.md` on the first tick. Derive every entry from checke
 - Required checks: <names>
 - AI review lanes that must finish before a PR is ready: <workflow and lane names>
 - Known queue behaviour: <e.g. concurrency groups without cancel-in-progress; long queues are not failures>
+- Actions lockfile: <`.github/workflows/actions.lock` present or not. When present, PRs touching workflows also run `gh actions-lock --verify` (extension `github/gh-actions-lock`)>
 
 ## Known flaky tests
 - <test name>: <failure signature>. Rerun once; if it passes, note it.
 
 ## Merge-order hazards
 - <PR or change>: <what other PRs must do while it is open or after it lands>
+- Stacks: <GitHub stacks from `gh stack view`, bottom to top. When a bottom PR merges, the next one needs retargeting (and a rebase after a squash merge)>
 
 ## Excluded
 - <PRs the user said to leave alone>

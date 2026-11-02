@@ -16,6 +16,15 @@ When the provider reports that the PR conflicts with its target branch, rebase b
 
 A rebased PR branch normally requires rewriting its remote history. Do that only when push was explicitly authorized, using a lease that names the exact remote head ref and expected pre-rebase SHA; never use plain `--force` or an implicit lease. If the lease rejects, refetch and report the remote advance instead of retrying destructively. Verify the provider's new head SHA afterward. If push was not authorized, leave the successful local rebase unpushed and report the old and new head SHAs.
 
+## Retarget and Rebase a Stacked PR
+
+A stacked PR targets the branch of the PR below it. On GitHub, stacks are managed with GitHub's `gh stack` extension. Check `gh extension list` for `github/gh-stack`; if it is missing, ask the user to install it (`gh extension install github/gh-stack`) rather than installing it yourself.
+
+- `gh stack checkout <pr>` loads the stack locally and `gh stack view` shows its trunk and order. Check the trunk is the default branch: a stack linked without its bottom PR uses that PR's branch as trunk.
+- After a lower PR merged, the next PR must target the default branch. `gh pr edit --base` fails while the PR is in a native stack ("part of a stack"). Remove the stack grouping with `gh stack unstack <stack-number>` (the PRs stay open), retarget the bottom open PR with `gh pr edit <pr> --base <default>`, then relink the remaining PRs bottom to top with `gh stack link <pr1> <pr2> ...`.
+- Whether a rebase is needed depends on how the lower PR merged. A merge commit keeps its commits in the default branch's history, so the upper PRs only need retargeting. A squash or rebase merge leaves the old commits in the upper branches; rebase them with `gh stack rebase` (or `git rebase --onto <default> <old-lower-head> <branch>`) and push each with an explicit lease, per the rules above.
+- Update the stack list in every remaining PR's description: mark merged PRs and state the new merge order.
+
 ## Repair CI/CD Failures
 
 For every failed or cancelled job:
@@ -26,6 +35,8 @@ For every failed or cancelled job:
 4. Fix PR-caused failures within the requested scope. Do not change production code to mask an infrastructure failure or weaken a test to obtain green CI.
 5. Re-run the exact failing command, then the broader relevant suite and matching manual usage check.
 6. After an authorized push, follow the new pipeline for the pushed head SHA and repeat until it passes or only a proven external blocker remains.
+
+A failure in a workflow lockfile check (`gh actions-lock --verify`, from GitHub's `github/gh-actions-lock` extension) means an action is unpinned, missing from `.github/workflows/actions.lock`, or its ref moved upstream. Run `gh actions-lock` to pin and record new or changed actions. Treat a moved ref or unreachable pin as a supply-chain signal: inspect what the tag or branch now points to before passing `--accept-moved` or `--relock`, and report what moved.
 
 Report external or inaccessible failures with the job URL, observed evidence, and the smallest owner action needed. Do not claim CI is fixed until the provider reports success for the current PR head.
 
@@ -48,6 +59,8 @@ On GitHub, reply using the exact review Thread ID, then resolve that same thread
 ## Pass the Local Pre-Push Gate
 
 Before any authorized push, derive the repository's full local check matrix from its guidance, package or task scripts, and CI configuration. Run every applicable, locally reproducible check on the final candidate, including formatting verification, linting, static or type diagnostics, targeted and broader tests, build or packaging checks, and the matching manual usage check. A targeted test alone is not sufficient when the repository provides a broader relevant suite.
+
+When the PR touches `.github/workflows/` or an in-repo action and the repository has `.github/workflows/actions.lock`, `gh actions-lock --verify` is part of the gate; run `gh actions-lock` first to pin new actions and commit the lockfile change with them.
 
 Fix every PR-caused failure and rerun the failed check plus any broader check whose inputs changed. Do not push while an applicable local check is failing or has not run. Omit a check only when it is inherently remote, credential-gated, or infrastructure-dependent and no local equivalent exists; record the reason and the evidence instead of asking the reviewer to investigate it.
 
