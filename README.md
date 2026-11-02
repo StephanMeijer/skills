@@ -9,6 +9,7 @@ Licensed under the [MIT License](LICENSE).
 | Skill | Purpose |
 | --- | --- |
 | `champion-challenger` | Search for the best classifier: one radical idea per round, scored against the champion, losers salvaged. |
+| `coding-guidelines` | Keep code simple and the architecture sound: remove rather than add, parse at the boundary, errors as values, no flaky tests, linting in CI. |
 | `convert-documents` | Convert office, PDF, markup, ebook, spreadsheet, and presentation formats with CLI tools. |
 | `convert-media` | Convert images, audio, and video with CLI tools and verified codec-aware settings. |
 | `create-pull-request` | Open small, verified PRs, split by concern, each with an ELI5 and screenshots for visual changes. |
@@ -82,6 +83,12 @@ For searching for the best classification model:
 
 ```bash
 npx skills add StephanMeijer/skills --skill champion-challenger
+```
+
+For simple code and sound architecture:
+
+```bash
+npx skills add StephanMeijer/skills --skill coding-guidelines
 ```
 
 For document conversion:
@@ -171,6 +178,9 @@ skills/
 │   ├── SKILL.md
 │   ├── agents/
 │   └── references/
+├── coding-guidelines/
+│   ├── SKILL.md
+│   └── agents/
 ├── convert-documents/
 │   ├── SKILL.md
 │   ├── agents/

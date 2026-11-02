@@ -1,0 +1,4 @@
+interface:
+  display_name: "Coding Guidelines"
+  short_description: "Keep it simple: remove rather than add, no flaky tests"
+  default_prompt: "Use $coding-guidelines to keep this code simple: prefer removing code over adding it, and no flaky tests."
