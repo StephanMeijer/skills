@@ -14,6 +14,7 @@ Licensed under the [MIT License](LICENSE).
 | `create-pull-request` | Open small, verified PRs, split by concern, each with an ELI5 and screenshots for visual changes. |
 | `dockerfile` | Create and audit minimal, secure, reproducible multi-platform Dockerfiles and `.dockerignore` files. |
 | `git-commit` | Commit as one GPG-signed, signed-off Conventional Commit with a short subject line and no body. |
+| `github-actions` | Write, harden, and debug GitHub Actions workflows: SHA-pinned via `gh actions-lock`, least privilege, injection-safe. |
 | `github-issue` | Create and manage GitHub issues with native metadata, relationships, projects, fields, and security workflows. |
 | `programming-go` | Write strict, modern Go with explicit errors, owned concurrency, and complete local checks. |
 | `programming-python` | Write strict, modern Python with precise types, validated models, and complete local checks. |
@@ -51,6 +52,12 @@ For stewarding every open pull request on a loop:
 
 ```bash
 npx skills add StephanMeijer/skills --skill pr-steward
+```
+
+For GitHub Actions workflows:
+
+```bash
+npx skills add StephanMeijer/skills --skill github-actions
 ```
 
 For GitHub issue management:
@@ -147,7 +154,7 @@ You can target a specific supported agent with `--agent`, or install globally wi
 
 ## Recommended GitHub CLI extensions
 
-The pull request skills use two official GitHub CLI extensions when they are installed, and ask you to install them when they are needed:
+The pull request and GitHub Actions skills use two official GitHub CLI extensions when they are installed, and ask you to install them when they are needed:
 
 ```bash
 gh extension install github/gh-stack         # native stacked pull requests: link, rebase, and retarget a stack
@@ -183,6 +190,10 @@ skills/
 ├── git-commit/
 │   ├── SKILL.md
 │   └── agents/
+├── github-actions/
+│   ├── SKILL.md
+│   ├── agents/
+│   └── references/
 ├── github-issue/
 │   ├── SKILL.md
 │   ├── agents/

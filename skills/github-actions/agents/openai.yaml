@@ -1,0 +1,4 @@
+interface:
+  display_name: "GitHub Actions"
+  short_description: "Write, harden, and debug pinned, least-privilege workflows"
+  default_prompt: "Use $github-actions to write, review, or fix this repository's GitHub Actions workflows: pin actions with gh actions-lock, grant least-privilege permissions, and prove the change with a real run."
