@@ -24,7 +24,7 @@ npx playwright screenshot --viewport-size=390,844 http://localhost:3000/settings
 
 Name files `<before|after>-<screen>-<viewport>[-<theme>].png`. Keep them in a temporary directory, outside the repository.
 
-Look at every screenshot before uploading it. A blank page, a spinner, a login wall, or an error overlay is not evidence; fix the capture.
+Look at every screenshot before uploading it: a blank page, a spinner, a login wall, or an error overlay is not evidence; fix the capture.
 
 ## How to Upload
 
@@ -34,7 +34,7 @@ Never commit screenshots to the PR branch; they would end up in the default bran
 
 Use the first option that works:
 
-1. **`--attach`**: `gh pr create … --body-file <file> --attach '<path>#<alt text>'`, or `gh pr edit <pr> --attach '<path>#<alt text>'` for a PR that is already open. The file is uploaded as a GitHub asset, and an image reference to that local path in the body (`![alt](./after-settings-desktop.png)`) is rewritten to the uploaded URL, so write the table with local paths and let `gh` rewrite them. Check that the installed `gh` has the flag with `gh pr create --help | grep -- --attach`; the fallbacks below are only for one that does not.
+1. **`--attach`**: `gh pr create … --body-file <file> --attach '<path>#<alt text>'`, or `gh pr edit <pr> --attach '<path>#<alt text>'` for a PR that is already open. The file is uploaded as a GitHub asset and an image reference to that local path in the body (`![alt](./after-settings-desktop.png)`) is rewritten to the uploaded URL, so write the table with local paths. Check that the installed `gh` has the flag with `gh pr create --help | grep -- --attach`; the fallbacks below are only for one that does not.
 2. **Browser upload**, when browser automation is available and signed in to GitHub: open the PR, edit the description, and attach the files through the editor's file input. GitHub inserts `https://github.com/user-attachments/assets/...` links. Save, then check that the images render.
 3. **Assets branch**: commit the images to a dedicated orphan branch, such as `pr-assets`, under a folder per PR (`pr-<number>/`), and reference them by commit SHA so the links never move:
 
@@ -42,7 +42,7 @@ Use the first option that works:
    ![After, settings, desktop](https://github.com/<owner>/<repo>/blob/<sha>/pr-<number>/after-settings-desktop.png?raw=true)
    ```
 
-   These links work in private repositories for anyone with read access. Use an existing assets branch when the repository has one. Creating a new long-lived branch is visible to the whole team, so ask the user once before creating it.
+   These links work in private repositories for anyone with read access. Use an existing assets branch when the repository has one; a new long-lived branch is visible to the whole team, so ask the user once before creating it.
 
 ### Forgejo and Codeberg
 

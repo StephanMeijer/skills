@@ -6,7 +6,7 @@ A small PR gets reviewed sooner, reviewed better, and reverted cleanly. Split by
 
 Separate these into their own PRs, in roughly this merge order:
 
-1. **Preparatory refactors** that change no behavior: renames, moves, extracting a function, introducing a type. Reviewers can approve these quickly because tests should not change.
+1. **Preparatory refactors** that change no behavior: renames, moves, extracting a function, introducing a type. Tests should not change, so reviewers approve these quickly.
 2. **Mechanical changes**: formatting, codemods, dependency bumps, generated code. Reviewers skim these; mixing them with logic hides the logic.
 3. **Infrastructure the feature needs**: a migration, a new endpoint, a config option, behind a flag or unused until the next PR.
 4. **The behavior change itself**, with its tests.
@@ -37,9 +37,9 @@ In a stack, every description lists the whole chain:
 3. #103 Switch production to Redis sessions
 ```
 
-After a lower PR merges, the next PR's base must move to the default branch. Mention this in the report; doing the retarget and rebase later is work for the `pull-request` skill.
+After a lower PR merges, the next PR's base must move to the default branch. Mention this in the report; the retarget and rebase are work for the `pull-request` skill.
 
-On GitHub, link the stack with `gh stack` (see Open the PRs). A PR in a native stack cannot have its base changed with `gh pr edit --base`; GitHub refuses with "part of a stack". The `pull-request` skill covers retargeting it.
+On GitHub, link the stack with `gh stack` (see Open the PRs). A PR in a native stack cannot have its base changed with `gh pr edit --base`; GitHub refuses with "part of a stack".
 
 ## Building the Branches
 
