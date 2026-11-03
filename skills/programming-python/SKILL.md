@@ -26,6 +26,21 @@ Produce modern Python whose types and tests make behavior explicit. Follow the r
 - Keep synchronous code by default. Use async only for genuine concurrent I/O, follow the project's existing async stack, and keep blocking work off the event loop.
 - Prefer clear functions and composition over speculative classes, frameworks, decorators, metaprogramming, or compatibility layers. Preserve public API compatibility unless a breaking change is requested.
 
+## Protect Trust Boundaries
+
+- For changes to authentication, authorization, tokens, sessions, cookies, identity, proxy metadata,
+  registration, or abuse controls, enumerate every sibling entry point and artifact transition before
+  editing. Put the decision in shared domain code and run the same allowed and denied cases through
+  every applicable path.
+- Parse scopes, roles, groups, domains, origins, external identities, and artifact purposes into
+  explicit domain values. Do not authorize with substring or suffix checks.
+- Intersect authority and expiration across all principals, clients, resources, and policies. Bind
+  protected artifacts to their purpose and consumer so renaming or replay cannot change their use.
+- Treat dependency parsers as fallible after local validation, and test exceptions, replay, expiry,
+  reset, retry, and concurrency sequences where they can change the decision.
+- For a security fix, first add a deterministic regression test that fails for the intended reason,
+  then verify every sibling path.
+
 ## Prove the Change Locally
 
 Use the project's testing library and conventions. Add focused tests for changed behavior, boundary validation, failure paths, and preserved public behavior; prefer real local integrations over mocks when practical.
