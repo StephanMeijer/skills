@@ -38,7 +38,7 @@ Simple is good.
 ## Parse, Don't Validate
 
 - Parse untrusted input into a typed value once, at the boundary: requests, files, environment, external APIs. Code past the boundary trusts the type and does not check again.
-- Use the ecosystem's schema library rather than hand-written checks: Zod in TypeScript, Pydantic in Python, serde in Rust, Ecto changesets in Elixir.
+- Parse with the validator the repository already uses. For a small shape with no existing validator, a small explicit parser is fine; add the ecosystem's schema library (Zod in TypeScript, Pydantic in Python, serde in Rust, Ecto changesets in Elixir) only when nested schemas, unions, or error reporting make hand-written parsing less trustworthy.
 - A failed parse is an error value with the reason, not a half-valid object.
 
 ## Errors
