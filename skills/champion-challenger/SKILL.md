@@ -47,7 +47,7 @@ Read `CONTRACT.md` and `LEDGER.md` first in every round. Verify the hashes of th
 
 ## Run One Round
 
-1. **Read the map.** From `LEDGER.md`, list the idea axes already explored, the current champion, and the salvage pile.
+1. **Read the map.** From `LEDGER.md`, list the idea axes already explored, the current champion, the salvage pile, the falsified hypotheses, and the streak and budget lines. If the streak has reached the plateau limit or the budget is spent, go straight to Stop and Report.
 2. **Pick a radical idea.** Choose one idea that changes the approach along an axis the ledger has not explored, per [references/radical-ideas.md](references/radical-ideas.md). A hyperparameter sweep, a different seed, or a near copy of a past attempt is not radical. Write the hypothesis before writing code: what the idea exploits that the champion misses, and what result would falsify it.
 3. **Build on what works.** Compose the challenger as the radical idea on top of the champion's parts and the salvage items that are compatible with the idea. When the idea replaces something wholesale (a new model family, a new representation), still carry over salvage that applies across approaches: cleaned labels, leakage fixes, useful features, class weighting, thresholds.
 4. **Train within budget.** Stop early and record a partial result rather than exceeding the round budget. Fix every seed. Fit all preprocessing on the training split only.
@@ -56,7 +56,7 @@ Read `CONTRACT.md` and `LEDGER.md` first in every round. Verify the hashes of th
    - **Win**: the challenger becomes the champion. Record what made it win, and drop salvage items it already absorbed.
    - **Loss or tie**: the champion stays. Salvage the challenger as below.
    - **Crash or budget overrun**: record the cause; salvage any finding that is still true, such as a data problem the attempt exposed.
-7. **Record.** Write `RESULT.md` in the attempt directory and update `LEDGER.md`: the attempt row, the idea map, the salvage pile, and the champion when it changed.
+7. **Record.** Write `RESULT.md` in the attempt directory and update `LEDGER.md`: the attempt row, the idea map, the salvage pile, the champion when it changed, a falsified-hypotheses entry when the attempt lost, and the streak and budget lines (reset "rounds without a win" on a win, otherwise add one; add the round's runtime to the budget used).
 
 ## Salvage What a Loser Got Right
 
@@ -81,8 +81,10 @@ Add each finding to the salvage pile with its evidence (counts, slice metrics) a
 Report to the user, and tell them the loop can stop, when one of these holds:
 
 - the champion meets the target score on the validation split and its confirmation view;
-- the plateau limit from the contract is reached: that many rounds in a row without a win;
-- the total budget is spent, or a problem needs the user (a contract hash mismatch, a suspected leak, a disallowed resource the next idea needs).
+- the plateau limit from the contract is reached: the ledger's "rounds without a win" line equals it;
+- the total budget is spent per the ledger's "budget used" line, or a problem needs the user (a contract hash mismatch, a suspected leak, a disallowed resource the next idea needs).
+
+Both checks read the "Streak and budget" lines that step 7 keeps current; they are one comparison each, not a recount of the attempts table.
 
 The final report gives the champion's approach, validation and confirmation scores with their noise, the test score only when the user asked for it, the ideas tried with their outcome, and the salvage that compounded into the result.
 
