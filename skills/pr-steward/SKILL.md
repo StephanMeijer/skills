@@ -55,7 +55,7 @@ Classify every finding (from a review, an AI review lane, or a fix sub-agent) be
 - **Out of scope**: the defect already exists on the base branch, or it lies in code or behavior the PR neither touches nor claims, or it is a larger feature or redesign. Do **not** fix it in the PR, and do not let it block readiness. File it as a GitHub issue per [references/follow-up-issues.md](references/follow-up-issues.md).
 - **When unsure**: a new defect the diff introduces is always in scope. A pre-existing defect the diff merely makes more reachable is in scope only when the fix is small and local; otherwise it is out of scope.
 
-Link an out-of-scope issue to its PR in both directions: the issue cites the PR and the comment that raised it, and the PR links the issue (a reply in the originating thread, which is then resolved, or a top-level comment). Set a native dependency when the issue needs the PR to land; otherwise the two-way mentions are the link, because GitHub has no native "related" relationship.
+Link an out-of-scope issue to its PR in both directions: the issue cites the PR and the comment that raised it, and the PR links the issue (a reply in the originating thread, which is then resolved, or a top-level comment). Set a native dependency when the issue needs the PR to land; otherwise the two-way mentions are the link, because the CLI exposes no write for GitHub's native "relates to" relationship (see the `github-issue` skill).
 
 ## Run One Tick
 
