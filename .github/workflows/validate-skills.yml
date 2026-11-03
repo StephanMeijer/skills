@@ -3,16 +3,24 @@ name: Validate skills
 on:
   pull_request:
   push:
+    branches: [main]
 
 permissions:
   contents: read
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   validate:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v7
-      - uses: actions/setup-node@v6
+      - uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v6.5.0
         with:
           node-version: 24
           package-manager-cache: false
@@ -28,7 +36,7 @@ jobs:
           qa_root="$(mktemp -d)"
 
           cd "$qa_root"
-          npx --yes skills@latest add "$source_root" --skill '*' --agent codex --copy --yes
+          npx --yes skills@1.7.6 add "$source_root" --skill '*' --agent codex --copy --yes
 
           for skill_file in "$source_root"/skills/*/SKILL.md; do
             skill_name="$(basename "$(dirname "$skill_file")")"
