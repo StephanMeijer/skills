@@ -1,10 +1,10 @@
 # Working a Pull Request as Its Author
 
-Move an existing PR toward merge by turning current CI and reviewer feedback into verified code. Treat local verification as the author's responsibility: never push a change and leave its locally reproducible quality checks for the reviewer to run.
+Move an existing PR toward merge by turning current CI and reviewer feedback into verified code. Local verification is the author's responsibility: never push a change and leave its locally reproducible quality checks for the reviewer to run.
 
 ## Rebase a Conflicted PR First
 
-When the provider reports that the PR conflicts with its target branch, rebase before repairing CI or reviewer feedback so subsequent work uses the current integration base.
+When the provider reports that the PR conflicts with its target branch, rebase before repairing CI or reviewer feedback so later work uses the current base.
 
 1. Read the exact base branch and PR head branch from provider metadata. Never assume `main` or `master`.
 2. Confirm the current branch is the PR head, tracked and untracked worktree state and the index are clean, its upstream is known, and the base branch is not being rewritten.
@@ -21,14 +21,14 @@ git fetch <base-remote> <base-branch>
 git rebase <base-sha>
 ```
 
-Resolve each conflict by intent, stage the resolved paths, and continue with `git rebase --continue`. If a correct resolution is unclear, use `git rebase --abort` and verify the recorded head is restored.
+Resolve each conflict by intent, stage the resolved paths, and continue with `git rebase --continue`.
 
 ```bash
 git log --oneline <base-remote>/<base-branch>..HEAD
 git range-diff <base-sha>..<old-head-sha> <base-sha>..HEAD
 ```
 
-A rebased PR branch normally requires rewriting its remote history. Do that only when push was explicitly authorized, using a lease that names the exact remote head ref and expected pre-rebase SHA; never use plain `--force` or an implicit lease:
+Push the rebased branch only when push was explicitly authorized, with a lease that names the exact remote head ref and expected pre-rebase SHA; never use plain `--force` or an implicit lease:
 
 ```bash
 git push \
@@ -51,7 +51,7 @@ A stacked PR targets the branch of the PR below it. On GitHub, stacks are manage
 
 For every failed or cancelled job:
 
-1. Open the job details and isolate the first actionable failure rather than relying on the check title.
+1. Open the job details and isolate the first actionable failure; the check title is not enough.
 2. Reproduce the failing command locally when the repository exposes it.
 3. Decide whether the failure is caused by the PR, exposed by the rebase, or external infrastructure such as missing credentials, runner outages, rate limits, or a demonstrably flaky dependency.
 4. Fix PR-caused failures within the requested scope. Do not change production code to mask an infrastructure failure or weaken a test to obtain green CI.
@@ -86,4 +86,4 @@ When the PR touches `.github/workflows/` or an in-repo action and the repository
 
 Fix every PR-caused failure and rerun the failed check plus any broader check whose inputs changed. Do not push while an applicable local check is failing or has not run. Omit a check only when it is inherently remote, credential-gated, or infrastructure-dependent and no local equivalent exists; record the reason and the evidence instead of asking the reviewer to investigate it.
 
-In the outcome, list the exact local commands and their results. The reviewer should receive verification evidence, not a request to run linting, tests, builds, or manual checks on the author's behalf.
+List the exact local commands and their results in the outcome; the reviewer receives verification evidence, not a request to run linting, tests, builds, or manual checks.

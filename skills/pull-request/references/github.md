@@ -27,7 +27,7 @@ Use the returned `headRefOid` to find matching workflow runs:
 gh run list --commit <head-sha> --limit 20 --json conclusion,createdAt,databaseId,displayTitle,event,headSha,name,status,updatedAt,url,workflowName
 ```
 
-Inspect a failed run only as far as needed to identify the failing job and actionable log section:
+Inspect a failed run only far enough to find the failing job and actionable log section:
 
 ```bash
 gh run view <run-id> --json conclusion,jobs,status,url,workflowName
@@ -102,7 +102,7 @@ Rebase only when `mergeable` is `CONFLICTING` or equivalent current provider evi
 
 ## Submit fresh findings as inline comments
 
-Only submit after explicit user authorization. Prefer one review containing every fresh inline finding so the findings share one disposition and do not produce a burst of separate notifications.
+Only submit after explicit user authorization. Prefer one review containing every fresh inline finding so they share one disposition and send one notification.
 
 Create `review.json` with the reviewed head SHA and one comment per defect:
 

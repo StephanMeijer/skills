@@ -22,7 +22,7 @@ fj pr view <PR> comments
 fj pr review <PR> list --comments
 ```
 
-Use `fj pr checkout <PR>` only when local inspection or authorized local changes require it and the worktree is safe to switch. Compare local `HEAD` with the provider's PR head before editing.
+Use `fj pr checkout <PR>` only when local inspection or authorized local changes require it and the worktree is safe to switch. Confirm local `HEAD` matches the provider's PR head before editing.
 
 ## Use the REST API for complete identifiers and CI
 
@@ -85,7 +85,7 @@ fj api '/repos/<owner>/<repo>/pulls/<PR>/reviews' \
   --input review.json
 ```
 
-Otherwise use an already configured authenticated API client against the same instance endpoint. If none is available, open the PR's changed-files view, add each finding on its intended line with the web UI, and submit the review there. For API submission, require the returned review `id`, `html_url`, `commit_id`, and expected `comments_count`, then list `/repos/<owner>/<repo>/pulls/<PR>/reviews/<review-id>/comments` and require an `html_url` for every intended inline finding. For web submission, reopen the submitted review and verify every intended inline comment in place.
+Otherwise use an already configured authenticated API client against the same endpoint. If none is available, open the PR's changed-files view, add each finding on its intended line with the web UI, and submit the review there. For API submission, require the returned review `id`, `html_url`, `commit_id`, and expected `comments_count`, then list `/repos/<owner>/<repo>/pulls/<PR>/reviews/<review-id>/comments` and require an `html_url` for every intended inline finding. For web submission, reopen the submitted review and verify every intended inline comment in place.
 
 If Forgejo rejects an anchor, refetch the diff and correct the old/new line selection. Do not silently convert the finding into a top-level PR comment.
 

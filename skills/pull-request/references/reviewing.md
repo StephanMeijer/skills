@@ -4,7 +4,7 @@ Produce actionable findings mapped to the PR diff. A plain review request return
 
 ## Review the Change
 
-1. Surface failed, cancelled, pending, skipped, stale, unavailable, or missing CI before review findings. Place it at the top of the report rather than allowing a green subset to obscure it.
+1. Surface failed, cancelled, pending, skipped, stale, unavailable, or missing CI before review findings. Put it at the top of the report so a green subset does not hide it.
 2. Read the complete PR diff and every changed file relevant to a potential finding.
 3. Read repository guidance such as `AGENTS.md`, coding standards, and test instructions.
 4. Inspect nearby callers, tests, schemas, and error paths before asserting a defect.
@@ -45,12 +45,12 @@ exact path and trigger.
 
 ## Draft and Submit Fresh Findings
 
-Write one actionable defect per inline comment. Keep each comment self-contained: explain the impact and triggering scenario, then give the smallest credible fix. Do not combine unrelated findings merely to reduce the comment count.
+Write one actionable defect per inline comment. Keep each comment self-contained: explain the impact and triggering scenario, then give the smallest credible fix. Do not combine unrelated findings to reduce the comment count.
 
 When submission is explicitly authorized:
 
 1. Refetch the PR head and diff immediately before posting. If the head changed, discard stale anchors and re-review the affected diff.
-2. Use the provider reference to submit one review containing all inline findings, so they share one disposition and do not produce a burst of separate notifications.
+2. Use the provider reference to submit one review containing all inline findings, so they share one disposition and send one notification.
 3. Use a comment disposition unless the user explicitly requested approval or changes. Do not infer a disposition from finding severity.
 4. Put only the concise summary and unanchorable findings in the overall review body. Explain why each unanchorable finding could not be placed inline.
 5. Verify the returned review and every inline comment by stable ID or URL. After an ambiguous timeout or transport failure, inspect the PR before retrying so a successful write is not duplicated.
