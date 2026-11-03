@@ -25,7 +25,7 @@ Asking to commit authorizes staging and committing the changes the user is worki
 
 1. `git status --short` and `git diff` (plus `git diff --staged` when something is already staged). Read the whole diff; the subject must describe what the diff does, not what the user said they did.
 2. Read the repository's conventions: `CONTRIBUTING`, `CLAUDE.md`, `AGENTS.md`, `.gitmessage`, `commitlint` or `release-plz` configuration, and `git log --oneline -20`. They decide the allowed types, the scope names, and whether the subject starts lower-case. Follow them over the defaults below.
-3. If the diff holds more than one independent concern (a refactor and a behaviour change, a dependency bump and the code that uses it, two unrelated fixes), split it: stage and commit one concern at a time, in dependency order, each with its own subject. Use `git add -p` for hunks that belong to different concerns.
+3. If the diff holds more than one independent concern (a refactor and a behaviour change, a dependency bump and the code that uses it, two unrelated fixes), split it: stage and commit one concern at a time, in dependency order, each with its own subject. Stage by path. When one file holds hunks of two concerns, write this concern's hunks to a patch (`git diff -- <path>`, edited down) and `git apply --cached <patch>`; interactive `git add -p` is not available.
 
 ## Choose Type and Scope
 
