@@ -43,7 +43,7 @@ state_dir="$(git rev-parse --path-format=absolute --git-common-dir)/pr-steward"
 ```
 
 - `$state_dir/PROFILE.md`: the repository profile (gate commands, build environment, AI review lanes, flaky tests, merge-order hazards). Create it on the first tick from [references/repository-profile.md](references/repository-profile.md) by reading the CI workflows and repository guidance. Keep it current when a tick learns something durable.
-- `$state_dir/STATE.md`: the agent-to-PR ledger, last clean review head per PR, decisions, open questions to the user, filed follow-ups, and a short tick log. Create it from [references/state-template.md](references/state-template.md).
+- `$state_dir/STATE.md`: the agent-to-PR ledger, last clean review head per PR, decisions, excluded PRs, open questions to the user, filed follow-ups, and a short tick log. Create it from [references/state-template.md](references/state-template.md).
 
 Read both at the start of every tick. Update `STATE.md` whenever a sub-agent is launched, stopped, or reports. Record user rules given mid-loop in `STATE.md` under decisions so they outlive the conversation.
 

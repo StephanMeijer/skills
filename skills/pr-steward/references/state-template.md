@@ -16,6 +16,9 @@ Create `$state_dir/STATE.md` on the first tick. Update it whenever a sub-agent i
 - <rule given mid-loop, with the date>
 - <decision the steward made and told the user, e.g. which PR renumbers a colliding spec section>
 
+## Excluded
+- <PRs the user said to leave alone; no sub-agent touches them>
+
 ## Pairwise conflicts between open PRs
 - #<A> vs #<B>: <file, and how whichever merges second resolves it>
 

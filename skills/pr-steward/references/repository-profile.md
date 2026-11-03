@@ -33,7 +33,4 @@ Create `$state_dir/PROFILE.md` on the first tick. Derive every entry from checke
 ## Merge-order hazards
 - <PR or change>: <what other PRs must do while it is open or after it lands>
 - Stacks: <GitHub stacks from `gh stack view`, bottom to top. When a bottom PR merges, the next one needs retargeting (and a rebase after a squash merge)>
-
-## Excluded
-- <PRs the user said to leave alone>
 ```
