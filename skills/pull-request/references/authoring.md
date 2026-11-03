@@ -14,7 +14,29 @@ When the provider reports that the PR conflicts with its target branch, rebase b
 6. If resolution cannot be completed confidently, run `git rebase --abort`, confirm the original head is restored, and report the blocking conflicts.
 7. After a successful rebase, inspect the rewritten branch log and range-diff from the old to new series, account for every changed file, and run the relevant tests.
 
-A rebased PR branch normally requires rewriting its remote history. Do that only when push was explicitly authorized, using a lease that names the exact remote head ref and expected pre-rebase SHA; never use plain `--force` or an implicit lease. If the lease rejects, refetch and report the remote advance instead of retrying destructively. Verify the provider's new head SHA afterward. If push was not authorized, leave the successful local rebase unpushed and report the old and new head SHAs.
+The commands, with the base and head taken from provider metadata (see the provider reference):
+
+```bash
+git fetch <base-remote> <base-branch>
+git rebase <base-sha>
+```
+
+Resolve each conflict by intent, stage the resolved paths, and continue with `git rebase --continue`. If a correct resolution is unclear, use `git rebase --abort` and verify the recorded head is restored.
+
+```bash
+git log --oneline <base-remote>/<base-branch>..HEAD
+git range-diff <base-sha>..<old-head-sha> <base-sha>..HEAD
+```
+
+A rebased PR branch normally requires rewriting its remote history. Do that only when push was explicitly authorized, using a lease that names the exact remote head ref and expected pre-rebase SHA; never use plain `--force` or an implicit lease:
+
+```bash
+git push \
+  --force-with-lease=refs/heads/<head-branch>:<old-head-sha> \
+  <head-remote> HEAD:refs/heads/<head-branch>
+```
+
+Never force-push the base branch. For a fork PR, identify the writable head remote and owner instead of assuming `origin` is the push target. If the lease rejects, refetch and report the remote advance instead of retrying with a weaker lease. Verify the provider's new head SHA afterward. If push was not authorized, leave the successful local rebase unpushed and report the old and new head SHAs.
 
 ## Retarget and Rebase a Stacked PR
 

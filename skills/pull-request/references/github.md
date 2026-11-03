@@ -98,33 +98,7 @@ Filter for `isResolved == false`. The outer `reviewThreads.nodes[].id`, commonly
 
 ## Rebase when GitHub reports conflicts
 
-Rebase only when `mergeable` is `CONFLICTING` or equivalent current provider evidence shows a conflict. Use `baseRefName` as the base and `headRefName` as the PR branch; do not assume conventional names.
-
-Before rebasing, confirm tracked and untracked worktree state and the index are clean, the checked-out branch is the PR head, and its upstream is known. Fetch the base from its actual remote, record the current head SHA and exact fetched base SHA, then rebase the PR branch onto that observed commit:
-
-```bash
-git fetch <base-remote> <base-branch>
-git rebase <base-sha>
-```
-
-Resolve each conflict by intent, stage the resolved paths, and continue with `git rebase --continue`. If a correct resolution is unclear, use `git rebase --abort` and verify the recorded head is restored.
-
-After a successful rebase, run relevant tests and inspect the rewritten range and range-diff:
-
-```bash
-git log --oneline <base-remote>/<base-branch>..HEAD
-git range-diff <base-sha>..<old-head-sha> <base-sha>..HEAD
-```
-
-If push was explicitly authorized, update the PR head branch with a lease:
-
-```bash
-git push \
-  --force-with-lease=refs/heads/<head-branch>:<old-head-sha> \
-  <head-remote> HEAD:refs/heads/<head-branch>
-```
-
-Never force-push the base branch. For a fork PR, identify the writable head remote and owner instead of assuming `origin` is the push target. If the explicit lease rejects, refetch and stop rather than retrying with a weaker lease. Refetch PR metadata and require `headRefOid` to match local `HEAD`.
+Rebase only when `mergeable` is `CONFLICTING` or equivalent current provider evidence shows a conflict. Use `baseRefName` as the base and `headRefName` as the PR branch; do not assume conventional names. Then follow the rebase and lease-push procedure in [authoring.md](authoring.md). After an authorized push, refetch PR metadata and require `headRefOid` to match local `HEAD`.
 
 ## Submit fresh findings as inline comments
 
