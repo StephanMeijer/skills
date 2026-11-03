@@ -1,0 +1,4 @@
+interface:
+  display_name: "Security Invariants"
+  short_description: "Audit trust boundaries and lock fixes with tests"
+  default_prompt: "Use $security-invariants to audit this security-sensitive flow and turn each confirmed gap into a regression-tested invariant."

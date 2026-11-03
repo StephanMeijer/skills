@@ -25,6 +25,7 @@ Licensed under the [MIT License](LICENSE).
 | `pull-request` | Review GitHub and Forgejo PRs, post findings on changed code lines, and drive a PR toward merge as its author. |
 | `refactor-debts-and-smells` | Refactor technical debt and code smells, magic values, and scattered literals, or file issues for larger rewrites. Better, not compact. |
 | `ruthless-critic` | Deliver precise, evidence-based, unsparing criticism without personal abuse. |
+| `security-invariants` | Design and audit trust-boundary invariants, path matrices, adversarial sequences, and regression-tested fixes. |
 | `shopping` | Compare products, offers, and reviews across the wider web before buying. |
 | `squash-pull-request` | Rebase a PR onto its base and squash it into one GPG-signed, signed-off commit with a subject line only. |
 | `support-ticket` | Advance technical support cases with falsifiable tests, evidence analysis, and actionable provider updates. |
@@ -139,6 +140,12 @@ For an unsparing critique:
 npx skills add StephanMeijer/skills --skill ruthless-critic
 ```
 
+For security-invariant design, audits, and regression-tested remediation:
+
+```bash
+npx skills add StephanMeijer/skills --skill security-invariants
+```
+
 For product and shopping research:
 
 ```bash
@@ -235,6 +242,10 @@ skills/
 ├── ruthless-critic/
 │   ├── SKILL.md
 │   └── agents/
+├── security-invariants/
+│   ├── SKILL.md
+│   ├── agents/
+│   └── references/
 ├── shopping/
 │   ├── SKILL.md
 │   └── agents/
