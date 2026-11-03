@@ -17,8 +17,10 @@ Prefer remuxing when all required streams are compatible with the target contain
 Remux selected streams without quality loss:
 
 ```sh
-ffmpeg -hide_banner -i "input.mkv" -map 0:v:0 -map '0:a?' -map '0:s?' -map_metadata 0 -map_chapters 0 -c copy "output.mkv"
+ffmpeg -hide_banner -i "input.mkv" -map 0 -map_metadata 0 -map_chapters 0 -c copy "output.mkv"
 ```
+
+`-map 0` keeps every stream, including the attachment streams that carry MKV cover art and the fonts ASS/SSA subtitles need; a selective `-map 0:v:0 -map '0:a?' -map '0:s?'` silently drops them. Confirm with `ffprobe -show_streams` that the output has the same stream count as the input.
 
 Use explicit, compatibility-oriented H.264/AAC MP4 settings when that target is requested:
 
