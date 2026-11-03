@@ -83,7 +83,7 @@ Then act within the ledger:
 - For **discussion**, record the substance without inventing a response.
 - Reply inside the existing thread, and resolve an addressed thread only when explicitly authorized. Explain why it is addressed before resolving it.
 
-Kody is the AI review agent of Kodus, an open-source code-review tool that posts inline findings on pull requests. Retrigger Kody only after all accepted Kody fixes are committed and pushed, and only when the user explicitly requests that remote comment.
+If the repository runs an AI review bot, retrigger it only after accepted fixes are committed and pushed, only when the user explicitly asks for that remote comment, using the trigger the repository documents, and never mention the bot's handle outside that comment.
 
 ## Report
 
