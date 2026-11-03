@@ -21,16 +21,17 @@ Write `CONTRACT.md` during setup, with the user, before any model is trained. Af
 
 ## Scoring Script
 
-- Write `evaluate.*` once. It takes a predictions file with one row per validation example (example ID, predicted class, class probabilities when the metric needs them) and prints the metric. It reads labels itself; attempts never read validation labels for training.
-- It must reject a predictions file with missing, extra, or duplicate IDs.
-- Record its SHA-256 hash. Each round verifies it before scoring.
+- Write `evaluate.*` once. It takes the name of a split from the contract (validation, a confirmation fold, or the confirmation split) and one or two prediction files, each with one row per example of that split (example ID, predicted class, class probabilities when the metric needs them). It reads the split's labels itself; attempts never read validation labels for training.
+- With one prediction file it prints the metric. With two (champion, challenger) it also prints the paired-bootstrap mean difference and its 95 % interval from the win rule below, using the resample count and seed recorded in the contract. The bootstrap lives in this script, never in an attempt, so the number that decides a win is computed by frozen code.
+- It must reject a prediction file with missing, extra, or duplicate IDs for the named split.
+- Record its SHA-256 hash. Each round verifies it before scoring. Changing the script changes the contract version (see the top of this file).
 
 ## Win Rule
 
 A challenger wins only when it beats the champion by more than noise on the same validation examples:
 
 1. Measure noise in round 0 by retraining the baseline with at least three seeds; record the standard deviation of the metric.
-2. Compute a paired bootstrap over validation examples: resample example indices with replacement (at least 1,000 times, fixed seed), score both prediction sets on each resample, and take the difference.
+2. Run `evaluate.*` with the champion's and the challenger's validation predictions. It computes the paired bootstrap: resample example indices with replacement (at least 1,000 times, fixed seed), score both prediction sets on each resample, take the difference, and print the mean difference and its 95 % interval.
 3. The challenger wins when the lower bound of the 95 % interval of the difference is above zero **and** the mean difference exceeds the minimum meaningful gain recorded here. For losses where lower is better, flip the sign.
 4. Before promotion, the challenger must also beat the champion on the confirmation view. When it wins on validation but not there, record it as a loss with a note "validation-only win" and salvage it.
 
@@ -54,7 +55,7 @@ Approved by the user on <date>.
 - Split hashes: train <sha256>, validation <sha256>, test <sha256>, folds <sha256>
 - Selection metric: <metric> (higher|lower is better); secondary: <list>
 - Gates: <latency, size, interpretability, or none>
-- Scoring script: evaluate.<ext>, sha256 <hash>
+- Scoring script: evaluate.<ext>, sha256 <hash>; computes the metric and the paired bootstrap
 - Win rule: paired bootstrap, 1,000 resamples, seed <n>; minimum meaningful gain <delta>
 - Baseline noise (std over <k> seeds): <value>
 - Budget: <per round>; total <rounds or hours>; plateau limit <n> rounds

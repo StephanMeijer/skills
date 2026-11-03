@@ -51,7 +51,7 @@ Read `CONTRACT.md` and `LEDGER.md` first in every round. Verify the hashes of th
 2. **Pick a radical idea.** Choose one idea that changes the approach along an axis the ledger has not explored, per [references/radical-ideas.md](references/radical-ideas.md). A hyperparameter sweep, a different seed, or a near copy of a past attempt is not radical. Write the hypothesis before writing code: what the idea exploits that the champion misses, and what result would falsify it.
 3. **Build on what works.** Compose the challenger as the radical idea on top of the champion's parts and the salvage items that are compatible with the idea. When the idea replaces something wholesale (a new model family, a new representation), still carry over salvage that applies across approaches: cleaned labels, leakage fixes, useful features, class weighting, thresholds.
 4. **Train within budget.** Stop early and record a partial result rather than exceeding the round budget. Fix every seed. Fit all preprocessing on the training split only.
-5. **Score.** Run the frozen scoring script on the validation predictions. Apply the win rule from the contract to the challenger and the champion on the same examples.
+5. **Score.** Run the frozen scoring script with the champion's and the challenger's validation predictions; it prints both metrics and the paired-bootstrap difference with its interval. Apply the win rule from the contract to those numbers. Attempts never compute the selection metric or the bootstrap themselves.
 6. **Decide.**
    - **Win**: the challenger becomes the champion. Record what made it win, and drop salvage items it already absorbed.
    - **Loss or tie**: the champion stays. Salvage the challenger as below.
