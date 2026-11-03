@@ -70,7 +70,7 @@ git commit -S -s -m "<type>(<scope>): <description>"
 git log -1 --format='%G? %GS%n%s%n%b'
 ```
 
-- The first line starts with `G` (good signature). `U`, `N`, `E` or `B` mean the commit is not acceptably signed; report it.
+- The first line starts with `G` (good signature). Anything else (`B`, `U`, `X`, `Y`, `R`, `E`, `N`) means the commit is not acceptably signed; report it.
 - The subject is the one you wrote.
 - The body is exactly one `Signed-off-by: Name <email>` line, or that plus one `BREAKING CHANGE:` line. Anything else means a body slipped in: amend with `--amend -S -s -m` only if the commit has not been pushed.
 - `git status --short` shows nothing left that belonged to this change.
