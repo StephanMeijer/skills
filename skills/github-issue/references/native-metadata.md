@@ -34,7 +34,7 @@ gh project list --owner OWNER --limit 1000
 gh project field-list PROJECT_NUMBER --owner OWNER --limit 1000
 ```
 
-Compare returned counts with provider totals when available. If a command cannot prove completeness, use the corresponding documented API with pagination instead of assuming a default or short page is complete.
+Compare returned counts with provider totals when available; if a command cannot prove completeness, paginate the corresponding documented API instead of assuming a default or short page is complete.
 
 Adding an issue to a project requires the `project` authentication scope. Check before changing authentication:
 
@@ -82,7 +82,7 @@ gh api --paginate -H "X-GitHub-Api-Version: 2026-03-10" \
   "repos/OWNER/REPO/issues/NUMBER/issue-field-values"
 ```
 
-Add or update named values without replacing unmentioned fields. `FIELD_ID` is the numeric `id` from the organization endpoint. The value must match the field type; select values use an existing option name.
+Add or update named values without replacing unmentioned fields. `FIELD_ID` is the numeric `id` from the organization endpoint.
 
 ```bash
 gh api --method POST \
@@ -127,7 +127,7 @@ First ensure the issue is in the project:
 gh issue edit NUMBER --repo OWNER/REPO --add-project "PROJECT"
 ```
 
-Then set one project field per invocation. The project owner may differ from the issue repository owner.
+Then set one project field per invocation; the project owner may differ from the issue repository owner.
 
 ```bash
 gh project item-edit PROJECT_NUMBER \
@@ -139,7 +139,7 @@ gh project item-edit PROJECT_NUMBER \
 
 Use the typed flags shown by `gh project item-edit --help` for fields that cannot use a name/value pair, including `--date`, `--number`, `--text`, and `--iteration-id`. Clear a field with node IDs plus `--clear` when required by the installed CLI.
 
-Verify project membership and field values. `gh project item-list` fetches only 30 items by default, so pass a `--limit` that covers the project and confirm the returned item count matches the reported `totalCount` before concluding anything:
+Verify project membership and field values. `gh project item-list` fetches only 30 items by default, so pass a `--limit` that covers the project and confirm the returned item count matches the reported `totalCount`:
 
 ```bash
 gh project item-list PROJECT_NUMBER --owner PROJECT_OWNER --limit 1000 --format json \
@@ -153,6 +153,6 @@ gh project item-list PROJECT_NUMBER --owner PROJECT_OWNER --limit 1000 --format 
   --jq '.items[] | select(.content.url == "https://github.com/OWNER/REPO/issues/NUMBER")'
 ```
 
-A truncated page proves nothing: it cannot show that the issue is absent from the project, and it cannot show that a field value was left unchanged. Raise the limit or paginate the underlying API when `totalCount` exceeds what was returned.
+A truncated page cannot show that the issue is absent from the project or that a field value was left unchanged; raise the limit or paginate the underlying API when `totalCount` exceeds what was returned.
 
 Do not treat a project Status, Priority, or Target date as the same field as an organization-level issue field with the same visible name.

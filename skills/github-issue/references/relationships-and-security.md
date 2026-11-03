@@ -81,7 +81,7 @@ Confirm that the installed CLI has not added support:
 gh issue edit --help
 ```
 
-If no related-issue flag exists, do not modify the issue. Report that the native relationship remains unapplied because GitHub has not exposed it to this CLI-only workflow. Do not add a body reference, open a browser, call undocumented internal endpoints, or substitute `blocked by`, `blocking`, or parent/sub-issue metadata.
+If no related-issue flag exists, do not modify the issue; report that the native relationship remains unapplied because GitHub has not exposed it to this CLI-only workflow. Do not add a body reference, open a browser, call undocumented internal endpoints, or substitute `blocked by`, `blocking`, or parent/sub-issue metadata.
 
 ## Link a Code-Scanning Security Alert
 
@@ -95,7 +95,7 @@ gh issue view ISSUE_NUMBER --repo ISSUE_OWNER/ISSUE_REPO --json number,url,title
 gh issue edit --help
 ```
 
-If no security-alert relationship flag exists, do not modify either resource. Report that the native link remains unapplied because GitHub has not exposed it to this CLI-only workflow. Do not open a browser or call undocumented internal endpoints. Linking requires write access to the alert repository when GitHub exposes a supported command or API.
+If no security-alert relationship flag exists, do not modify either resource; report that the native link remains unapplied because GitHub has not exposed it to this CLI-only workflow. Do not open a browser or call undocumented internal endpoints. Linking requires write access to the alert repository when GitHub exposes a supported command or API.
 
 Official references:
 
@@ -108,7 +108,7 @@ Do not put the literal secret from a secret-scanning alert into an issue. The do
 
 Never file non-public vulnerability details in a public issue.
 
-For an external reporter, use private vulnerability reporting when the repository has enabled it. This creates a private report for maintainers:
+For an external reporter, use private vulnerability reporting when the repository has enabled it:
 
 ```bash
 gh api --method POST \
