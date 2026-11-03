@@ -9,7 +9,7 @@ Each entry names a debt or smell, the rewrite that fixes it, and the trap to avo
 Two or more blocks do the same thing with different constants, field names, or a single differing step.
 
 - **Rewrite**: one owner of the logic, with the variation as a parameter, a data table, or a passed-in function.
-- **Trap**: merging code that only looks alike but changes for different reasons. If the copies would evolve independently, the duplication is cheaper than the coupling. Three real copies justify a merge; two coincidental ones do not.
+- **Trap**: merging code that only looks alike but would evolve independently; then the duplication is cheaper than the coupling. Three real copies justify a merge; two coincidental ones do not.
 
 ### Magic numbers and strings
 
@@ -20,10 +20,10 @@ Unnamed literals whose meaning the reader has to guess: `86400`, `3`, `0.15`, `"
 
 ### Scattered values without an owner
 
-The same value, or values that must agree, written in several places: a timeout in three call sites, a route path in a handler and a client, a queue name in a producer and a consumer, a limit in validation and in an error message, a key string in a writer and a reader. Changing one and missing another is a bug waiting to happen.
+The same value, or values that must agree, written in several places: a timeout in three call sites, a route path in a handler and a client, a queue name in a producer and a consumer, a limit in validation and in an error message, a key string in a writer and a reader.
 
 - **Rewrite**: one owner, in the module that owns the concept, imported everywhere else. Values that vary by environment go into configuration read once at the boundary. Derive dependent values from the owner (`MAX_LEN` in the message comes from the constant, not a second literal).
-- **Trap**: a single `constants` file that collects every value in the project. Constants belong with the concept they describe; a global grab bag couples unrelated modules. Two literals that are equal by coincidence and would change independently are not the same value; do not merge them.
+- **Trap**: a single `constants` file that collects every value in the project; constants belong with the concept they describe. Two literals that are equal by coincidence and would change independently are not the same value; do not merge them.
 
 ### Primitive obsession and data clumps
 
@@ -51,7 +51,7 @@ Names that say something the code does not do, the same concept called three thi
 Hand-written loops, parsers, retries, date arithmetic, deep merges, path handling, argument parsing, or collection helpers that the language, its standard library, or a dependency already in the project provides.
 
 - **Rewrite**: call the existing facility.
-- **Trap**: adding a new dependency to delete twenty lines. Prefer what is already installed; a new dependency needs its own justification.
+- **Trap**: adding a new dependency to delete twenty lines; a new dependency needs its own justification.
 
 ### Pass-through layers
 
@@ -102,7 +102,7 @@ Deep nesting, flags that track loop state, temporary variables that hold a value
 
 ## Not an Improvement
 
-These shrink code while making it worse. Never propose them, and reject them when found in your own drafts:
+These shrink code while making it worse. Never propose them, and reject them in your own drafts:
 
 - nested or chained ternaries;
 - long method chains or comprehensions that pack several transformations into one expression;
