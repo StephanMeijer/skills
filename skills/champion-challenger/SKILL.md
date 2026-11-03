@@ -74,7 +74,7 @@ Add each finding to the salvage pile with its evidence (counts, slice metrics) a
 - Many rounds against one validation split overfit it. When a challenger wins, confirm it on a second view the contract defines (another cross-validation fold set or a confirmation split) before promotion. Record both numbers.
 - Report validation scores as validation scores. The test split answers one question, once, at the end.
 - A score that jumps far beyond the previous best is a leakage suspect until proven otherwise. Check before promoting.
-- Prefer the simpler model when two are within noise, and record the decision.
+- Prefer the simpler model when two are within noise, and record the decision. "Noise" is the contract's noise floor: the larger of the minimum meaningful gain and two times the baseline seed standard deviation measured in round 0.
 
 ## Stop and Report
 

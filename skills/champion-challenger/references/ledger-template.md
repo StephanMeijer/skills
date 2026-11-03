@@ -9,7 +9,7 @@ Contract: v<n> (CONTRACT.md)
 
 ## Champion
 Attempt <NNN>-<slug>: <one-line approach>
-Validation <metric> <score> ± <noise>; confirmation <score>
+Validation <metric> <score> ± <baseline seed std from CONTRACT.md>; confirmation <score>
 Components: <representation, model, data treatment, objective, framing>
 Path: attempts/<NNN>-<slug>/
 
