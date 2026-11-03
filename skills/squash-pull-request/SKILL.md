@@ -51,12 +51,13 @@ Run the repository's formatter, linter, and the tests for the crates or packages
 One commit, signed, signed off, subject only:
 
 ```bash
-git commit -S -s -m "<subject>"
+git commit -S -s -m "<subject>"                                  # or, for a breaking change:
+git commit -S -s -m "<subject>" -m "BREAKING CHANGE: <what breaks>"
 ```
 
-- The subject is the PR title unless the user gives one or the repository's commit convention (for example Conventional Commits) requires a different shape.
-- No body. The Signed-off-by trailer that `-s` adds is the only line after the subject. Do not add issue references, co-author lines, or attribution unless the user asks.
-- Confirm the signature with `git log -1 --format='%G? %GS'`; `G` is a good signature. Confirm the trailer is present and the body is otherwise empty.
+- Write the subject per the `git-commit` skill: Conventional by default (`type(scope): description`, imperative, at most 72 characters), describing the PR's net change. The PR title is input for it, not the subject itself, unless the user gives a subject or the repository's convention differs.
+- No body, with one exception: when any squashed commit carries `!` after its scope or a `BREAKING CHANGE:` footer, keep `!` in the subject and carry exactly one `BREAKING CHANGE:` line as the only body line, because release tooling reads it. Do not add issue references, co-author lines, or attribution unless the user asks.
+- Confirm the signature with `git log -1 --format='%G? %GS'`; `G` is a good signature. Confirm the body is exactly the Signed-off-by trailer that `-s` adds, or that plus the one `BREAKING CHANGE:` line.
 - Let commit hooks run. If a hook fails for a reason unrelated to the PR (a toolchain pinned by the environment, a lint the base branch itself fails), fix the environment rather than bypass the hook, and say so in the report.
 
 ## Push and Verify
