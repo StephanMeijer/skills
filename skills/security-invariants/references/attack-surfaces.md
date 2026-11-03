@@ -17,16 +17,18 @@ whose completion proves security.
   before comparison?
 - Is exact membership accidentally implemented with substring, prefix, suffix, replacement, or a
   delimiter-sensitive string operation?
-- Are case, Unicode, trailing dots, default ports, percent encoding, duplicate values, and ambiguous
-  separators normalized once at the boundary?
+- Does each comparison use the protocol's defined equality? Normalize case, Unicode, trailing dots,
+  default ports, percent encoding, and duplicates only where the protocol permits it; preserve opaque
+  identifiers byte-for-byte and reject ambiguous encodings or separators.
 
 ## Authority and Lifetime
 
 - Is output authority the intersection of the subject, actor, client, requested target, resource,
   account policy, and server policy?
 - Can exchange, refresh, delegation, or impersonation copy permissions the receiving party lacks?
-- Can a derived artifact outlive the account, session, parent artifact, client limit, or revocation
-  boundary that authorized it?
+- Can a derived artifact outlive the account, session, delegation, consent, client limit, absolute
+  renewal limit, or other authority that permits it? Distinguish the short redemption window of a
+  one-time credential such as an authorization code from the lifetime of the authority it conveys.
 - Are optional claims and custom attributes released only for exact authorized scopes?
 
 ## Artifact Purpose and Replay
