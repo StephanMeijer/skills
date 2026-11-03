@@ -151,6 +151,16 @@ trivy image \
   "$runtime_image"
 ```
 
+Scan the build context too: it is everything `COPY` can reach, so a secret or key outside `.dockerignore` leaks from here. Run it before and after any `.dockerignore` change:
+
+```bash
+trivy fs \
+  --scanners secret,misconfig \
+  --severity HIGH,CRITICAL \
+  --exit-code 1 \
+  "$build_context"
+```
+
 Run a second reporting scan without `--ignore-unfixed` when the first scan omitted findings. Report unfixed high or critical findings and assess them explicitly; do not silently classify “unfixed” as safe. Never hide scanner output with a broad ignore.
 
 When practical, rebuild from the same clean inputs without reusing build cache and compare the resulting image digest and semantic configuration. A difference is not automatically a failure, but it must be traced to an expected input or documented source of nondeterminism before the image is described as reproducible.
