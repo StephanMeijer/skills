@@ -52,10 +52,10 @@ Anything an outside contributor can set is untrusted: PR titles and bodies, bran
 ## Supply Chain
 
 - Pin every action to a full commit SHA, recorded in `.github/workflows/actions.lock` with `gh actions-lock` (see the skill). Tags and branches can be moved by whoever controls the action's repository.
-- Prefer actions from GitHub (`actions/*`, `github/*`) and well-maintained, verified publishers. For a small third-party action, consider a few lines of shell instead.
+- Prefer actions from GitHub (`actions/*`, `github/*`) and well-maintained, verified publishers. Prefer a few lines of shell over a small third-party action.
 - Pin container images in `container:` and `services:` by digest.
 - Pin tool installs (`curl | sh` installers, `npm install -g`, `pip install`) to exact versions, and verify checksums for downloaded binaries.
-- For released artifacts, consider build provenance attestations (`actions/attest-build-provenance`) so users can verify where an artifact came from.
+- Attach build provenance attestations (`actions/attest-build-provenance`) to released artifacts so users can verify where they came from.
 
 ## Runners
 
