@@ -33,7 +33,7 @@ Simple is good.
 - Code that has no effect on functionality or stability goes: dead code, unused options, needless wrappers, defensive checks for cases that cannot happen.
 - Before adding something, check whether removing something solves it.
 - Use what exists first: the codebase's own helpers, then the standard library, then a dependency already installed. Only then write new code. Never add a dependency for a few lines.
-- Never cut validation at trust boundaries, error handling that prevents data loss, or security. Simple does not mean unsafe.
+- Never cut validation at trust boundaries, error handling that prevents data loss, or security. Simple does not mean unsafe. For authentication, authorization, tokens, sessions, cookies, or proxy trust, follow the `security-invariants` skill when it is installed.
 
 ## Parse, Don't Validate
 
@@ -46,24 +46,6 @@ Simple is good.
 - Fail loudly. Never swallow an error or silently fall back to a default. A clear failure is easier to debug than wrong output.
 - Prefer errors as values over exceptions, as in Rust's `Result` (`Ok(value)` / `Err(error)`) or Elixir's `{:ok, value}` / `{:error, reason}`. The caller sees in the signature that a call can fail and has to handle it.
 - Follow the language's idiom for this: `Result` in Rust, tagged tuples in Elixir, `(value, error)` in Go. Where the language has no such idiom, use the codebase's existing pattern rather than inventing one.
-
-## Preserve Security Invariants
-
-- Before changing authentication, authorization, tokens, sessions, cookies, identity, proxy trust,
-  registration, or abuse controls, find every equivalent entry point and artifact transition. A new
-  path is incomplete until it enforces the same policy as its siblings.
-- Put each security decision in one shared owner that every applicable path must cross. Duplicated
-  checks drift; their presence in one handler does not prove another handler is safe.
-- Parse scopes, roles, groups, domains, origins, hosts, and identifiers into structured values and
-  compare exact components. Never authorize through substring, prefix, suffix, or replacement logic.
-- Derived authority and lifetime can only narrow. Intersect the subject, actor, client, request,
-  resource, account, and server limits instead of copying one input wholesale.
-- Bind signed or encrypted artifacts to their purpose and intended consumer. A cookie, token, state,
-  or link must not become valid for another operation merely by renaming or moving it.
-- Test stateful defenses as adversarial sequences. Include failure followed by success, reset, retry,
-  replay, expiry, revocation, and concurrency where those transitions can change the decision.
-- Add negative regression cases across every sibling path when a security policy changes. Happy-path
-  coverage does not prove the invariant.
 
 ## Tests
 

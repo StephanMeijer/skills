@@ -29,25 +29,7 @@ Build a constraint ledger for each affected package: toolchain and MSRV, valid f
 - Keep synchronous code by default. Introduce async only for demonstrated concurrency or I/O needs, and use the project's existing runtime rather than prescribing Tokio.
 - Introduce traits, generics, macros, and abstractions only at real reuse or substitution boundaries. Prefer clear concrete code over speculative flexibility.
 - Preserve public API compatibility unless a breaking change is explicitly requested. Document public APIs and safety, panic, and error contracts where relevant.
-
-## Protect Trust Boundaries
-
-- For changes to authentication, authorization, tokens, sessions, cookies, identity, proxy metadata,
-  registration, or abuse controls, enumerate every sibling entry point and artifact transition before
-  editing. Put the decision in shared domain code and test every applicable path against the same
-  allowed and denied cases.
-- Model scopes, roles, groups, domains, origins, external identities, and artifact purposes as parsed
-  types. Do not use substring or suffix checks where exact membership or a qualified namespace is the
-  rule.
-- Intersect authority and expiration across the subject, actor, client, request, resource, account,
-  and server policy. Derived tokens and sessions must never widen or outlive their authority.
-- Treat third-party parsing and conversion as fallible even after local validation. If any production
-  profile uses `panic = "abort"`, every input-reachable panic is process termination, including one
-  triggered in a background task.
-- Bind protected artifacts to purpose and consumer so another cookie, token, state, or link parser
-  cannot accept the same plaintext or signed value under a different name.
-- Add deterministic negative, replay, expiry, and sequence tests. For a security fix, first prove the
-  vulnerable behavior with a test that fails for the intended reason, then verify every sibling path.
+- For a change to authentication, authorization, tokens, sessions, cookies, identity, proxy trust, registration, or abuse controls, follow the `security-invariants` skill when it is installed: enumerate every sibling entry point before editing, parse scopes, roles, groups, domains, origins, and external identities into newtypes and never authorize with substring, prefix, or suffix checks. If any production profile uses `panic = "abort"`, every input-reachable panic is process termination, including one in a background task, and add a deterministic regression test that fails for the intended reason before the fix.
 
 ## Prove the Change Locally
 

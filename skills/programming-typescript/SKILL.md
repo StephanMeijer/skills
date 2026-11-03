@@ -24,21 +24,7 @@ Produce modern TypeScript whose types remain trustworthy at runtime boundaries. 
 - Use Effect when typed failures, dependency management, concurrency, retries, or resource safety provide a genuine improvement; do not wrap simple code ceremonially.
 - Prefer platform APIs and minimize dependencies. Require a concrete benefit for large, overlapping, weakly maintained, or security-sensitive packages.
 - Keep frontend builds on Vite unless project constraints require another tool. Preserve framework conventions and public API compatibility unless a breaking change is requested.
-
-## Protect Trust Boundaries
-
-- For changes to authentication, authorization, tokens, sessions, cookies, identity, proxy metadata,
-  registration, or abuse controls, enumerate every sibling entry point and artifact transition before
-  editing. Put the decision in shared domain code and run the same allowed and denied cases through
-  every applicable path.
-- Parse scopes, roles, groups, domains, origins, external identities, and artifact purposes into
-  branded or validated domain values. Do not authorize with `includes`, prefix, or suffix checks.
-- Intersect authority and expiration across all principals, clients, resources, and policies. Bind
-  protected artifacts to their purpose and consumer so renaming or replay cannot change their use.
-- Treat dependency parsers as fallible after local validation, and test thrown failures, replay,
-  expiry, reset, retry, and concurrent requests where they can change the decision.
-- For a security fix, first add a deterministic regression test that fails for the intended reason,
-  then verify every sibling path.
+- For a change to authentication, authorization, tokens, sessions, cookies, identity, proxy trust, registration, or abuse controls, follow the `security-invariants` skill when it is installed: enumerate every sibling entry point before editing, parse scopes, roles, groups, domains, origins, and external identities into branded or validated domain values and never authorize with substring, prefix, or suffix checks (`includes` included), and add a deterministic regression test that fails for the intended reason before the fix.
 
 ## Prove the Change Locally
 

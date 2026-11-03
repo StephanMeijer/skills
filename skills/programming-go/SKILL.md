@@ -30,21 +30,7 @@ Inspect without mutating: do not run `go get`, `go mod tidy`, or `go generate` m
 - Prefer the standard library, including `net/http`, `log/slog`, `encoding/json`, `errors`, `slices`, and `maps`, and minimize dependencies. Justify large, weakly maintained, duplicated, or security-sensitive modules; keep `go.mod` and `go.sum` tidy and committed.
 - Accept interfaces and return concrete types. Define small interfaces in the consuming package, and introduce generics, interfaces, code generation, or abstractions only at real reuse or substitution boundaries. Prefer clear concrete code over speculative flexibility.
 - Preserve public API compatibility unless a breaking change is explicitly requested; a breaking change to a v2+ module requires a new major version path. Document exported identifiers with doc comments, including error and concurrency contracts where relevant.
-
-## Protect Trust Boundaries
-
-- For changes to authentication, authorization, tokens, sessions, cookies, identity, proxy metadata,
-  registration, or abuse controls, enumerate every sibling entry point and artifact transition before
-  editing. Put the decision in shared domain code and run the same allowed and denied table cases
-  through every applicable path.
-- Parse scopes, roles, groups, domains, origins, external identities, and artifact purposes into
-  defined types. Do not authorize with substring or suffix checks.
-- Intersect authority and expiration across all principals, clients, resources, and policies. Bind
-  protected artifacts to their purpose and consumer so renaming or replay cannot change their use.
-- Treat dependency parsers as fallible after local validation, and test fatal input, replay, expiry,
-  reset, retry, and concurrency sequences where they can change the decision.
-- For a security fix, first add a deterministic regression test that fails for the intended reason,
-  then verify every sibling path.
+- For a change to authentication, authorization, tokens, sessions, cookies, identity, proxy trust, registration, or abuse controls, follow the `security-invariants` skill when it is installed: enumerate every sibling entry point before editing, parse scopes, roles, groups, domains, origins, and external identities into defined types and never authorize with substring, prefix, or suffix checks, and add a deterministic regression test that fails for the intended reason before the fix.
 
 ## Prove the Change Locally
 
