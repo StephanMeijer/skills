@@ -6,7 +6,7 @@ license: MIT
 
 # Merge Pull Request
 
-Merge one pull request so that its change appears once in the history that changelog and release tooling reads. The merge itself is one command; the work is choosing the method and writing the commit message GitHub would otherwise write for you.
+Merge one pull request so its change appears once in the history that changelog and release tooling reads. The merge is one command; the work is choosing the method and writing the commit message GitHub would otherwise write.
 
 ## Set the Authority Boundary
 
@@ -17,11 +17,11 @@ Asking to merge a PR authorizes merging that PR with a method the repository all
 1. Treat a PR number or URL as authoritative; otherwise resolve the PR for the current branch with `gh pr view`.
 2. Read the PR: `gh pr view <PR> --json number,title,baseRefName,headRefName,headRefOid,isDraft,mergeable,mergeStateStatus,reviewDecision,statusCheckRollup,commits`. Record `headRefOid`; the merge is pinned to it.
 3. Read what the repository allows: `gh repo view --json mergeCommitAllowed,squashMergeAllowed,rebaseMergeAllowed,deleteBranchOnMerge`.
-4. Read the commit convention and the changelog tooling (`release-plz.toml`, `cliff.toml`, `.releaserc*`, `CHANGELOG.md`, `CONTRIBUTING`): they decide what a commit subject must look like. Without such tooling the rules below still hold; the history is the changelog someone will read later.
+4. Read the commit convention and the changelog tooling (`release-plz.toml`, `cliff.toml`, `.releaserc*`, `CHANGELOG.md`, `CONTRIBUTING`): they decide what a commit subject must look like. Without such tooling the rules below still hold.
 
 ## One Entry Per Change
 
-Changelog tooling that follows Conventional Commits turns every line shaped like `type(scope): description` that it finds in a commit message into an entry. GitHub's default merge messages put the PR title or the branch's commit subjects into the body of the commit it creates, so the same change is counted twice: once from the branch commit, once from the merge or squash commit. This merge commit is therefore unacceptable:
+Conventional Commits changelog tooling turns every line shaped like `type(scope): description` in a commit message into an entry. GitHub's default merge messages put the PR title or the branch's commit subjects into the body of the commit they create, so the same change is counted twice. This merge commit is therefore unacceptable:
 
 ```text
 Merge pull request #76 from StephanMeijer/test/exercise-update-gym-list
@@ -56,10 +56,10 @@ git fetch origin <base>
 git log --format='%H%n%B' <base-before>..origin/<base> | grep -cE '^(feat|fix|docs|refactor|perf|test|build|ci|chore|revert)(\([^)]+\))?!?: '
 ```
 
-Record the base branch's SHA before the merge as `<base-before>`. The count must equal the number of changes the PR represents: one for a squash, one per branch commit for a rebase, and for a merge commit the branch commits alone. If the merge or squash commit came back with a body GitHub filled in despite `--body ""`, say so in the report; do not rewrite the base branch to fix it.
+`<base-before>` is the base branch's SHA recorded before the merge. The count must equal the number of changes the PR represents: one for a squash, one per branch commit for a rebase, and for a merge commit the branch commits alone. If the merge or squash commit came back with a body GitHub filled in despite `--body ""`, say so in the report; do not rewrite the base branch to fix it.
 
-Also confirm `gh pr view <PR> --json state,mergeCommit` shows `MERGED` and the commit you expected.
+Confirm `gh pr view <PR> --json state,mergeCommit` shows `MERGED` and the expected commit.
 
 ## Report
 
-The PR, the method and why it was chosen, the exact subject and body written, the merge commit SHA, the grep count against the expected count, whether the branch was deleted, and anything that blocked or was skipped. Never describe the PR as merged without the provider showing `MERGED`.
+The PR, the method and why, the exact subject and body written, the merge commit SHA, the grep count against the expected count, whether the branch was deleted, and anything that blocked or was skipped. Never describe the PR as merged without the provider showing `MERGED`.
