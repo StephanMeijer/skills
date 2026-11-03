@@ -22,7 +22,7 @@ Write `CONTRACT.md` during setup, with the user, before any model is trained. Af
 ## Scoring Script
 
 - Write `evaluate.*` once. It takes the name of a split from the contract (validation, a confirmation fold, or the confirmation split) and one or two prediction files, each with one row per example of that split (example ID, predicted class, class probabilities when the metric needs them). It reads the split's labels itself; attempts never read validation labels for training.
-- With one prediction file it prints the metric. With two (champion, challenger) it also prints the paired-bootstrap mean difference and its 95 % interval from the win rule below, using the resample count and seed recorded in the contract. The bootstrap lives in this script, never in an attempt, so the number that decides a win is computed by frozen code.
+- With one prediction file it prints the metric. With two (champion, challenger) it also prints the paired-bootstrap mean difference and its 95 % interval from the win rule below, using the resample count and seed recorded in the contract. The bootstrap lives in this script, never in an attempt.
 - It must reject a prediction file with missing, extra, or duplicate IDs for the named split.
 - Record its SHA-256 hash. Each round verifies it before scoring. Changing the script changes the contract version (see the top of this file).
 
