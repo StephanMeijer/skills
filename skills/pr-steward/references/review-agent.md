@@ -18,6 +18,20 @@ You review one pull request and post one COMMENT review. The orchestrator gives 
 5. Report only verified, actionable findings: correctness, security, data exposure, regressions, spec and documentation accuracy, missing boundary tests, and violations of an explicit project rule. No style nits. Zero findings is a valid result.
 6. Check the profile's merge-order hazards against the diff (for example, a pending PR that enables a lint the new code would violate).
 
+For a security-sensitive diff involving authentication, authorization, tokens, sessions, cookies,
+identity, federation, proxy metadata, registration, redirects, rate limits, replay defenses, or
+cryptographic artifacts:
+
+1. Name the security invariant and find every sibling producer and consumer, including unchanged
+   files. Compare all equivalent paths against the same policy instead of reviewing only the diff.
+2. Check exact structured membership, qualified identity namespaces, authority and lifetime
+   intersection, artifact purpose binding, trusted proxy-hop assumptions, input-reachable fatal
+   operations, and adversarial reset or replay sequences as applicable.
+3. Require deterministic negative tests across every applicable path. Record any uninspected path as
+   an evidence gap and do not issue an unqualified clean security verdict.
+4. Put a verified cross-cutting or pre-existing defect in the review body under the steward's normal
+   scope rules. Do not force it onto an unrelated changed line.
+
 ## Post
 
 1. Refetch `headRefOid` immediately before posting. If it moved, review the new range first.

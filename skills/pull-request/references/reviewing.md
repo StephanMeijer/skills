@@ -15,6 +15,34 @@ Produce actionable findings mapped to the PR diff. A plain review request return
 9. Avoid duplicating a concern already covered by an unresolved review thread.
 10. If there are no findings, say so and identify any tests or runtime paths that remain unverified.
 
+## Review Security-Sensitive Changes
+
+Use this branch when a diff changes authentication, authorization, token or session issuance, cookies,
+identity mapping, federation, proxy-derived metadata, registration, redirects, rate limiting, replay
+defenses, or cryptographic artifact handling.
+
+1. State the security invariant the change relies on and identify the shared code that owns it.
+2. Find every sibling producer, consumer, refresh, exchange, revocation, and alternate protocol path,
+   including unchanged files. Compare their enforcement rather than reviewing the changed handler in
+   isolation.
+3. Build a compact path-by-invariant matrix. Treat an uninspected applicable cell as an evidence gap,
+   not a pass.
+4. Verify structured values use exact parsed membership and qualified namespaces. Check that derived
+   authority and expiration are the intersection of every principal, client, resource, request, and
+   server limit.
+5. Verify signed or encrypted artifacts are bound to purpose and consumer, forwarded metadata has a
+   complete trusted-hop model, and attacker-controlled input cannot reach a fatal operation or a
+   stricter downstream parser unhandled.
+6. Review adversarial sequences, not only single requests: failure followed by success, reset, retry,
+   replay, expiry, revocation, and concurrency where relevant.
+7. Require deterministic negative tests across every applicable sibling path. A happy-path test or a
+   passing pipeline is not evidence that the invariant holds.
+
+If the available diff, repository, or environment cannot establish a high-impact claim, report the
+gap and the smallest discriminating test. Do not return an unqualified clean security verdict. Put a
+verified cross-cutting defect that cannot be anchored to the diff in the overall review with its
+exact path and trigger.
+
 ## Draft and Submit Fresh Findings
 
 Write one actionable defect per inline comment. Keep each comment self-contained: explain the impact and triggering scenario, then give the smallest credible fix. Do not combine unrelated findings merely to reduce the comment count.
