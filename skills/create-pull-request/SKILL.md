@@ -28,6 +28,11 @@ Asking to create a PR authorizes pushing the PR branches and opening the PRs. It
 4. Read the repository's guidance: `CONTRIBUTING`, `CLAUDE.md`, `AGENTS.md`, the PR template (`.github/pull_request_template.md`, `.github/PULL_REQUEST_TEMPLATE/`, `.forgejo/`, `.gitea/`), commit message conventions, branch naming, and labels.
 5. Search open PRs and issues for overlapping work, and find the issues this work resolves.
 
+If the change may fix an undisclosed vulnerability, read the repository's `SECURITY.md` and
+[references/security-fixes.md](references/security-fixes.md) before inspecting public trackers,
+naming a public branch, pushing, or opening a PR. Never make private exploit details public as a
+side effect of ordinary PR creation.
+
 ## Plan Small PRs
 
 Read [references/splitting.md](references/splitting.md) and decide the split before writing any description.
@@ -41,6 +46,10 @@ State the plan in one short list (PR title, what it contains, what it is based o
 For each PR branch, run the repository's build, lint, typecheck, and tests locally, using its documented commands. Do not open a PR whose locally reproducible checks fail; fix the failure or report it. Open as a draft only when the user asks, the repository's conventions say so, or a known failure remains that the user accepted.
 
 When the repository has `.github/workflows/actions.lock`, or the change adds or edits anything under `.github/workflows/` or an in-repo action, run GitHub's `gh actions-lock` extension (`github/gh-actions-lock`; if missing, ask the user to run `gh extension install github/gh-actions-lock`): `gh actions-lock` pins every action to a commit SHA and updates the lockfile, and the lockfile change belongs in the same PR. Verify with `gh actions-lock --verify`, which writes nothing and fails on an incomplete lockfile. A repository without a lockfile is not onboarded unasked; suggest it in the report.
+
+For a private security fix, assume ordinary hosted CI and integrations may be unavailable in the
+temporary private fork. Run the complete locally reproducible gate and record anything that only the
+maintainer can verify after merging or publishing.
 
 ## Capture Screenshots for Visual Changes
 

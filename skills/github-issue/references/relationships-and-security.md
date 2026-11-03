@@ -128,8 +128,20 @@ gh api --method POST \
 
 Both JSON documents require `summary` and `description`. A draft advisory also requires `severity` and a `vulnerabilities` array; a private report accepts optional vulnerabilities and either `severity` or a CVSS vector. Validate the full payload against the current API documentation before sending it. These are separate security objects, not ordinary issues or code-scanning alert links, and they require Repository security advisories write permission.
 
+Submitting a private report does not authorize publishing an advisory or opening a public fix. After
+the maintainer accepts the report, coordinate remediation through the advisory discussion and its
+temporary private fork. The original reporter can create a temporary private fork while they remain
+an advisory collaborator; only the maintainer can merge the private remediation into the parent
+repository. Treat creating the fork, pushing a branch, and opening its private PR as separate
+mutations that require authorization.
+
+Never place an undisclosed fix on a public fork or public branch. If private reporting, advisory
+access, or temporary-fork creation fails, stop and report the failure instead of falling back to a
+public issue or PR.
+
 Official references:
 
 - <https://docs.github.com/en/code-security/how-tos/report-and-fix-vulnerabilities/report-privately>
 - <https://docs.github.com/en/code-security/how-tos/report-and-fix-vulnerabilities/fix-reported-vulnerabilities/create-repository-advisory>
+- <https://docs.github.com/en/code-security/tutorials/fix-reported-vulnerabilities/collaborate-in-a-fork>
 - <https://docs.github.com/en/rest/security-advisories/repository-advisories>
