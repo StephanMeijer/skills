@@ -32,7 +32,7 @@ docker buildx imagetools inspect IMAGE:TAG
 docker buildx imagetools inspect IMAGE@sha256:INDEX_DIGEST
 ```
 
-Do not pin a platform-specific manifest digest in a Dockerfile that must build for both architectures. Not every publisher offers patch-version tags; distroless commonly uses tags that communicate runtime and user variants instead. Never use `latest`. Never select a base solely because it produces the smallest compressed number; confirm architecture availability, support lifecycle, runtime compatibility, and vulnerability posture.
+Do not pin a platform-specific manifest digest in a Dockerfile that must build for both architectures. Not every publisher offers patch-version tags; distroless uses tags that name runtime and user variants instead. Never use `latest`. Never select a base only because it produces the smallest compressed number; confirm architecture availability, support lifecycle, runtime compatibility, and vulnerability posture.
 
 ## Stages and Artifacts
 
@@ -40,14 +40,14 @@ Do not pin a platform-specific manifest digest in a Dockerfile that must build f
 - Give stages lowercase semantic names such as `dependencies`, `build`, `test`, and `runtime`.
 - Keep dependency resolution separate from frequently changing source when that improves cache reuse.
 - Add buildable test or lint stages only when the repository already uses that design or the tests must exercise build-stage artifacts. Keep them outside the runtime ancestry.
-- Copy final artifacts from an exact named stage. Do not copy an entire builder filesystem.
-- Never install a compiler in the runtime stage merely to build a native dependency at container startup.
+- Copy final artifacts from an exact named stage, never an entire builder filesystem.
+- Never install a compiler in the runtime stage to build a native dependency at container startup.
 - Avoid broad early `COPY . .`; first copy only inputs needed for dependency resolution, then the minimum source needed for the build.
 
 ## Build Inputs and Caching
 
 - Require repository lockfiles and the ecosystem's frozen or immutable install mode when available.
-- Use `RUN --mount=type=cache` for package and compiler caches. A cache mount improves build speed but must not be required for correctness.
+- Use `RUN --mount=type=cache` for package and compiler caches. A cache mount speeds the build but must not be required for correctness.
 - Use `RUN --mount=type=secret` or `RUN --mount=type=ssh` for private dependencies and credentials.
 - Never store secrets in `ARG`, `ENV`, labels, URLs, copied configuration, or committed `.dockerignore` exceptions.
 - Keep build arguments for genuine build-time variation, not runtime configuration or secrets.
@@ -62,7 +62,7 @@ Do not pin a platform-specific manifest digest in a Dockerfile that must build f
 - Design for `docker run --read-only`; identify exact tmpfs or volume mounts needed for writes.
 - Keep one concern per image. Run the application directly as PID 1 and use exec-form startup instructions.
 - Add an init only after demonstrating defective signal forwarding or child reaping without it.
-- Do not install shells, editors, process monitors, curl, wget, Git, compilers, headers, or package managers in the final stage. Prefer distroless or `scratch` when these tools must be absent. Alpine inherently includes BusyBox and `apk`; accept and report that tradeoff only when Alpine's userspace is actually required.
+- Do not install shells, editors, process monitors, curl, wget, Git, compilers, headers, or package managers in the final stage. Prefer distroless or `scratch` when these tools must be absent. Alpine includes BusyBox and `apk`; accept and report that tradeoff only when Alpine's userspace is actually required.
 - Keep root-only setup in build layers. If runtime root is unavoidable, explain the constraint and report the minimum required capabilities and writable paths without silently expanding into deployment-file edits.
 
 ## Reproducibility and Supply Chain
@@ -93,12 +93,12 @@ Derive `.dockerignore` from the actual build context; never paste a static langu
 
 1. Enumerate tracked and untracked paths under the selected build context.
 2. Trace every `COPY`, `ADD`, bind mount, build script, versioning step, and test target to identify inputs that must remain available.
-3. Exclude everything else that is local-only, reproducibly generated, irrelevant to the build, or sensitive. Pay particular attention to repository metadata, credentials, private keys, environment files, local dependency trees, caches, logs, coverage, editor state, and host build outputs, but match the repository's real paths rather than broad guessed extensions.
+3. Exclude everything else that is local-only, reproducibly generated, irrelevant to the build, or sensitive: in particular repository metadata, credentials, private keys, environment files, local dependency trees, caches, logs, coverage, editor state, and host build outputs, matched by the repository's real paths rather than broad guessed extensions.
 4. Preserve required workspace manifests, generated sources, tests, documentation, public certificates, and VCS metadata when a verified build step consumes them.
-5. When multiple Dockerfiles use materially different contexts, consider Dockerfile-specific ignore files instead of weakening one global file.
+5. When multiple Dockerfiles use materially different contexts, use Dockerfile-specific ignore files instead of weakening one global file.
 6. Re-run build checks and every target after changing ignore rules. A smaller context does not justify a missing build input.
 
-Use `.gitignore` only as evidence; do not copy it wholesale. Git-ignored files may be required build inputs, while tracked files may still be irrelevant or unsafe to send to the builder.
+Use `.gitignore` only as evidence; do not copy it wholesale. Git-ignored files may be required build inputs, and tracked files may be irrelevant or unsafe to send to the builder.
 
 Official references:
 

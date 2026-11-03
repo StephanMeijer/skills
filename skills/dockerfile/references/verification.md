@@ -9,7 +9,7 @@ runtime_image=local/dockerfile-qa:validation
 run_hardening=(--read-only --cap-drop ALL --security-opt no-new-privileges --tmpfs /tmp:rw,nosuid,nodev,noexec)
 ```
 
-`run_hardening` is the runtime policy of SKILL.md gate 5, used by every `docker run` below. If the application does not use `/tmp`, omit that mount here; add a capability only when observed behavior proves it is required, and record the exception.
+`run_hardening` is the runtime policy of SKILL.md gate 5, used by every `docker run` below. If the application does not use `/tmp`, omit that mount; add a capability only when observed behavior proves it is required, and record the exception.
 
 ## Static Checks
 
@@ -27,7 +27,7 @@ Run Hadolint when installed:
 hadolint "$dockerfile_path"
 ```
 
-Do not suppress a rule merely to get green. Document a narrowly justified exception next to the affected instruction only when the rule conflicts with a verified requirement.
+Do not suppress a rule to get green. Document a narrowly justified exception next to the affected instruction only when the rule conflicts with a verified requirement.
 
 ## Build Every Target
 
@@ -54,7 +54,7 @@ docker buildx build \
   --file "$dockerfile_path" "$build_context"
 ```
 
-If the active builder cannot execute or cross-compile a required stage, configure an appropriate builder or report that platform as unverified. Never claim multi-platform support from Dockerfile inspection alone.
+If the active builder cannot execute or cross-compile a required stage, configure a builder that can or report that platform as unverified. Never claim multi-platform support from Dockerfile inspection alone.
 
 Build and load the native platform for runtime QA:
 
@@ -127,7 +127,7 @@ Inventory packages and the final filesystem with Syft when installed:
 syft "$runtime_image"
 ```
 
-Without Syft, export a created container and inspect the complete path list without requiring a shell in the image:
+Without Syft, export a created container and list every path without needing a shell in the image:
 
 ```bash
 inspection_container="$(docker create "$runtime_image")"
@@ -135,7 +135,7 @@ docker export "$inspection_container" | tar -tf - | sort
 docker rm "$inspection_container"
 ```
 
-Compare the inventory with the selected base and intended artifacts. Fail the review when it reveals copied source, secrets, caches, package indexes, an unexpected compiler toolchain, or unjustified VCS/debugging utilities. Alpine's built-in BusyBox and `apk` are base-image contents, not proof that the Dockerfile installed debugging tools; record that accepted base tradeoff. Do not rely on layer count alone because modern Docker instructions do not necessarily create filesystem layers.
+Compare the inventory with the selected base and intended artifacts. Fail the review when it reveals copied source, secrets, caches, package indexes, an unexpected compiler toolchain, or unjustified VCS/debugging utilities. Alpine's built-in BusyBox and `apk` are base-image contents, not proof that the Dockerfile installed debugging tools; record that accepted base tradeoff. Do not rely on layer count alone, because modern Docker instructions do not necessarily create filesystem layers.
 
 Run a vulnerability and secret scan when Trivy is available. Make fixable high or critical findings fail the command:
 
@@ -158,9 +158,9 @@ trivy fs \
   "$build_context"
 ```
 
-Run a second reporting scan without `--ignore-unfixed` when the first scan omitted findings. Report unfixed high or critical findings and assess them explicitly; do not silently classify “unfixed” as safe. Never hide scanner output with a broad ignore.
+Run a second reporting scan without `--ignore-unfixed` when the first scan omitted findings. Report unfixed high or critical findings and assess them explicitly; do not classify "unfixed" as safe. Never hide scanner output with a broad ignore.
 
-When practical, rebuild from the same clean inputs without reusing build cache and compare the resulting image digest and semantic configuration. A difference is not automatically a failure, but it must be traced to an expected input or documented source of nondeterminism before the image is described as reproducible.
+When practical, rebuild from the same clean inputs without build cache and compare the resulting image digest and semantic configuration. A difference is not automatically a failure, but trace it to an expected input or documented source of nondeterminism before describing the image as reproducible.
 
 ## Publication Evidence
 
