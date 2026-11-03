@@ -55,7 +55,7 @@ maintainer can verify after merging or publishing.
 
 A change is visual when anything a user sees could look different: UI components, styles, layout, copy, icons, images, generated documents, charts, emails, or CLI output formatting. When in doubt, treat it as visual.
 
-Read [references/screenshots.md](references/screenshots.md) to capture before and after screenshots of every affected screen or state and upload them to the PR description. Never commit screenshots to the PR branch.
+Read [references/screenshots.md](references/screenshots.md) to capture before and after screenshots of every affected screen or state and upload them to the PR description with `gh pr create --attach` or `gh pr edit --attach`. Never commit screenshots to the PR branch.
 
 ## Write the Description
 

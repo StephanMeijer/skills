@@ -32,10 +32,11 @@ Never commit screenshots to the PR branch; they would end up in the default bran
 
 ### GitHub
 
-GitHub has no API for uploading images into a description. Use the first option that works:
+Use the first option that works:
 
-1. **Browser upload**, when browser automation is available and signed in to GitHub: open the PR, edit the description, and attach the files through the editor's file input. GitHub inserts `https://github.com/user-attachments/assets/...` links. Save, then check that the images render.
-2. **Assets branch**: commit the images to a dedicated orphan branch, such as `pr-assets`, under a folder per PR (`pr-<number>/`), and reference them by commit SHA so the links never move:
+1. **`--attach`**: `gh pr create … --body-file <file> --attach '<path>#<alt text>'`, or `gh pr edit <pr> --attach '<path>#<alt text>'` for a PR that is already open. The file is uploaded as a GitHub asset, and an image reference to that local path in the body (`![alt](./after-settings-desktop.png)`) is rewritten to the uploaded URL, so write the table with local paths and let `gh` rewrite them. Check that the installed `gh` has the flag with `gh pr create --help | grep -- --attach`; the fallbacks below are only for one that does not.
+2. **Browser upload**, when browser automation is available and signed in to GitHub: open the PR, edit the description, and attach the files through the editor's file input. GitHub inserts `https://github.com/user-attachments/assets/...` links. Save, then check that the images render.
+3. **Assets branch**: commit the images to a dedicated orphan branch, such as `pr-assets`, under a folder per PR (`pr-<number>/`), and reference them by commit SHA so the links never move:
 
    ```markdown
    ![After, settings, desktop](https://github.com/<owner>/<repo>/blob/<sha>/pr-<number>/after-settings-desktop.png?raw=true)
