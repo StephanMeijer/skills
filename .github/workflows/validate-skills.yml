@@ -16,6 +16,9 @@ jobs:
         with:
           node-version: 24
           package-manager-cache: false
+      - name: Verify the README table matches skills/
+        shell: bash
+        run: diff <(ls skills) <(grep -oE '^\| \140[^ |]+' README.md | tr -d '| \140' | sort)
       - name: Verify every skill installs
         shell: bash
         run: |
