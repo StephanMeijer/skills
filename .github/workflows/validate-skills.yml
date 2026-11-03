@@ -26,7 +26,9 @@ jobs:
           package-manager-cache: false
       - name: Verify the README table matches skills/
         shell: bash
-        run: diff <(ls skills) <(grep -oE '^\| \140[^ |]+' README.md | tr -d '| \140' | sort)
+        run: |
+          bt="$(printf '\140')"
+          diff <(ls skills) <(grep -oE "^\| ${bt}[^ |]+" README.md | tr -d "| ${bt}" | sort)
       - name: Verify every skill installs
         shell: bash
         run: |
