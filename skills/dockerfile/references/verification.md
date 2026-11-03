@@ -6,7 +6,10 @@ Set task-specific variables to the actual file, context, image, and targets. Do 
 dockerfile_path=Dockerfile
 build_context=.
 runtime_image=local/dockerfile-qa:validation
+run_hardening=(--read-only --cap-drop ALL --security-opt no-new-privileges --tmpfs /tmp:rw,nosuid,nodev,noexec)
 ```
+
+`run_hardening` is the runtime policy of SKILL.md gate 5, used by every `docker run` below. If the application does not use `/tmp`, omit that mount here; add a capability only when observed behavior proves it is required, and record the exception.
 
 ## Static Checks
 
@@ -69,10 +72,7 @@ For a one-shot CLI, run it in the foreground with a read-only root filesystem an
 
 ```bash
 docker run --rm \
-  --read-only \
-  --cap-drop ALL \
-  --security-opt no-new-privileges \
-  --tmpfs /tmp:rw,nosuid,nodev,noexec \
+  "${run_hardening[@]}" \
   "$runtime_image"
 ```
 
@@ -82,10 +82,7 @@ For a service, retain the stopped container until its logs and exit state have b
 container_name="dockerfile-runtime-qa-$$"
 docker run --detach \
   --name "$container_name" \
-  --read-only \
-  --cap-drop ALL \
-  --security-opt no-new-privileges \
-  --tmpfs /tmp:rw,nosuid,nodev,noexec \
+  "${run_hardening[@]}" \
   "$runtime_image"
 
 # Exercise the real readiness and service interface here.
@@ -96,7 +93,7 @@ test "$(docker inspect --format '{{.State.ExitCode}}' "$container_name")" -eq 0
 docker rm "$container_name"
 ```
 
-The readiness and interface step is mandatory; replace the marker with the repository's real probe before running the scenario. Adapt ports, arguments, environment, capabilities, and writable mounts to the application. Do not inject production credentials. If the application does not use `/tmp`, omit that mount. Add a capability only when observed behavior proves it is required, and record the exception. On failure, inspect logs and state before removing the container.
+The readiness and interface step is mandatory; replace the marker with the repository's real probe before running the scenario. Adapt ports, arguments, environment, capabilities, and writable mounts to the application. Do not inject production credentials. On failure, inspect logs and state before removing the container.
 
 Verify the configured user without assuming the image has a shell. Unless a root exception is documented, make root-equivalent values fail:
 
