@@ -36,7 +36,7 @@ Read [references/splitting.md](references/splitting.md) and decide the split bef
 
 Split when the change contains more than one independent concern: a refactor and a behavior change, a mechanical rename and new logic, a dependency bump and the code that uses it, or features that could ship separately. Split a PR above roughly 400 changed lines, excluding generated files, lockfiles, and snapshots, unless it is one indivisible concern.
 
-State the plan in one short list (PR title, contents, base) and proceed. Each planned PR must build, pass tests, and leave the product working when merged alone, in order.
+State the plan in one short list (PR title, contents, base) and proceed. The titles in the plan are already the plain-English PR titles, never commit subjects. Each planned PR must build, pass tests, and leave the product working when merged alone, in order.
 
 ## Verify Before Opening
 
@@ -57,7 +57,7 @@ Follow [references/screenshots.md](references/screenshots.md): capture before an
 Use [references/description-template.md](references/description-template.md). When the repository has its own PR template, fill it in and add the ELI5 and Screenshots sections rather than replacing it.
 
 - The **ELI5** comes first: two to four short sentences in everyday words, no jargon, no file or function names, saying what changes and why it matters to the person using or running the product.
-- The title says what changes for the user or operator, in plain words, for someone scanning a PR list. Never reuse the commit message or Conventional Commit syntax (`feat(scope): …`) as the title unless the repository requires that format for PR titles (a title linter or squash-merge convention). Follow the house style of recent merged PR titles, such as a `Fix:` prefix.
+- The title says what changes for the user or operator, in plain words, for someone scanning a PR list. A PR title is never a commit message: no copied commit subject and no Conventional Commit syntax (`feat(scope): …`), in the plan, in `gh pr create`, or in a later edit. For example, commit `fix(auth): accept the bearer scheme case-insensitively` becomes the PR `Accept lowercase "bearer" in the Authorization header`. Follow the house style of recent merged PR titles, such as a `Fix:` prefix.
 - Link issues with closing keywords (`Closes #123`) only when the PR fully resolves them; otherwise reference them.
 - For stacked PRs, list the whole stack with links in every PR and mark which one this is.
 - Write the description to a file and pass it with `--body-file`, so quoting and newlines survive.
