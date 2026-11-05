@@ -5,6 +5,8 @@ Create `$state_dir/STATE.md` on the first tick. Update it whenever a sub-agent i
 ```markdown
 # PR steward state: <owner>/<repo>
 
+Loop: <cron/job ID> every <interval> · Automerge: yes|no (asked <date>)
+
 ## Sub-agents
 | PR | Job | Sub-agent ID | Status / next step |
 |---|---|---|---|
@@ -29,5 +31,5 @@ Create `$state_dir/STATE.md` on the first tick. Update it whenever a sub-agent i
 - <question>; do not act until answered
 
 ## Tick log
-- <time>: <what changed>
+- <time>: <what changed, including PRs merged and the loop stopping>
 ```

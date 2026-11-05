@@ -1,6 +1,6 @@
 ---
 name: merge-pull-request
-description: Merge a GitHub pull request so the base branch gains exactly one changelog entry per change. Picks rebase, squash, or merge commit from the repository's settings and the PR's history, writes the squash or merge commit message explicitly so no Conventional Commit subject is repeated in a commit body, pins the merge to the reviewed head, and verifies the merged commit afterwards. Use when asked to merge a PR, land a PR, or complete a merge. Do not use to review a PR (use pull-request), to squash its branch before merge (use squash-pull-request), or for unattended loops (pr-steward never merges).
+description: Merge a GitHub pull request so the base branch gains exactly one changelog entry per change. Picks rebase, squash, or merge commit from the repository's settings and the PR's history, writes the squash or merge commit message explicitly so no Conventional Commit subject is repeated in a commit body, pins the merge to the reviewed head, and verifies the merged commit afterwards. Use when asked to merge a PR, land a PR, or complete a merge. Do not use to review a PR (use pull-request), to squash its branch before merge (use squash-pull-request), pr-steward uses this skill for its opt-in automerge.
 license: MIT
 ---
 
