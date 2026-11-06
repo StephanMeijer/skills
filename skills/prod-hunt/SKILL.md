@@ -47,9 +47,10 @@ not this hunt; those belong to `suck-hunt`.
   never reach the conversation: name the file, the commit and the kind of
   secret, never the value.
 - Fetched tools are pinned where the commands pin them. The report gives the
-  version of every tool the project does not pin. osv-scanner and trivy send
-  package names and versions, not code, to public databases. If the dependency
-  list is confidential, ask first.
+  version of every tool the project does not pin. osv-scanner, npm audit,
+  pip-audit, composer audit and govulncheck send package names and versions,
+  not code, to public databases. trivy, run here without its vulnerability
+  scanner, sends neither. If the dependency list is confidential, ask first.
 
 ## 2. Let the instruments speak first
 

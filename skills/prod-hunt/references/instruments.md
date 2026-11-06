@@ -11,26 +11,27 @@ go run github.com/google/osv-scanner/v2/cmd/osv-scanner@latest scan source -r -f
 docker run --rm -v "$PWD:/src:ro" aquasec/trivy:latest fs --quiet --scanners misconfig,secret,license --format table /src > "$H/trivy.txt" 2>&1
 git ls-files -ci --exclude-standard > "$H/tracked-ignored.txt"
 git ls-files | grep -iE '(^|/)\.env(\.|$)|\.pem$|\.key$|id_rsa|\.p12$|\.pfx$' > "$H/secret-files.txt"
-grep -rnE 'DEBUG *= *(True|true|1)|NODE_ENV.*development|APP_DEBUG=true|FLASK_DEBUG|\bdebug: *true' --exclude-dir=node_modules --exclude-dir=.git . > "$H/debug-defaults.txt"
+git grep -nE 'DEBUG *= *(True|true|1)|NODE_ENV.*development|APP_DEBUG=true|FLASK_DEBUG|\bdebug: *true' > "$H/debug-defaults.txt"
 grep -rnE "Access-Control-Allow-Origin.*\*|origin: *['\"]\*|allow_origins=\[['\"]\*|AllowAllOrigins|CORS_ALLOW_ALL" <src> > "$H/cors.txt"
 grep -rnE 'verify=False|rejectUnauthorized: *false|InsecureSkipVerify: *true|NODE_TLS_REJECT_UNAUTHORIZED|CURLOPT_SSL_VERIFYPEER.*(false|0)' <src> > "$H/tls-off.txt"
-grep -rnE "(secret|password|passwd|api_?key|token)[\"']? *[:=] *[\"'][^\"'\$\{]{6,}" -i <src> > "$H/hardcoded-creds.txt"
+grep -rnE "(secret|password|passwd|api_?key|token)[\"']? *[:=] *[\"'][^\"'\$\{]{6,}" -i <src> | cut -d: -f1,2 > "$H/hardcoded-creds.txt"
 grep -rnE 'SIGTERM|SIGINT|signal\.Notify|NotifyContext|process\.on\(|add_signal_handler|graceful' <src> > "$H/signals.txt"
 grep -rnEi "['\"/](health|healthz|ready|readyz|live|livez|ping|status)['\"]" <src> > "$H/health.txt"
 grep -rnE '(log|logger|console)\.[a-z]+\(.*(password|token|secret|authorization|cookie|ssn|card)' -i <src> > "$H/log-leaks.txt"
-grep -rnEi 'sentry|bugsnag|rollbar|honeybadger|opentelemetry|prometheus|datadog|newrelic|statsd' --exclude-dir=node_modules --exclude-dir=.git . > "$H/observability.txt"
+git grep -nEi 'sentry|bugsnag|rollbar|honeybadger|opentelemetry|prometheus|datadog|newrelic|statsd' > "$H/observability.txt"
 grep -rnEi 'rate.?limit|throttle|slowapi|express-rate-limit|limiter' <src> > "$H/rate-limit.txt"
 find . -path ./node_modules -prune -o \( -ipath '*migrat*' -o -name '*.sql' \) -type f -print > "$H/migrations.txt"
-grep -rnEi 'drop (table|column)|rename (table|column)|alter column .* not null|truncate' $(cat "$H/migrations.txt") > "$H/destructive-migrations.txt" 2>/dev/null
+tr '\n' '\0' < "$H/migrations.txt" | xargs -0 grep -HnEi 'drop (table|column)|rename (table|column)|alter column .* not null|truncate' > "$H/destructive-migrations.txt" 2>/dev/null
 grep -rnE 'continue-on-error: *true|allow_failure: *true|\|\| *true' .github .gitlab-ci.yml .circleci > "$H/ci-cannot-fail.txt" 2>/dev/null
-ls .nvmrc .node-version .python-version .tool-versions rust-toolchain* go.mod runtime.txt 2>/dev/null > "$H/runtime-pins.txt"
+git ls-files .nvmrc .node-version .python-version .tool-versions 'rust-toolchain*' go.mod runtime.txt > "$H/runtime-pins.txt"
 ```
 
 - **Runtime end of life**: take the runtime versions from `runtime-pins.txt`,
   the Dockerfile `FROM` lines and the manifest, and check each one against
   `https://endoflife.date/api/<product>.json`. This sends only the product
   name.
-- **Secrets**: `--redact` keeps values out of the file. A `.env` that is
+- **Secrets**: `--redact` and `cut` keep values out of the files, and
+  `git grep` skips untracked files such as a local `.env`. A `.env` that is
   tracked counts as a secret even when it holds only placeholders today.
 - **Health and signals**: an empty file is a lead that is only worth anything
   after the deploy target is known. A platform health check or a framework
@@ -68,15 +69,16 @@ grow with users or time.
 
 ```
 docker run --rm -i hadolint/hadolint < Dockerfile > "$H/hadolint.txt" 2>&1
-grep -nE '^FROM .*(:latest|^FROM [^:@]+$)' Dockerfile* > "$H/unpinned-base.txt"
-grep -nE '^USER ' Dockerfile* > "$H/user.txt"
-grep -nE '^HEALTHCHECK|^STOPSIGNAL|^CMD .*(sh -c|npm (run )?start)' Dockerfile* > "$H/lifecycle.txt"
+git grep -niE -e '^FROM .*:latest' -e '^FROM +(--platform=[^ ]+ +)?[^:@ ]+( +AS +.*)?$' -- 'Dockerfile*' > "$H/unpinned-base.txt"
+git grep -nE '^USER ' -- 'Dockerfile*' > "$H/user.txt"
+git grep -nE '^HEALTHCHECK|^STOPSIGNAL|^(CMD|ENTRYPOINT) .*(sh"?,? *"?-c|npm)' -- 'Dockerfile*' > "$H/lifecycle.txt"
 ```
 
 - No `USER`, or `USER root` in the final stage, means the container runs as
   root.
-- `CMD npm start` and `sh -c` put a shell or npm in PID 1, which swallows
-  SIGTERM. The shutdown timing in step 3 proves it.
+- npm in `CMD` or `ENTRYPOINT`, and `sh -c`, put npm or a shell in PID 1,
+  which swallows SIGTERM. The shutdown timing in step 3 proves it.
+- A `FROM` hit that names an earlier stage is not an unpinned base.
 - `docker build` from the scratch copy is step 3's clean build. Afterwards,
   `docker image inspect` gives the size, user and health check of what was
   built.
