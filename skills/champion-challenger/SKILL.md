@@ -43,7 +43,7 @@ Read `CONTRACT.md` and `LEDGER.md` first in every round. Compare the SHA-256 has
 
 1. Inspect the data: size, class balance, label noise signs, duplicates, leakage candidates (IDs, timestamps, near-duplicate rows across splits, columns derived from the label), and the natural grouping of examples.
 2. Write the contract per [references/evaluation-contract.md](references/evaluation-contract.md).
-3. Run round 0: the simplest honest baselines (majority class and one plain linear or tree model). The better one becomes the first champion. Measure its noise by retraining it with at least three seeds. Score it on the confirmation view too, keep those predictions in the round-0 attempt directory for later comparisons, and record both scores on the Champion line of `LEDGER.md`.
+3. Run round 0: the simplest honest baselines (majority class and one plain linear or tree model). The better one becomes the first champion. Measure its noise as the contract's win rule says. Score it on the confirmation view too, keep those predictions in the round-0 attempt directory for later comparisons, and record both scores on the Champion line of `LEDGER.md`.
 
 ## Run One Round
 
@@ -74,7 +74,7 @@ Add each finding to the salvage pile with its evidence (counts, slice metrics) a
 - Before promoting a winner, confirm it on the confirmation view the contract defines (another cross-validation fold set or a confirmation split) and record both numbers.
 - Report validation scores as validation scores. The test split answers one question, once, at the end.
 - A score that jumps far beyond the previous best is a leakage suspect until proven otherwise. Check before promoting.
-- Prefer the simpler model when two are within noise, and record the decision. "Noise" is the contract's noise floor: the larger of the minimum meaningful gain and two times the baseline seed standard deviation measured in round 0.
+- Prefer the simpler model when two are within noise, and record the decision. "Noise" is the noise floor recorded in `CONTRACT.md`.
 
 ## Stop and Report
 
