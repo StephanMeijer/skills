@@ -49,7 +49,7 @@ Do not pin a platform-specific manifest digest in a Dockerfile that must build f
 - Require repository lockfiles and the ecosystem's frozen or immutable install mode when available.
 - Use `RUN --mount=type=cache` for package and compiler caches. A cache mount speeds the build but must not be required for correctness.
 - Use `RUN --mount=type=secret` or `RUN --mount=type=ssh` for private dependencies and credentials.
-- Never store secrets in `ARG`, `ENV`, labels, URLs, copied configuration, or committed `.dockerignore` exceptions.
+- Never store secrets in `ARG`, `ENV`, labels, URLs, copied configuration, command-line literals that persist in image metadata (such as `RUN TOKEN=...`), or committed `.dockerignore` exceptions.
 - Keep build arguments for genuine build-time variation, not runtime configuration or secrets.
 - Sort long package lists for reviewability. Install only packages required by that stage.
 - Combine package index refresh, installation, and cleanup in one layer where the base package manager requires it. Do not run blanket `apk upgrade` or `apt-get upgrade`.
