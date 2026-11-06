@@ -35,7 +35,7 @@ The experiment directory is `experiments/champion-challenger/` in the project un
 - `CONTRACT.md`: the frozen evaluation contract. Create it during setup from [references/evaluation-contract.md](references/evaluation-contract.md).
 - `LEDGER.md`: the champion, every attempt, the idea map, the salvage pile, and open questions. Create it from [references/ledger-template.md](references/ledger-template.md).
 - `splits/`, `evaluate.*`: the fixed split indices and the scoring script, with their hashes recorded in `CONTRACT.md`.
-- `attempts/<NNN>-<slug>/`: one directory per round with the training code, its config, a `RESULT.md`, and the validation predictions per example.
+- `attempts/<NNN>-<slug>/`: one directory per round with the training code, its config, a `RESULT.md`, and the validation predictions per example, plus the confirmation predictions when the round scored the confirmation view (always in round 0).
 
 Read `CONTRACT.md` and `LEDGER.md` first in every round. Compare the SHA-256 hashes of `splits/` and `evaluate.*` with those in `CONTRACT.md`; on a mismatch, stop and report instead of running. Update `LEDGER.md` before the round ends, even when the attempt crashed.
 
@@ -43,7 +43,7 @@ Read `CONTRACT.md` and `LEDGER.md` first in every round. Compare the SHA-256 has
 
 1. Inspect the data: size, class balance, label noise signs, duplicates, leakage candidates (IDs, timestamps, near-duplicate rows across splits, columns derived from the label), and the natural grouping of examples.
 2. Write the contract per [references/evaluation-contract.md](references/evaluation-contract.md).
-3. Run round 0: the simplest honest baselines (majority class and one plain linear or tree model). The better one becomes the first champion. Measure its noise by retraining it with at least three seeds.
+3. Run round 0: the simplest honest baselines (majority class and one plain linear or tree model). The better one becomes the first champion. Measure its noise by retraining it with at least three seeds. Score it on the confirmation view too, keep those predictions in the round-0 attempt directory for later comparisons, and record both scores on the Champion line of `LEDGER.md`.
 
 ## Run One Round
 
