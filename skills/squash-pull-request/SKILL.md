@@ -20,7 +20,7 @@ Asking to squash a PR authorizes rewriting that PR's branch and force-pushing it
 1. A PR number or URL is authoritative; otherwise resolve the PR for the current branch with `gh pr view` or `fj pr view`.
 2. Read the base branch, head branch, head SHA, author, whether the head is in a fork, mergeability, and the commit list from the provider. Never assume `main`.
 3. Fetch both branches from the correct remote. Record the observed head SHA: it is the lease and the recovery point.
-4. Check `git worktree list`. If the PR branch is checked out in another worktree, build the squash on a scratch branch and push that to the remote ref instead of moving it.
+4. Check `git worktree list` and note whether the PR branch is checked out in another worktree; the cleanup after the push depends on it.
 5. Confirm the working tree and index are clean so nothing unrelated is swept into the squash.
 
 ## Build the Squash
