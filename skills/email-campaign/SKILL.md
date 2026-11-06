@@ -84,12 +84,12 @@ Every reply is evidence and a lever.
 2. Extract new facts into the dossier with the date and who said it. Classify: documented, stated by a party, heard in conversation.
 3. Identify what the reply unlocks: a new recipient, a question for the formal request, a fact that removes an argument from the other side, a contact the sender asked for.
 4. Answer within the day when the sender was fast. Thank, confirm the next step and its timing, give what was asked for, ask one further question at most.
-5. Cross-pollinate deliberately: a chain's confirmed interest goes into the next mail to the ally, to the political channel, and eventually to press, in that order. Pass it to a competitor only when the sender or the user has agreed to that; do not guess what the sender would accept.
+5. Cross-pollinate deliberately: a chain's confirmed interest goes into the next mail to the ally, then to the political channel. Pass it to press or to a competitor only when the sender or the user has agreed to that; do not guess what the sender would accept.
 6. Do not forward one party's private message to another. Summarise in the writer's own words at the level the sender would accept.
 
 ## Keep the Log
 
-Maintain a correspondence log from the first message. One row per message, sent or received: date and time in UTC, counterpart and function, channel, subject, one-line content, status, and the next action. Record bounces and wrong addresses so they are not repeated. Keep a do-not-contact list in the same log: anyone who asks to stop, or whose colleague says so on their behalf, goes on it with the date and the message that asked. Never draft to them, or to anyone else at their organisation, again in this campaign. Check the list before every draft. Record every deadline the campaign creates: statutory decision dates, extension limits, meeting dates, promised calls.
+Maintain a correspondence log from the first message. One row per message, sent or received: date and time in UTC, counterpart and function, channel, subject, one-line content, status, and the next action. Record bounces and wrong addresses so they are not repeated. Keep a do-not-contact list in the same log: anyone who asks to stop, or whose colleague says so on their behalf, goes on it with the date and the message that asked. Never draft to them again in this campaign; block the whole organisation only when the request came on its behalf. Formal requests and political submissions through official channels are not covered by the list. Check the list before every draft. Record every deadline the campaign creates: statutory decision dates, extension limits, meeting dates, promised calls.
 
 Keep an index file at the project root that states the current status of every formal request and the map of the project's folders, so that anyone, including a later session, can resume without re-reading the threads.
 
