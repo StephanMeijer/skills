@@ -43,7 +43,7 @@ Read `CONTRACT.md` and `LEDGER.md` first in every round. Compare the SHA-256 has
 
 1. Inspect the data: size, class balance, label noise signs, duplicates, leakage candidates (IDs, timestamps, near-duplicate rows across splits, columns derived from the label), and the natural grouping of examples.
 2. Write the contract per [references/evaluation-contract.md](references/evaluation-contract.md).
-3. Run round 0: the simplest honest baselines (majority class and one plain linear or tree model). The better one becomes the first champion. Measure its noise by retraining it with at least three seeds.
+3. Run round 0: the simplest honest baselines (majority class and one plain linear or tree model). The better one becomes the first champion. Measure its noise by retraining it with at least three seeds. Score it on the confirmation view too, keep those predictions for later comparisons, and record both scores on the Champion line of `LEDGER.md`.
 
 ## Run One Round
 
