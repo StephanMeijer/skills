@@ -105,9 +105,21 @@ docker run --detach \
 docker stop --timeout 10 "$container_name"
 docker logs "$container_name"
 
+# docker run --stop-signal overrides STOPSIGNAL, so read the container's setting.
+stop_signal="$(docker inspect --format '{{.Config.StopSignal}}' "$container_name")"
+case "${stop_signal:=SIGTERM}" in
+  *[!0-9]*)
+    signal_number="$(kill -l "$stop_signal")" || {
+      printf 'runtime container has an unknown stop signal: %s\n' "$stop_signal" >&2
+      exit 1
+    }
+    ;;
+  *) signal_number="$stop_signal" ;;
+esac
+
 exit_code="$(docker inspect --format '{{.State.ExitCode}}' "$container_name")"
 case "$exit_code" in
-  0|143)
+  0|"$((128 + signal_number))")
     ;;
   137)
     printf 'runtime image ignored the stop signal and was killed after the grace period\n' >&2
@@ -125,7 +137,7 @@ docker rm "$container_name"
 Read the exit code as a shutdown verdict rather than as a plain success test:
 
 - `0` means the process handled the stop signal and exited cleanly.
-- `143` is `128 + SIGTERM` and means an init forwarded the stop signal and reported that its child terminated on that signal. Signal delivery works, so this passes. When the image sets a non-default `STOPSIGNAL`, the equivalent passing value is `128` plus that signal's number instead of `143`.
+- `128` plus the container's stop signal number (`143` for the default `SIGTERM`) means an init forwarded the stop signal and reported that its child terminated on that signal. Signal delivery works, so this passes. The script reads the signal from the container because `docker run --stop-signal` overrides the image's `STOPSIGNAL`.
 - `137` is `128 + SIGKILL` and means the grace period expired and Docker killed the container. Linux does not apply default signal dispositions to PID 1, so a process that installs no handler for the stop signal ignores it entirely, even though the same binary exits immediately when it runs as any other PID. Fix the application's signal handling or add a minimal init; never paper over it by extending the grace period.
 - Any other non-zero code is a genuine shutdown failure in the application.
 
