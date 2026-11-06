@@ -29,19 +29,23 @@ jobs:
         run: |
           bt="$(printf '\140')"
           diff <(ls skills) <(grep -oE "^\| ${bt}[^ |]+" README.md | tr -d "| ${bt}" | sort)
-      - name: Verify every reference link resolves
+      - name: Verify every relative Markdown link resolves
         shell: bash
         run: |
           set -euo pipefail
+          # Relative .md links only: ':' skips URLs and mailto, '<' skips placeholders.
+          # grep exits 1 on no match; any other failure fails the step.
+          hits="$(grep -roE '\]\([^)#:<]+\.md[)#]' skills --include='*.md')" || [ "$?" -eq 1 ]
           status=0
           while IFS= read -r hit; do
             file="${hit%%:*}"
             target="${hit#*:](}"
+            target="${target%?}"
             if [ ! -e "$(dirname "$file")/$target" ]; then
               echo "::error file=$file::links to missing $target"
               status=1
             fi
-          done < <(grep -roE '\]\(references/[^)#]+' skills --include='*.md')
+          done <<< "$hits"
           exit "$status"
       - name: Verify every skill installs
         shell: bash
