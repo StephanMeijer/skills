@@ -1,0 +1,4 @@
+interface:
+  display_name: "Batch Issues"
+  short_description: "Find issues that are cheaper to do together and offer batch options"
+  default_prompt: "Use $batch-issues to gather this repository's open issues, find which ones batch together because they share code or a prerequisite, and give me one to three batch options with a recommendation."
