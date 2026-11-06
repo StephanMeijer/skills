@@ -68,10 +68,10 @@ grow with users or time.
 ## Dockerfile
 
 ```
-docker run --rm -i hadolint/hadolint < Dockerfile > "$H/hadolint.txt" 2>&1
-git grep -niE -e '^FROM .*:latest' -e '^FROM +(--platform=[^ ]+ +)?[^:@ ]+( +AS +.*)?$' -- 'Dockerfile*' > "$H/unpinned-base.txt"
-git grep -nE '^USER ' -- 'Dockerfile*' > "$H/user.txt"
-git grep -nE '^HEALTHCHECK|^STOPSIGNAL|^(CMD|ENTRYPOINT) .*(sh"?,? *"?-c|npm)' -- 'Dockerfile*' > "$H/lifecycle.txt"
+git ls-files ':(glob)**/Dockerfile*' | while IFS= read -r f; do echo "== $f"; docker run --rm -i hadolint/hadolint < "$f"; done > "$H/hadolint.txt" 2>&1
+git grep -niE -e '^FROM .*:latest' -e '^FROM +(--platform=[^ ]+ +)?[^:@ ]+( +AS +.*)?$' -- ':(glob)**/Dockerfile*' > "$H/unpinned-base.txt"
+git grep -nE '^USER ' -- ':(glob)**/Dockerfile*' > "$H/user.txt"
+git grep -nE '^HEALTHCHECK|^STOPSIGNAL|^(CMD|ENTRYPOINT) .*(sh"?,? *"?-c|npm)' -- ':(glob)**/Dockerfile*' > "$H/lifecycle.txt"
 ```
 
 - No `USER`, or `USER root` in the final stage, means the container runs as
