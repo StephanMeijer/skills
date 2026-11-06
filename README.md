@@ -14,6 +14,7 @@ Licensed under the [MIT License](LICENSE).
 | `convert-media` | Convert images, audio, and video with CLI tools and verified codec-aware settings. |
 | `create-pull-request` | Open small, verified PRs, split by concern, each with an ELI5 and screenshots for visual changes. |
 | `dockerfile` | Create and audit minimal, secure, reproducible multi-platform Dockerfiles and `.dockerignore` files. |
+| `email-campaign` | Build an evidence-based case and get companies, officials, allies, and press to engage by e-mail. |
 | `git-commit` | Commit as one GPG-signed, signed-off Conventional Commit with a short subject line and no body. |
 | `github-actions` | Write, harden, and debug GitHub Actions workflows: SHA-pinned via `gh actions-lock`, least privilege, injection-safe. |
 | `github-issue` | Create and manage GitHub issues with native metadata, relationships, projects, fields, and security workflows. |
