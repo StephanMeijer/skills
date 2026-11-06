@@ -1,6 +1,6 @@
 # Markup and Semantic Document Conversion
 
-## Choose the Rendering Model
+## Inspect Pandoc
 
 Inspect Pandoc's installed readers, writers, and version:
 
