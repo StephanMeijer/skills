@@ -1,15 +1,5 @@
 # GitHub Actions Security Policy
 
-## Contents
-
-- Untrusted input
-- Token permissions
-- Dangerous triggers
-- Secrets and credentials
-- Supply chain
-- Runners
-- Review checklist
-
 ## Untrusted Input
 
 Anything an outside contributor can set is untrusted: PR titles and bodies, branch names, commit messages, issue and comment text, labels, author names, and file contents of a PR.
