@@ -1,0 +1,4 @@
+interface:
+  display_name: "Production-Readiness Hunt"
+  short_description: "Hunt and prove what stops a repository from going live and staying up"
+  default_prompt: "Use $prod-hunt to check whether this repository is production-ready: find and prove blockers such as committed secrets, insecure defaults, outbound calls without timeouts, no graceful shutdown or health check, missing observability, and destructive migrations, then report a verdict and ranked findings."
