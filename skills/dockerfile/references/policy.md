@@ -1,15 +1,5 @@
 # Dockerfile Policy
 
-## Contents
-
-- Base-image routing
-- Stages and artifacts
-- Build inputs and caching
-- Runtime hardening
-- Reproducibility and supply chain
-- Instruction rules
-- `.dockerignore`
-
 ## Base-Image Routing
 
 Choose the runtime base by verified requirements:
