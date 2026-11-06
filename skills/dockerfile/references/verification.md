@@ -87,7 +87,7 @@ docker run --detach \
 
 # Exercise the real readiness and service interface here.
 
-docker stop --time 10 "$container_name"
+docker stop --timeout 10 "$container_name"
 docker logs "$container_name"
 test "$(docker inspect --format '{{.State.ExitCode}}' "$container_name")" -eq 0
 docker rm "$container_name"
