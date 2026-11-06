@@ -72,7 +72,7 @@ Move one rung at a time and let replies arrive before the next.
 1. **Informal, private**: companies, allies, individual officials. Fast, cheap, reversible.
 2. **Formal information request** to the public body (freedom-of-information or equivalent). Precise items, identified by date and source; a stated willingness to prioritise; explicit handling of exemptions; a request for a receipt with a case number. File separate requests for separate matters; never amend a pending request, since it resets the clock in practice.
 3. **Political**: written question to a council or committee, a citizen's address, a request to speak. Attach the formal request as evidence.
-4. **Press**: only when there is a document, a named counterpart willing to be quoted, or a decision deadline. One outlet per message, offer exclusivity implicitly by not mentioning others.
+4. **Press**: only when there is a document, a named counterpart willing to be quoted, or a decision deadline. One outlet per message. Either offer an explicit exclusive with a time window ("exclusive to you until Thursday noon") and pitch no one else until it lapses, or pitch openly and say others may receive it too. Never imply exclusivity while pitching several outlets in parallel.
 
 Do not run all rungs at once. A burst of fifteen messages in four days is a good opening; after that, pause and let the inbox fill. Volume without pause turns "a well-prepared citizen" into "that person again".
 
@@ -84,12 +84,12 @@ Every reply is evidence and a lever.
 2. Extract new facts into the dossier with the date and who said it. Classify: documented, stated by a party, heard in conversation.
 3. Identify what the reply unlocks: a new recipient, a question for the formal request, a fact that removes an argument from the other side, a contact the sender asked for.
 4. Answer within the day when the sender was fast. Thank, confirm the next step and its timing, give what was asked for, ask one further question at most.
-5. Cross-pollinate deliberately: a chain's confirmed interest goes into the next mail to a competitor, to the ally, to the political channel, and eventually to press, in that order.
+5. Cross-pollinate deliberately: a chain's confirmed interest goes into the next mail to the ally, to the political channel, and eventually to press, in that order. Pass it to a competitor only when the sender or the user has agreed to that; do not guess what the sender would accept.
 6. Do not forward one party's private message to another. Summarise in the writer's own words at the level the sender would accept.
 
 ## Keep the Log
 
-Maintain a correspondence log from the first message. One row per message, sent or received: date and time in UTC, counterpart and function, channel, subject, one-line content, status, and the next action. Record bounces and wrong addresses so they are not repeated. Record every deadline the campaign creates: statutory decision dates, extension limits, meeting dates, promised calls.
+Maintain a correspondence log from the first message. One row per message, sent or received: date and time in UTC, counterpart and function, channel, subject, one-line content, status, and the next action. Record bounces and wrong addresses so they are not repeated. Keep a do-not-contact list in the same log: anyone who asks to stop, or whose colleague says so on their behalf, goes on it with the date and the message that asked. Never draft to them, or to anyone else at their organisation, again in this campaign. Check the list before every draft. Record every deadline the campaign creates: statutory decision dates, extension limits, meeting dates, promised calls.
 
 Keep an index file at the project root that states the current status of every formal request and the map of the project's folders, so that anyone, including a later session, can resume without re-reading the threads.
 
