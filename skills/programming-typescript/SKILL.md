@@ -12,7 +12,7 @@ Produce modern TypeScript whose types remain trustworthy at runtime boundaries. 
 
 1. Inspect package manifests, runtime and package-manager declarations, every lockfile, compiler versions and complete configuration inheritance, module type and export conditions, build tooling, CI, tests, runtime entry points, and repository guidance.
 2. Preserve the established runtime, module system, package manager, lockfile, framework, build stack, and public API unless the request explicitly changes them. Treat conflicting declarations or lockfiles as a blocker to resolve, not permission to choose or regenerate one.
-3. For a new project without established conventions, use modern ESM and the newest stable Node.js by default. Choose Deno or Bun only for a concrete project benefit and follow its recommended package workflow. For libraries, deliberately choose and test every declared supported runtime and affected export condition.
+3. For a new project without established conventions, use modern ESM and the newest stable Node.js by default. On Node.js, choose pnpm or npm and commit the matching lockfile. Choose Deno or Bun only for a concrete project benefit and follow its recommended package workflow. For libraries, deliberately choose and test every declared supported runtime and affected export condition.
 
 ## Implement Strictly
 
