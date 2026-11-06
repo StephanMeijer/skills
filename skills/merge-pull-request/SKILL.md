@@ -29,7 +29,7 @@ Merge pull request #76 from StephanMeijer/test/exercise-update-gym-list
 fix: example message
 ```
 
-The rule: after the merge, the commits added to the base branch carry exactly one Conventional subject per change, and no other line in any of those commits matches `^(feat|fix|docs|refactor|perf|test|build|ci|chore|revert)(\([^)]+\))?!?:` followed by a space. GitHub's repository settings cannot produce a merge commit with an empty body, so write the message yourself with `--subject` and `--body`.
+The rule: after the merge, the commits added to the base branch carry exactly one Conventional subject per change, and no other line in any of those commits matches `^(feat|fix|docs|refactor|perf|test|build|ci|chore|revert)(\([^)]+\))?!?:` followed by a space. GitHub's repository settings cannot produce a merge commit without the PR title in it, so write the message yourself with `--subject` and `--body`. GitHub silently ignores an empty body and falls back to the default (the PR title or the commit list), so `--body ""` is not enough: pass a non-empty plain-English body that matches no Conventional pattern, such as one sentence saying what the change does.
 
 ## Pick the Method
 
@@ -37,17 +37,29 @@ In this order, the first the repository allows and the PR fits:
 
 - **Rebase** (`--rebase`) when every commit on the branch is one Conventional, signed commit that should be its own entry. Nothing is written; the branch commits land as they are. A PR that should be one entry but has several commits goes through `squash-pull-request` first, then rebase-merges.
 - **Squash** (`--squash`) when the PR is one change and its branch history is not worth keeping. The subject is the Conventional subject for the net change, written per the `git-commit` skill from the diff, not copied from the PR title (titles are plain English). The body is empty: GitHub's default body lists every squashed commit subject, which is the double entry.
-- **Merge commit** (`--merge`) only when the repository requires merge commits. The subject stays GitHub's non-Conventional `Merge pull request #<N> from <owner>/<branch>` so tooling ignores it, and the body is empty. Never set the PR title as the merge subject: a Conventional title makes the merge commit itself an entry.
+- **Merge commit** (`--merge`) when the repository or the user prefers merge commits, or the branch's Conventional commits should each stay an entry. The subject stays GitHub's non-Conventional `Merge pull request #<N> from <owner>/<branch>` so tooling ignores it, and the body is one plain sentence (see above). Never set the PR title as the merge subject or body: a Conventional title makes the merge commit itself an entry.
 
 ## Merge
 
 ```bash
 gh pr merge <PR> --rebase --match-head-commit <headRefOid>
-gh pr merge <PR> --squash --match-head-commit <headRefOid> --subject "<type>(<scope>): <description>" --body ""
-gh pr merge <PR> --merge  --match-head-commit <headRefOid> --subject "Merge pull request #<N> from <owner>/<branch>" --body ""
+gh pr merge <PR> --squash --match-head-commit <headRefOid> --subject "<type>(<scope>): <description>" --body "<plain sentence>"
+gh pr merge <PR> --merge  --match-head-commit <headRefOid> --subject "Merge pull request #<N> from <owner>/<branch>" --body "<plain sentence>"
 ```
 
 `--match-head-commit` makes GitHub refuse the merge if the branch moved after you read it. Add `--delete-branch` only when the user asked for it or the repository deletes branches on merge anyway. Never pass `--admin`.
+
+### Stacked PRs
+
+A PR in a native GitHub stack (`gh api repos/<owner>/<repo>/pulls/<N> --jq .stack` is not null) cannot be merged with `gh pr merge` ("must be merged using the asynchronous merge REST API"). `gh stack merge` cannot set the message, so call the API directly, one PR at a time from the bottom of the stack:
+
+```bash
+uuid=$(gh api -X PUT repos/<owner>/<repo>/pulls/<N>/merge-async -f merge_method=<merge|squash|rebase> \
+  -f merge_action=direct_merge -f sha=<headRefOid> -f commit_title="<subject>" -f commit_message="<plain sentence>" --jq .details.uuid)
+gh api repos/<owner>/<repo>/pulls/<N>/merge-async/$uuid   # poll until status is not "pending"; expect "merged"
+```
+
+Merging a PR this way also merges every open PR below it, so never merge a higher PR to land a lower one. After each merge GitHub retargets the next PR to the base branch and usually rewrites its commits, so its head SHA changes. Do not re-pin blindly: re-pin only when `git rev-parse <new-head>^{tree}` equals the tree of the head that was reviewed (fetch first); otherwise stop and get the new head reviewed.
 
 ## Verify
 
@@ -56,7 +68,7 @@ git fetch origin <base>
 git log --format='%H%n%B' <base-before>..origin/<base> | grep -cE '^(feat|fix|docs|refactor|perf|test|build|ci|chore|revert)(\([^)]+\))?!?: '
 ```
 
-`<base-before>` is the base branch's SHA recorded before the merge. The count must equal the number of changes the PR represents: one for a squash, one per branch commit for a rebase, and for a merge commit the branch commits alone. If the merge or squash commit came back with a body GitHub filled in despite `--body ""`, say so in the report; do not rewrite the base branch to fix it.
+`<base-before>` is the base branch's SHA recorded before the merge. The count must equal the number of changes the PR represents: one for a squash, one per branch commit for a rebase, and for a merge commit the branch commits alone. If the merge or squash commit came back with a body GitHub filled in, say so in the report; do not rewrite the base branch to fix it.
 
 Confirm `gh pr view <PR> --json state,mergeCommit` shows `MERGED` and the expected commit.
 
