@@ -29,7 +29,7 @@ Path: attempts/<NNN>-<slug>/
 | Composition | | |
 
 ## Salvage pile
-- [S1] from 004: <finding> — evidence: <counts or slice metric beyond noise> — status: open | absorbed by <NNN> | discarded
+- [S1] from 004: <finding> — evidence: <counts, or class metric beyond that class's noise floor> — status: open | unconfirmed (slice) | absorbed by <NNN> | discarded
 
 ## Falsified hypotheses
 - 005: <hypothesis> — falsified by <result>
@@ -58,7 +58,7 @@ Runtime: <time>; hardware: <hardware>
 ## Error comparison with champion
 Challenger right, champion wrong: <n>; champion right, challenger wrong: <n>
 Pattern in the challenger's wins: <class, slice, or none found>
-Per-class change beyond noise: <list>
+Per-class change beyond that class's noise floor: <list>
 
 ## Salvage
 - <finding with evidence, or "none">

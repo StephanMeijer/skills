@@ -63,11 +63,11 @@ Read `CONTRACT.md` and `LEDGER.md` first in every round. Compare the SHA-256 has
 Compare a losing challenger's validation predictions with the champion's, example by example:
 
 - the examples it gets right and the champion gets wrong, and whether they share a pattern (a class, a slice, a length, a source);
-- the classes or slices where its metric beats the champion beyond noise;
+- the classes where its per-class metric from `CONTRACT.md` beats the champion by more than that class's noise floor in `CONTRACT.md`, and slices where it gains, marked unconfirmed because slice noise is not measured;
 - the components that caused those gains: a feature, a preprocessing step, a representation, a loss, a calibration or threshold, a label fix;
 - complementary errors, which make it a candidate for an ensemble or a stacker with the champion.
 
-Add each finding to the salvage pile with its evidence (counts, slice metrics) and the attempt that produced it. Discard a finding that does not survive the noise level.
+Add each finding to the salvage pile with its evidence (counts, slice metrics) and the attempt that produced it. Discard a class finding that does not clear that threshold. Keep slice findings in the pile with status `unconfirmed (slice)`: they can inspire an idea but never count as evidence for promotion.
 
 ## Stay Honest
 
