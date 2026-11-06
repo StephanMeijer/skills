@@ -28,7 +28,7 @@ When the user supplies an EAN, GTIN, UPC, ISBN, SKU, manufacturer part number, m
 
 ## Research Beyond the Webshop
 
-Browse the wider web for every recommendation or quality assessment, even when the user supplies a retailer link or is already on a specific site.
+Browse the wider web for every recommendation or quality assessment, even when the user supplies a retailer link or is already on a specific site. Use the web search and page-fetch tools you have; without any, say so, give no prices, availability, or review counts, and stop at the buying brief.
 
 For each serious candidate, seek these independent evidence classes when available:
 
