@@ -35,7 +35,7 @@ The rule: after the merge, the commits added to the base branch carry exactly on
 
 In this order, the first the repository allows and the PR fits:
 
-- **Rebase** (`--rebase`) when every commit on the branch is one Conventional, signed commit that should be its own entry. Nothing is written; the branch commits land as they are. A PR that should be one entry but has several commits goes through `squash-pull-request` first, then rebase-merges.
+- **Rebase** (`--rebase`) when every commit on the branch is one Conventional commit that should be its own entry and the repository does not need signed history on the base branch. Nothing is written, but GitHub always rewrites rebased commits and drops their signatures; when signed history matters, use the next method that fits instead: squash for one change, a merge commit when each commit should stay an entry, which keeps their signatures; GitHub signs the squash or merge commit. A PR that should be one entry but has several commits goes through `squash-pull-request` first, then rebase-merges.
 - **Squash** (`--squash`) when the PR is one change and its branch history is not worth keeping. The subject is the Conventional subject for the net change, written per the `git-commit` skill from the diff, not copied from the PR title (titles are plain English). The body is empty: GitHub's default body lists every squashed commit subject, which is the double entry.
 - **Merge commit** (`--merge`) when the repository or the user prefers merge commits, or the branch's Conventional commits should each stay an entry. The subject stays GitHub's non-Conventional `Merge pull request #<N> from <owner>/<branch>` so tooling ignores it, and the body is one plain sentence (see above). Never set the PR title as the merge subject or body: a Conventional title makes the merge commit itself an entry.
 
@@ -66,6 +66,12 @@ Merging a PR this way also merges every open PR below it, so never merge a highe
 ```bash
 git fetch origin <base>
 git log --format='%H%n%B' <base-before>..origin/<base> | grep -cE '^(feat|fix|docs|refactor|perf|test|build|ci|chore|revert)(\([^)]+\))?!?: '
+```
+
+When the repository expects signed history, check the signature of every commit the merge added and report any that is not verified:
+
+```bash
+gh api repos/<owner>/<repo>/commits/<sha> --jq '.commit.verification | "\(.verified) \(.reason)"'
 ```
 
 `<base-before>` is the base branch's SHA recorded before the merge. The count must equal the number of changes the PR represents: one for a squash, one per branch commit for a rebase, and for a merge commit the branch commits alone. If the merge or squash commit came back with a body GitHub filled in, say so in the report; do not rewrite the base branch to fix it.
