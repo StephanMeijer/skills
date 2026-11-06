@@ -168,7 +168,6 @@ Before changing an existing Dockerfile, build it unmodified, keep that image as 
 
 ```bash
 baseline_image=local/dockerfile-qa:baseline
-umask 077
 snapshot_dir="$(mktemp -d)"
 cp "$dockerfile_path" "$snapshot_dir/baseline.Dockerfile" # before editing
 
@@ -184,13 +183,17 @@ healthcheck={{json .Config.Healthcheck}}
 {{end}}'
 
 # Raw values stay in private files; the fingerprint keeps each name and a short hash of its value.
-snapshot() {
-  docker image inspect "$1" --format "$config_format" > "$snapshot_dir/$2.config"
+fingerprint() {
   while IFS= read -r line; do
     [ -n "$line" ] || continue
     name="${line%%=*}"
     printf '%s %s\n' "${name//\"/}" "$(printf '%s' "${line#*=}" | sha256sum | cut -c1-12)"
-  done < "$snapshot_dir/$2.config" | sort > "$snapshot_dir/$2.fingerprint"
+  done < "$1" | sort
+}
+
+snapshot() {
+  docker image inspect "$1" --format "$config_format" > "$snapshot_dir/$2.config"
+  fingerprint "$snapshot_dir/$2.config" > "$snapshot_dir/$2.fingerprint"
 }
 
 snapshot "$baseline_image" baseline
@@ -198,17 +201,24 @@ snapshot "$runtime_image" candidate
 diff "$snapshot_dir/baseline.fingerprint" "$snapshot_dir/candidate.fingerprint"
 ```
 
-Build arguments are not part of the image configuration, so outline both Dockerfiles and diff the declared sets:
+Build arguments are not part of the image configuration, so outline both Dockerfiles and diff the fingerprints of the declared sets. The outline prints each argument's default value, so it also goes through the fingerprint; this step needs `jq`:
 
 ```bash
-docker buildx build --call=outline \
-  --file "$snapshot_dir/baseline.Dockerfile" "$build_context" > "$snapshot_dir/baseline.args"
-docker buildx build --call=outline \
-  --file "$dockerfile_path" "$build_context" > "$snapshot_dir/candidate.args"
-diff "$snapshot_dir/baseline.args" "$snapshot_dir/candidate.args"
+outline_args() {
+  command -v jq >/dev/null || { echo 'outline_args: jq is required' >&2; return 1; }
+  docker buildx build --call=outline,format=json \
+    --file "$1" "$build_context" > "$snapshot_dir/$2.outline.json" || return
+  jq -r '.args[]? | "arg.\(.name)=\(.value | tojson)"' \
+    "$snapshot_dir/$2.outline.json" > "$snapshot_dir/$2.args" || return
+  fingerprint "$snapshot_dir/$2.args" > "$snapshot_dir/$2.args.fingerprint"
+}
+
+outline_args "$snapshot_dir/baseline.Dockerfile" baseline
+outline_args "$dockerfile_path" candidate
+diff "$snapshot_dir/baseline.args.fingerprint" "$snapshot_dir/candidate.args.fingerprint"
 ```
 
-Every line of either diff is either a change the user explicitly requested or a regression to revert. Read the raw `*.config` files privately to judge what changed, and report each change by key and behavior, never by pasting values: environment variables and build arguments by name, labels by key, and the entrypoint, command, and health check by what they now do. `STOPSIGNAL` and `EXPOSE` deserve particular attention because nothing in a size or hardening rewrite naturally preserves them, and a dropped `STOPSIGNAL` silently changes shutdown behavior that the runtime scenario then exercises against the wrong signal.
+Every line of either diff is either a change the user explicitly requested or a regression to revert. Read the raw `*.config` and `*.args` files privately to judge what changed, and report each change by key and behavior, never by pasting values: environment variables and build arguments by name, labels by key, and the entrypoint, command, and health check by what they now do. `STOPSIGNAL` and `EXPOSE` deserve particular attention because nothing in a size or hardening rewrite naturally preserves them, and a dropped `STOPSIGNAL` silently changes shutdown behavior that the runtime scenario then exercises against the wrong signal.
 
 ## Publication Evidence
 
