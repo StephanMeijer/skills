@@ -11,7 +11,7 @@ workdir=$(mktemp -d)
 soffice -env:UserInstallation="file://$workdir/profile" --headless --convert-to pdf --outdir "$workdir/output" "input.docx"
 ```
 
-Create the output directory before running the command. LibreOffice derives the output basename from the input; move the single expected result to its final path only after checking it. Capture standard output and error because some conversion failures still leave confusing artifacts.
+LibreOffice creates the `--outdir` directory and derives the output basename from the input; move the single expected result to its final path only after checking it. Capture standard output and error because some conversion failures still leave confusing artifacts.
 
 For an editable format conversion, name the desired extension and specify an export filter when ambiguity matters:
 
