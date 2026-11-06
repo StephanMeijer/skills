@@ -76,4 +76,4 @@ Once endpoint and host counters cannot account for measured loss, name the remai
 - route, next-hop, ECMP, LAG, BFD, spanning-tree, HA, and reconvergence events;
 - exact configuration or routing differences between an affected and clean prefix or host.
 
-Offer one coordinated test with an exact UTC window and a signature the counter should reproduce. If the provider performs a change, rerun the same failing profile first, then controls and the real application. Test every affected scope before accepting closure.
+Offer one coordinated test with an exact UTC window and a signature the counter should reproduce.
