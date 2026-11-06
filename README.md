@@ -9,6 +9,7 @@ Licensed under the [MIT License](LICENSE).
 | Skill | Purpose |
 | --- | --- |
 | `batch-issues` | Gather open issues from any tracker, find the ones cheaper to do together, and offer one to three batches. |
+| `batch-plan` | Plan a task or a batch of issues before coding, with shared groundwork once and at least one PR per item. |
 | `champion-challenger` | Search for the best classifier: one radical idea per round, scored against the champion, losers salvaged. |
 | `coding-guidelines` | Keep code simple and the architecture sound: remove rather than add, parse at the boundary, errors as values, no flaky tests, linting in CI. |
 | `convert-documents` | Convert office, PDF, markup, ebook, spreadsheet, and presentation formats with CLI tools. |

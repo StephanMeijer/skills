@@ -1,0 +1,4 @@
+interface:
+  display_name: "Batch Plan"
+  short_description: "Plan a task or a batch of issues with at least one PR per item"
+  default_prompt: "Use $batch-plan to plan these issues: read the code each one touches, put shared groundwork in its own PR, give every issue at least one PR of its own, and order the PRs so each ships alone."
