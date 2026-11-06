@@ -158,7 +158,7 @@ trivy fs \
   "$build_context"
 ```
 
-Always run a second, reporting scan without `--ignore-unfixed` and with `--exit-code 0`: the gate above drops unfixed findings without saying how many, so only this scan shows them. Report unfixed high or critical findings and assess them explicitly; do not classify "unfixed" as safe. Never hide scanner output with a broad ignore.
+Always run a second, reporting `trivy image` scan without `--ignore-unfixed` and with `--exit-code 0`: the gating `trivy image` scan drops unfixed findings without saying how many, so only this scan shows them. Report unfixed high or critical findings and assess them explicitly; do not classify "unfixed" as safe. Never hide scanner output with a broad ignore.
 
 When practical, rebuild from the same clean inputs without build cache and compare the resulting image digest and semantic configuration. A difference is not automatically a failure, but trace it to an expected input or documented source of nondeterminism before describing the image as reproducible.
 
