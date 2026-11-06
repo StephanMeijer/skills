@@ -30,7 +30,7 @@ Write `CONTRACT.md` during setup, with the user, before any model is trained. Af
 
 A challenger wins only when it beats the champion by more than noise on the same validation examples:
 
-1. Measure noise in round 0 by retraining the baseline with at least three seeds; record the standard deviation of the metric, overall and per class.
+1. Measure noise in round 0 by retraining the baseline with at least three seeds; record the standard deviation of the metric overall, and of a named per-class metric for each class: per-class recall, or the per-class component of the selection metric when it has one.
 2. Run `evaluate.*` with the champion's and the challenger's validation predictions. It computes the paired bootstrap: resample example indices with replacement (at least 1,000 times, fixed seed), score both prediction sets on each resample, take the difference, and print the mean difference and its 95 % interval.
 3. The challenger wins when the lower bound of the 95 % interval of the difference is above zero **and** the mean difference exceeds the noise floor: the larger of the minimum meaningful gain recorded here and two times the baseline seed standard deviation from step 1. The bootstrap only measures validation-set sampling noise; the seed floor is what keeps a single fixed-seed run from winning by training variance. For losses where lower is better, flip the sign.
 4. Before promotion, the challenger must also beat the champion on the confirmation view. When it wins on validation but not there, record it as a loss with a note "validation-only win" and salvage it.
@@ -57,7 +57,7 @@ Approved by the user on <date>.
 - Gates: <latency, size, interpretability, or none>
 - Scoring script: evaluate.<ext>, sha256 <hash>; computes the metric and the paired bootstrap
 - Win rule: paired bootstrap, 1,000 resamples, seed <n>; minimum meaningful gain <delta>; noise floor max(<delta>, 2 × baseline seed std)
-- Baseline noise (std over <k> seeds): <value>; per class: <class> <std>, ...
+- Baseline noise (std over <k> seeds): <value>; per class (<per-class metric>): <class> <std>, ...
 - Budget: <per round>; total <rounds or hours>; plateau limit <n> rounds
 - Target: <score> on validation and confirmation
 - Allowed: packages <list or "ask">; pretrained models <yes/no, which>; downloads <yes/no>; external data <yes/no>; paid APIs <yes/no, limit>
