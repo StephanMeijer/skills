@@ -2,7 +2,7 @@
 
 ## Choose LibreOffice Deliberately
 
-Prefer `soffice` or `libreoffice` headless conversion for word-processing documents, spreadsheets, and presentations when rendered fidelity matters. Confirm the installed version and available export filters. Expect fonts, macros, proprietary effects, external data sources, tracked changes, and complex forms to vary across office suites.
+Confirm the installed version and available export filters. Expect fonts, macros, proprietary effects, external data sources, tracked changes, and complex forms to vary across office suites.
 
 Use an isolated user profile so a running GUI instance, stale lock, extension, or user preference cannot capture the request:
 

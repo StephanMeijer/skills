@@ -2,8 +2,6 @@
 
 ## Choose the Rendering Model
 
-Prefer Pandoc for conversions where headings, paragraphs, lists, tables, citations, notes, and links are the primary contract. Prefer a browser print engine for HTML whose CSS layout and web fonts define the desired appearance. Prefer LibreOffice for an office document whose native layout is authoritative.
-
 Inspect Pandoc's installed readers, writers, and version:
 
 ```sh
