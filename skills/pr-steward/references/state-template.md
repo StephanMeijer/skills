@@ -29,6 +29,7 @@ Loop: <cron/job ID> every <interval> · Automerge: yes|no (asked <date>)
 
 ## Open questions to the user
 - <question>; do not act until answered
+- #<PR> blocked at <head SHA>: <check name> <job URL> <cause>
 
 ## Tick log
 - <time>: <what changed, including PRs merged and the loop stopping>
