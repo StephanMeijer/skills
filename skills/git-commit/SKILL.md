@@ -58,9 +58,10 @@ A breaking change takes `!` after the scope (`feat(cli)!: …`) and is the one c
 ```bash
 git add <files for this one change>
 git commit -S -s -m "<type>(<scope>): <description>"
+git commit -S -s -m "<type>(<scope>)!: <description>" -m "BREAKING CHANGE: <what breaks>"   # breaking change only
 ```
 
-- A single `-m` guarantees there is no body. Do not open an editor or pass a second `-m`.
+- A single `-m` guarantees there is no body. Pass a second `-m` only for the `BREAKING CHANGE:` footer; never open an editor.
 - Let pre-commit and commit-msg hooks run and pass. When a hook rewrites files (formatters), re-stage and commit again.
 - If signing fails (no key, agent locked, pinentry unavailable), stop and report; never fall back to an unsigned commit.
 
