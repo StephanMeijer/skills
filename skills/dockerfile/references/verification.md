@@ -179,34 +179,51 @@ When practical, rebuild from the same clean inputs without build cache and compa
 
 ## Compare an Audited Image
 
-Before changing an existing Dockerfile, build it unmodified and keep that image as the baseline. Snapshot the startup configuration of both images with one stable format so the comparison is a diff rather than a recollection:
+Before changing an existing Dockerfile, build it unmodified, keep that image as the baseline, and copy the unmodified Dockerfile next to it. Snapshot the startup configuration of both images with one stable format, then diff a fingerprint of each field and environment variable so the comparison is a diff rather than a recollection and no value reaches the output:
 
 ```bash
 baseline_image=local/dockerfile-qa:baseline
+umask 077
 snapshot_dir="$(mktemp -d)"
+cp "$dockerfile_path" "$snapshot_dir/baseline.Dockerfile" # before editing
+
 config_format='entrypoint={{json .Config.Entrypoint}}
 cmd={{json .Config.Cmd}}
 user={{json .Config.User}}
-env={{json .Config.Env}}
 ports={{json .Config.ExposedPorts}}
 workdir={{json .Config.WorkingDir}}
 labels={{json .Config.Labels}}
 stopsignal={{json .Config.StopSignal}}
-healthcheck={{json .Config.Healthcheck}}'
+healthcheck={{json .Config.Healthcheck}}
+{{range .Config.Env}}env.{{json .}}
+{{end}}'
 
-docker image inspect "$baseline_image" --format "$config_format" > "$snapshot_dir/baseline.config"
-docker image inspect "$runtime_image" --format "$config_format" > "$snapshot_dir/candidate.config"
-diff "$snapshot_dir/baseline.config" "$snapshot_dir/candidate.config"
+# Raw values stay in private files; the fingerprint keeps each name and a short hash of its value.
+snapshot() {
+  docker image inspect "$1" --format "$config_format" > "$snapshot_dir/$2.config"
+  while IFS= read -r line; do
+    [ -n "$line" ] || continue
+    name="${line%%=*}"
+    printf '%s %s\n' "${name//\"/}" "$(printf '%s' "${line#*=}" | sha256sum | cut -c1-12)"
+  done < "$snapshot_dir/$2.config" | sort > "$snapshot_dir/$2.fingerprint"
+}
+
+snapshot "$baseline_image" baseline
+snapshot "$runtime_image" candidate
+diff "$snapshot_dir/baseline.fingerprint" "$snapshot_dir/candidate.fingerprint"
 ```
 
-Build arguments are not part of the image configuration, so compare the declared set separately:
+Build arguments are not part of the image configuration, so outline both Dockerfiles and diff the declared sets:
 
 ```bash
 docker buildx build --call=outline \
-  --file "$dockerfile_path" "$build_context"
+  --file "$snapshot_dir/baseline.Dockerfile" "$build_context" > "$snapshot_dir/baseline.args"
+docker buildx build --call=outline \
+  --file "$dockerfile_path" "$build_context" > "$snapshot_dir/candidate.args"
+diff "$snapshot_dir/baseline.args" "$snapshot_dir/candidate.args"
 ```
 
-Every line of the diff is either a change the user explicitly requested or a regression to revert. `STOPSIGNAL` and `EXPOSE` deserve particular attention because nothing in a size or hardening rewrite naturally preserves them, and a dropped `STOPSIGNAL` silently changes shutdown behavior that the runtime scenario then exercises against the wrong signal.
+Every line of either diff is either a change the user explicitly requested or a regression to revert. Read the raw `*.config` files privately to judge what changed, and report each change by key and behavior, never by pasting values: environment variables and build arguments by name, labels by key, and the entrypoint, command, and health check by what they now do. `STOPSIGNAL` and `EXPOSE` deserve particular attention because nothing in a size or hardening rewrite naturally preserves them, and a dropped `STOPSIGNAL` silently changes shutdown behavior that the runtime scenario then exercises against the wrong signal.
 
 ## Publication Evidence
 
