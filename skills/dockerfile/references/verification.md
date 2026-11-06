@@ -107,6 +107,35 @@ case "$image_user" in
 esac
 ```
 
+A name passes that check without proving anything, so resolve it against the image's own user database. Only an all-digit value is a numeric ID that skips the lookup; anything else, such as `1app`, is a name to the runtime. Like the runtime, take the first matching passwd entry, and check the resulting UID numerically so `00` counts as root too:
+
+```bash
+user_name="${image_user%%:*}"
+case "$user_name" in
+  ""|*[!0-9]*)
+    inspection_container="$(docker create "$runtime_image")"
+    passwd_uid="$(docker cp "$inspection_container:/etc/passwd" - 2>/dev/null \
+      | tar -xO 2>/dev/null \
+      | awk -F: -v name="$user_name" '$1 == name { print $3; exit }')"
+    docker rm "$inspection_container" >/dev/null
+
+    case "$passwd_uid" in
+      ""|*[!0-9]*)
+        printf 'runtime image user %s does not resolve; the container cannot start\n' "$user_name" >&2
+        exit 1
+        ;;
+    esac
+    ;;
+  *) passwd_uid="$user_name" ;;
+esac
+if test "$passwd_uid" -eq 0; then
+  printf 'runtime image user %s resolves to UID 0\n' "$user_name" >&2
+  exit 1
+fi
+```
+
+An unresolvable name is a failure rather than an unverified check, because the runtime rejects it too: `docker run` on such an image fails with `unable to find user NAME: no matching entries in passwd file`. Copying the file out of a created container keeps the check working on an image with no shell, and reaching a `scratch` image with no user database at all correctly reports the name as unresolvable.
+
 Exercise startup, readiness, normal work, failure behavior, and graceful shutdown. Use `docker stop` and inspect logs and exit status; do not merely kill the process.
 
 Choose at least one failure case from the repository's actual interface, such as invalid configuration, malformed CLI input, or an unavailable dependency. Verify the documented exit status or response and confirm that logs remain actionable without exposing secret values.
