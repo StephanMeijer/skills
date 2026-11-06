@@ -88,9 +88,10 @@ Static reading guesses; a run proves. Where step 1 allows it:
 
 Read where production failures start: entry points, request handlers,
 outbound clients, job workers, config loading, the Dockerfile and deploy
-config. Then read the files the tools pointed at. On a large codebase, fan
-out by area, one subagent per service or directory. Each subagent hunts every
-category below and receives `$H` and these rules.
+config. Then read the files the tools pointed at. Fan out by area, one
+subagent per service or directory, when the codebase is large or another
+reason calls for it, such as several independent services in one repository.
+Each subagent hunts every category below and receives `$H` and these rules.
 
 **Usually blockers** (do not go live with these):
 
