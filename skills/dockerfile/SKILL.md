@@ -32,9 +32,7 @@ Use these priorities in order:
 4. small runtime size;
 5. effective build caching and readable maintenance.
 
-Prefer a `scratch` runtime for a completely static artifact that needs no certificates, timezone data, user database, shell, or debugging support; otherwise distroless, then Alpine. Use Debian slim only when compatibility requires it, and document the concrete reason.
-
-Pin production base images with a meaningful publisher tag and the immutable multi-platform index digest. Use trusted official or verified images. Never use `latest`.
+Choose the runtime base by the policy's base-image routing and pin it by its digest rules; record the reason for the chosen base in the report.
 
 ## Separate Build from Runtime
 
@@ -46,7 +44,7 @@ dependencies -> build -> test -> runtime
 
 Add lint and test stages only when container-specific tests or the repository's existing build design justify them; keep those targets independently buildable and outside the runtime ancestry, and do not duplicate a complete host-side test workflow to add stages. Copy only the final executable or runtime artifact, required shared libraries, explicitly needed certificates/data, and narrowly scoped configuration into the runtime image.
 
-Use BuildKit cache mounts for dependency caches and secret or SSH mounts for private inputs. Never pass secrets through `ARG`, `ENV`, image labels, copied files, or command-line literals that persist in image metadata.
+Apply the policy's build-input and caching rules.
 
 ## Minimize the Runtime
 
