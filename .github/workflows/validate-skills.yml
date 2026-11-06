@@ -29,6 +29,20 @@ jobs:
         run: |
           bt="$(printf '\140')"
           diff <(ls skills) <(grep -oE "^\| ${bt}[^ |]+" README.md | tr -d "| ${bt}" | sort)
+      - name: Verify every reference link resolves
+        shell: bash
+        run: |
+          set -euo pipefail
+          status=0
+          while IFS= read -r hit; do
+            file="${hit%%:*}"
+            target="${hit#*:](}"
+            if [ ! -e "$(dirname "$file")/$target" ]; then
+              echo "::error file=$file::links to missing $target"
+              status=1
+            fi
+          done < <(grep -roE '\]\(references/[^)#]+' skills --include='*.md')
+          exit "$status"
       - name: Verify every skill installs
         shell: bash
         run: |
