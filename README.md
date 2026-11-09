@@ -26,7 +26,7 @@ Licensed under the [MIT License](LICENSE).
 | `programming-python` | Write strict, modern Python with precise types, validated models, and complete local checks. |
 | `programming-rust` | Write strict, modern Rust with strong types, safe boundaries, and complete local checks. |
 | `programming-typescript` | Write strict, modern TypeScript without unsafe assertions or unparsed boundaries. |
-| `pr-steward` | Loop over every open GitHub PR with sub-agents that review, fix, and rebase, report or automerge ready PRs, clean up worktrees and branches of merged PRs, and stop the loop when nothing is left. |
+| `pr-steward` | Loop over every open GitHub PR with sub-agents that review, fix, and rebase, steelman and act on human feedback, report or automerge ready PRs, clean up worktrees and branches of merged PRs, and stop the loop when nothing is left. |
 | `pull-request` | Review GitHub and Forgejo PRs, post findings on changed code lines, and drive a PR toward merge as its author. |
 | `refactor-debts-and-smells` | Refactor technical debt and code smells, magic values, and scattered literals, or file issues for larger rewrites. Better, not compact. |
 | `ruthless-critic` | Deliver precise, evidence-based, unsparing criticism without personal abuse. |

@@ -12,7 +12,7 @@ Open a follow-up issue for every out-of-scope finding (see the scope rule in `SK
    - **Sub-issue**, when a parent tracking issue fits: `gh issue edit <parent> --add-sub-issue <new>`.
    - Read each relationship back with `gh issue view <new> --json blockedBy,parent,issueType`.
 5. **Set the issue type** when the repository uses types: `gh issue edit <new> --type <name>`, with a type name the repository already uses (list them as `github-issue`'s native-metadata reference describes).
-6. **Close the loop on the PR.** When the finding came from a review thread, reply in that thread with `Out of scope, filed as #<new>.` and resolve it. Otherwise post one short top-level comment: `Out of scope, filed as #<new> — <title>`. Skip the PR comment when the PR is closed or excluded in the state file; the issue body alone cites it.
+6. **Close the loop on the PR.** When the finding came from a review thread, reply in that thread with `Out of scope, filed as #<new>.` and resolve it. Otherwise post one short top-level comment: `Out of scope, filed as #<new> — <title>`. Skip the PR comment when the PR is closed or excluded in the state file; the issue body alone cites it. End each reply or comment with `<!-- pr-steward -->`.
 7. **Record it** in the steward's `STATE.md` so no later tick files it again.
 
 ## Report
