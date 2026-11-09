@@ -24,6 +24,12 @@ docker buildx imagetools inspect IMAGE@sha256:INDEX_DIGEST
 
 Do not pin a platform-specific manifest digest in a Dockerfile that must build for both architectures. Not every publisher offers patch-version tags; distroless uses tags that name runtime and user variants instead. Never use `latest`. Never select a base only because it produces the smallest compressed number; confirm architecture availability, support lifecycle, runtime compatibility, and vulnerability posture.
 
+## Builders
+
+- Write Dockerfiles that build under BuildKit and verify with BuildKit (`docker buildx`, or rootless `buildkitd`/`buildctl` for daemonless or unprivileged CI such as Kubernetes runners).
+- When the repository builds with Podman or Buildah (`podman build` is Buildah), also build and exercise the image with that tool, and keep to features both support: `RUN --mount` cache, secret, and bind, `--ssh`, heredocs, and `--platform`. Do not depend on a custom `# syntax=` frontend or BuildKit-only flags there. Keep the file name the repository uses (`Dockerfile` or `Containerfile`).
+- Do not introduce kaniko: it is archived upstream, ignores the `# syntax=` frontend, and lacks BuildKit checks, multi-platform output, and attestations. When a repository already uses it, keep the Dockerfile buildable by BuildKit, test `RUN --mount` behavior under kaniko instead of assuming it, and recommend migrating in the report.
+
 ## Stages and Artifacts
 
 - Declare `# syntax=docker/dockerfile:1` and use BuildKit.

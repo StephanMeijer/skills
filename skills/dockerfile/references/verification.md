@@ -64,6 +64,21 @@ docker buildx build --load \
   --file "$dockerfile_path" "$build_context"
 ```
 
+## Podman or Buildah
+
+When the repository builds with Podman or Buildah, or Docker is unavailable, also run the builds with Podman:
+
+```bash
+podman build --platform linux/amd64,linux/arm64 \
+  --manifest "$runtime_image-manifest" \
+  --file "$dockerfile_path" "$build_context"
+
+podman build --tag "$runtime_image" \
+  --file "$dockerfile_path" "$build_context"
+```
+
+Exercise the image with `podman run` and the same `run_hardening` flags. Podman has no equivalent of Docker's build checks or provenance attestations: when they could not run, report them as skipped instead of calling the image verified.
+
 ## Exercise the Image
 
 Run the application's real interface: make an HTTP request, invoke the CLI, process a representative input, or exercise the service protocol. A successful build is not sufficient.
