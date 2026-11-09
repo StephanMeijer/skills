@@ -14,7 +14,7 @@ concurrency:
 
 jobs:
   validate:
-    runs-on: 9xx
+    runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v7.0.1
