@@ -1,4 +1,4 @@
 interface:
   display_name: "Merge Pull Request"
   short_description: "Merge a PR with exactly one changelog entry per change"
-  default_prompt: "Use $merge-pull-request to merge this pull request: pick rebase, squash, or merge commit from the repository's settings, write the commit message so no Conventional Commit subject is repeated in a body, pin the merge to the reviewed head, and verify the merged commits."
+  default_prompt: "Use $merge-pull-request to merge this pull request: pick rebase, squash, or merge commit from the repository's settings, write the commit message so no Conventional Commit subject is repeated in a body, pin the merge to the reviewed head, verify the merged commits, then delete the merged branch and its clean worktrees."

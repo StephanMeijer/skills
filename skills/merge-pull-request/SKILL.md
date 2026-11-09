@@ -1,6 +1,6 @@
 ---
 name: merge-pull-request
-description: Merge a GitHub pull request so the base branch gains exactly one changelog entry per change. Picks rebase, squash, or merge commit from the repository's settings and the PR's history, writes the squash or merge commit message explicitly so no Conventional Commit subject is repeated in a commit body, pins the merge to the reviewed head, and verifies the merged commit afterwards. Use when asked to merge a PR, land a PR, or complete a merge. Do not use to review a PR (use pull-request), to squash its branch before merge (use squash-pull-request), pr-steward uses this skill for its opt-in automerge.
+description: Merge a GitHub pull request so the base branch gains exactly one changelog entry per change. Picks rebase, squash, or merge commit from the repository's settings and the PR's history, writes the squash or merge commit message explicitly so no Conventional Commit subject is repeated in a commit body, pins the merge to the reviewed head, verifies the merged commit afterwards, then deletes the merged head branch and removes its clean local worktrees and branches. Use when asked to merge a PR, land a PR, or complete a merge. Do not use to review a PR (use pull-request), to squash its branch before merge (use squash-pull-request), pr-steward uses this skill for its opt-in automerge.
 license: MIT
 ---
 
@@ -10,7 +10,7 @@ Merge one pull request so its change appears once in the history that changelog 
 
 ## Set the Authority Boundary
 
-Asking to merge a PR authorizes merging that PR with a method the repository allows. It does not authorize `--admin`, merging with failing or pending checks or an unmet review requirement, deleting the branch, or merging any other PR. When a requirement is unmet, report it and stop; `--auto` is acceptable only when the user asked to merge once checks pass.
+Asking to merge a PR authorizes merging that PR with a method the repository allows. It also authorizes the cleanup after a verified merge (see [Clean Up](#clean-up)): deleting that PR's head branch on the remote and removing its own clean worktrees and local branches. It does not authorize `--admin`, merging with failing or pending checks or an unmet review requirement, deleting any other branch or worktree, forcing a worktree removal, or merging any other PR. When a requirement is unmet, report it and stop; `--auto` is acceptable only when the user asked to merge once checks pass.
 
 ## Establish the Target
 
@@ -47,7 +47,7 @@ gh pr merge <PR> --squash --match-head-commit <headRefOid> --subject "<type>(<sc
 gh pr merge <PR> --merge  --match-head-commit <headRefOid> --subject "Merge pull request #<N> from <owner>/<branch>" --body "<plain sentence>"
 ```
 
-`--match-head-commit` makes GitHub refuse the merge if the branch moved after you read it. Add `--delete-branch` only when the user asked for it or the repository deletes branches on merge anyway. Never pass `--admin`.
+`--match-head-commit` makes GitHub refuse the merge if the branch moved after you read it. Do not pass `--delete-branch`: it deletes before the merge is verified and switches the local checkout without checking it. [Clean Up](#clean-up) does it afterwards. Never pass `--admin`.
 
 ### Stacked PRs
 
@@ -78,6 +78,21 @@ gh api repos/<owner>/<repo>/commits/<sha> --jq '.commit.verification | "\(.verif
 
 Confirm `gh pr view <PR> --json state,mergeCommit` shows `MERGED` and the expected commit.
 
+## Clean Up
+
+Once the provider shows `MERGED` and verification passed, remove what the merged PR leaves behind. Skip any step whose guard fails and report it; never fall back to a forced deletion.
+
+1. **Remote head branch.** Delete it with `git push origin --delete <headRefName>` only when every guard holds:
+   - the head is in the base repository, not a fork (`isCrossRepository` is false);
+   - it is not the default branch and not protected (`gh api repos/<owner>/<repo>/branches/<headRefName> --jq .protected`);
+   - no open PR uses it as head or base (`gh pr list --state open --head <b>` and `--base <b>` are empty), so a stacked PR above it is not orphaned;
+   - its remote tip still equals the merged `headRefOid` (`git ls-remote origin refs/heads/<b>`), so nothing pushed after the merge is lost.
+
+   When the repository deletes branches on merge, the branch is already gone; say so.
+2. **Worktrees.** For each entry in `git worktree list --porcelain` whose branch is the head branch, or tracks it, remove it with `git worktree remove <path>` (no `--force`) only when `git -C <path> status --porcelain` is empty and it has no commits outside the merged head (`git -C <path> log --oneline <headRefOid>..HEAD` is empty). The main checkout is never removed: when it has the head branch checked out and is clean, switch it to the base branch and fast-forward that instead. Then run `git worktree prune`.
+3. **Local branches.** Delete each local branch that is the head branch or tracks it, once it is no longer checked out anywhere, with `git branch -D` only when its tip is already in the merged head (`git merge-base --is-ancestor <branch> <headRefOid>`). `-D` is needed because a squash or rebase merge leaves the branch outside the base's history; the ancestry check is the safety. A branch with commits beyond the merged head stays, and is reported.
+4. `git fetch --prune origin`.
+
 ## Report
 
-The PR, the method and why, the exact subject and body written, the merge commit SHA, the grep count against the expected count, whether the branch was deleted, and anything that blocked or was skipped. Never describe the PR as merged without the provider showing `MERGED`.
+The PR, the method and why, the exact subject and body written, the merge commit SHA, the grep count against the expected count, what the cleanup deleted (remote branch, worktrees, local branches) and what it kept with the failed guard, and anything that blocked or was skipped. Never describe the PR as merged without the provider showing `MERGED`.

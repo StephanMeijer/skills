@@ -20,13 +20,13 @@ Licensed under the [MIT License](LICENSE).
 | `git-commit` | Commit as one GPG-signed, signed-off Conventional Commit with a short subject line and no body. |
 | `github-actions` | Write, harden, and debug GitHub Actions workflows: SHA-pinned via `gh actions-lock`, least privilege, injection-safe. |
 | `github-issue` | Create and manage GitHub issues with native metadata, relationships, projects, fields, and security workflows. |
-| `merge-pull-request` | Merge a PR by rebase, squash, or merge commit with an explicit message, so each change lands as exactly one changelog entry. |
+| `merge-pull-request` | Merge a PR by rebase, squash, or merge commit with an explicit message, so each change lands as exactly one changelog entry, then clean up its branch and worktrees. |
 | `prod-hunt` | Hunt what blocks production readiness, prove each blocker, and report a ready or not-ready verdict with ranked fixes. |
 | `programming-go` | Write strict, modern Go with explicit errors, owned concurrency, and complete local checks. |
 | `programming-python` | Write strict, modern Python with precise types, validated models, and complete local checks. |
 | `programming-rust` | Write strict, modern Rust with strong types, safe boundaries, and complete local checks. |
 | `programming-typescript` | Write strict, modern TypeScript without unsafe assertions or unparsed boundaries. |
-| `pr-steward` | Loop over every open GitHub PR with sub-agents that review, fix, and rebase, report or automerge ready PRs, and stop the loop when nothing is left. |
+| `pr-steward` | Loop over every open GitHub PR with sub-agents that review, fix, and rebase, report or automerge ready PRs, clean up worktrees and branches of merged PRs, and stop the loop when nothing is left. |
 | `pull-request` | Review GitHub and Forgejo PRs, post findings on changed code lines, and drive a PR toward merge as its author. |
 | `refactor-debts-and-smells` | Refactor technical debt and code smells, magic values, and scattered literals, or file issues for larger rewrites. Better, not compact. |
 | `ruthless-critic` | Deliver precise, evidence-based, unsparing criticism without personal abuse. |
