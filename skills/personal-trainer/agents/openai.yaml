@@ -1,0 +1,4 @@
+interface:
+  display_name: "Personal Trainer"
+  short_description: "Coach workouts and log every set to your health systems"
+  default_prompt: "Use $personal-trainer to tell me what to train next based on the last few days, and log my sets as I go."

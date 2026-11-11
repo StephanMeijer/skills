@@ -21,6 +21,7 @@ Licensed under the [MIT License](LICENSE).
 | `github-actions` | Write, harden, and debug GitHub Actions workflows: SHA-pinned via `gh actions-lock`, least privilege, injection-safe. |
 | `github-issue` | Create and manage GitHub issues with native metadata, relationships, projects, fields, and security workflows. |
 | `merge-pull-request` | Merge a PR by rebase, squash, or merge commit with an explicit message, so each change lands as exactly one changelog entry, then clean up its branch and worktrees. |
+| `personal-trainer` | Coach workouts from the last few days of training, log every set to connected health systems, and push the user to do more. |
 | `prod-hunt` | Hunt what blocks production readiness, prove each blocker, and report a ready or not-ready verdict with ranked fixes. |
 | `programming-go` | Write strict, modern Go with explicit errors, owned concurrency, and complete local checks. |
 | `programming-python` | Write strict, modern Python with precise types, validated models, and complete local checks. |
